@@ -25,7 +25,7 @@ public class MiConexion {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 
                 conexion = DriverManager.getConnection(url, usuario, password);  
-                System.out.println("¡Conexión establecida con éxito a la base de datos!");
+                System.out.println("se conecto a la base de datos!!!!!");
             } catch (SQLException | ClassNotFoundException ex) {  
                 System.out.println("No se puede conectar o no se puede cargar el driver. Error: " + ex.getMessage());
             }
