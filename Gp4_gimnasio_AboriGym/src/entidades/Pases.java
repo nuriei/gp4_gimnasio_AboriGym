@@ -4,7 +4,7 @@ package entidades;
 import java.time.LocalDate;
 
 
-  public class Membresia {
+  public class Pases {
  
     public static final int DIAS_VALIDEZ = 30;
  
@@ -16,11 +16,11 @@ import java.time.LocalDate;
     private double costo;
     private boolean estado;
  
-    public Membresia() {
+    public Pases() {
     }
  
     // Alta: la fechaFin se calcula automáticamente (inicio + 30 días)
-    public Membresia(Socio socio, int cantidadPases, LocalDate fechaInicio,
+    public Pases(Socio socio, int cantidadPases, LocalDate fechaInicio,
                      double costo, boolean estado) {
         this.socio = socio;
         this.cantidadPases = cantidadPases;
@@ -31,7 +31,7 @@ import java.time.LocalDate;
     }
  
     // Constructor completo (para cargar desde la BD)
-    public Membresia(int idMembresia, Socio socio, int cantidadPases, LocalDate fechaInicio,
+    public Pases(int idMembresia, Socio socio, int cantidadPases, LocalDate fechaInicio,
                      LocalDate fechaFin, double costo, boolean estado) {
         this.idMembresia = idMembresia;
         this.socio = socio;
