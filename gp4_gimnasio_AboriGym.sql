@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 20-10-2026 a las 05:13:08
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Host: 127.0.0.1
+-- Generation Time: Oct 22, 2026 at 10:31 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `gp4_gimnasio_aborigym`
+-- Database: `gp4_gimnasio_aborigym`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `asistencias`
+-- Table structure for table `asistencias`
 --
 
 CREATE TABLE `asistencias` (
@@ -37,7 +37,7 @@ CREATE TABLE `asistencias` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `clases`
+-- Table structure for table `clases`
 --
 
 CREATE TABLE `clases` (
@@ -52,7 +52,7 @@ CREATE TABLE `clases` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `entrenadores`
+-- Table structure for table `entrenadores`
 --
 
 CREATE TABLE `entrenadores` (
@@ -67,13 +67,13 @@ CREATE TABLE `entrenadores` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `membresias`
+-- Table structure for table `pases`
 --
 
-CREATE TABLE `membresias` (
-  `id_membresia` int(11) NOT NULL,
+CREATE TABLE `pases` (
+  `id_pase` int(11) NOT NULL,
   `id_socio` int(11) NOT NULL,
-  `cantidad_pases` int(11) NOT NULL,
+  `cantidadEntradas` int(11) NOT NULL,
   `fecha_inicio` date NOT NULL,
   `fecha_fin` date NOT NULL,
   `costo` decimal(10,2) NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE `membresias` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `socios`
+-- Table structure for table `socios`
 --
 
 CREATE TABLE `socios` (
@@ -98,11 +98,11 @@ CREATE TABLE `socios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 --
--- Índices para tablas volcadas
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `asistencias`
+-- Indexes for table `asistencias`
 --
 ALTER TABLE `asistencias`
   ADD PRIMARY KEY (`id_asistencia`),
@@ -110,28 +110,28 @@ ALTER TABLE `asistencias`
   ADD KEY `id_clase` (`id_clase`);
 
 --
--- Indices de la tabla `clases`
+-- Indexes for table `clases`
 --
 ALTER TABLE `clases`
   ADD PRIMARY KEY (`id_clase`),
   ADD KEY `id_entrenador` (`id_entrenador`);
 
 --
--- Indices de la tabla `entrenadores`
+-- Indexes for table `entrenadores`
 --
 ALTER TABLE `entrenadores`
   ADD PRIMARY KEY (`id_entrenador`),
   ADD UNIQUE KEY `dni` (`dni`);
 
 --
--- Indices de la tabla `membresias`
+-- Indexes for table `pases`
 --
-ALTER TABLE `membresias`
-  ADD PRIMARY KEY (`id_membresia`),
+ALTER TABLE `pases`
+  ADD PRIMARY KEY (`id_pase`),
   ADD KEY `id_socio` (`id_socio`);
 
 --
--- Indices de la tabla `socios`
+-- Indexes for table `socios`
 --
 ALTER TABLE `socios`
   ADD PRIMARY KEY (`id_socio`),
@@ -139,60 +139,60 @@ ALTER TABLE `socios`
   ADD UNIQUE KEY `correo` (`correo`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de la tabla `asistencias`
+-- AUTO_INCREMENT for table `asistencias`
 --
 ALTER TABLE `asistencias`
   MODIFY `id_asistencia` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `clases`
+-- AUTO_INCREMENT for table `clases`
 --
 ALTER TABLE `clases`
   MODIFY `id_clase` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `entrenadores`
+-- AUTO_INCREMENT for table `entrenadores`
 --
 ALTER TABLE `entrenadores`
   MODIFY `id_entrenador` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `membresias`
+-- AUTO_INCREMENT for table `pases`
 --
-ALTER TABLE `membresias`
-  MODIFY `id_membresia` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `pases`
+  MODIFY `id_pase` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `socios`
+-- AUTO_INCREMENT for table `socios`
 --
 ALTER TABLE `socios`
   MODIFY `id_socio` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Restricciones para tablas volcadas
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `asistencias`
+-- Constraints for table `asistencias`
 --
 ALTER TABLE `asistencias`
   ADD CONSTRAINT `fk_asistencia_clase` FOREIGN KEY (`id_clase`) REFERENCES `clases` (`id_clase`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_asistencia_socio` FOREIGN KEY (`id_socio`) REFERENCES `socios` (`id_socio`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `clases`
+-- Constraints for table `clases`
 --
 ALTER TABLE `clases`
   ADD CONSTRAINT `fk_clase_entrenador` FOREIGN KEY (`id_entrenador`) REFERENCES `entrenadores` (`id_entrenador`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `membresias`
+-- Constraints for table `pases`
 --
-ALTER TABLE `membresias`
+ALTER TABLE `pases`
   ADD CONSTRAINT `fk_membresia_socio` FOREIGN KEY (`id_socio`) REFERENCES `socios` (`id_socio`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
