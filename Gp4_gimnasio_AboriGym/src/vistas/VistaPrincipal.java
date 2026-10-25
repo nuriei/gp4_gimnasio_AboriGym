@@ -3,6 +3,7 @@ package vistas;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 public class VistaPrincipal extends javax.swing.JFrame {
 
     /**
@@ -10,6 +11,14 @@ public class VistaPrincipal extends javax.swing.JFrame {
      */
     public VistaPrincipal() {
         initComponents();
+        // Ícono de la ventana (asegurate de tener tu imagen en la carpeta imagenes)
+    try {
+        Image icono = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagenes/pesa_logo.png"));
+        setIconImage(icono);
+    } catch (Exception e) {
+        System.out.println("No se pudo cargar el ícono: " + e.getMessage());
+    }
+    
         setLocationRelativeTo(null);//para q quede centrada
     }
 
@@ -22,37 +31,73 @@ public class VistaPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jFrame1 = new javax.swing.JFrame();
         ImageIcon icono = new ImageIcon(getClass().getResource("/imagenes/fondo.jpg"));
         Image miImagen = icono.getImage();
-        jDesktopPane1 = new javax.swing.JDesktopPane(){
+        escritorio = new javax.swing.JDesktopPane(){
             @Override
             public void paintComponent(Graphics g){
                 g.drawImage(miImagen, 0, 0, getWidth(), getHeight(), this);
             }
         };
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+
+        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
+        jFrame1.getContentPane().setLayout(jFrame1Layout);
+        jFrame1Layout.setHorizontalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jFrame1Layout.setVerticalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Gimnasio AboriGym - Sistema de Gestión");
 
-        javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
-        jDesktopPane1.setLayout(jDesktopPane1Layout);
-        jDesktopPane1Layout.setHorizontalGroup(
-            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 698, Short.MAX_VALUE)
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/usuario_icon.png"))); // NOI18N
+        jButton1.setText("Gestion de Socios");
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/entrenador_icon.png"))); // NOI18N
+        jButton2.setText("Gestion de Entrenadores");
+
+        escritorio.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        escritorio.setLayer(jButton2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout escritorioLayout = new javax.swing.GroupLayout(escritorio);
+        escritorio.setLayout(escritorioLayout);
+        escritorioLayout.setHorizontalGroup(
+            escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(escritorioLayout.createSequentialGroup()
+                .addContainerGap(146, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addGap(148, 148, 148))
+            .addGroup(escritorioLayout.createSequentialGroup()
+                .addGap(162, 162, 162)
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jDesktopPane1Layout.setVerticalGroup(
-            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 644, Short.MAX_VALUE)
+        escritorioLayout.setVerticalGroup(
+            escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 238, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(44, 44, 44))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane1)
+            .addComponent(escritorio)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane1)
+            .addComponent(escritorio)
         );
 
         pack();
@@ -94,6 +139,9 @@ public class VistaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JDesktopPane jDesktopPane1;
+    private javax.swing.JDesktopPane escritorio;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JFrame jFrame1;
     // End of variables declaration//GEN-END:variables
 }
