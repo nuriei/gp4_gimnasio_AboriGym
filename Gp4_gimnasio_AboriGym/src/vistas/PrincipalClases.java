@@ -45,6 +45,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         btn_volver = new javax.swing.JButton();
         labelFondo = new javax.swing.JLabel();
 
+        setTitle("Gestion de Clases");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btn_volver.setText("Volver");

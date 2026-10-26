@@ -10,6 +10,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
      * Creates new form VistaPrincipal
      */
     public VistaPrincipal() {
+       
         initComponents();
         // Ícono de la ventana (asegurate de tener tu imagen en la carpeta imagenes)
     try {
@@ -58,6 +59,8 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gimnasio AboriGym - Sistema de Gestión");
+
+        escritorio.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         btnClases.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/clase_icon.png"))); // NOI18N
         btnClases.setText("Gestion de Clases        ");
