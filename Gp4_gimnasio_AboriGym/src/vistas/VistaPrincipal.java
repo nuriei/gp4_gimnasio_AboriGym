@@ -40,8 +40,10 @@ public class VistaPrincipal extends javax.swing.JFrame {
                 g.drawImage(miImagen, 0, 0, getWidth(), getHeight(), this);
             }
         };
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnClases = new javax.swing.JButton();
+        btnSocios = new javax.swing.JButton();
+        btnEntrenadores = new javax.swing.JButton();
+        btnPases = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -57,36 +59,70 @@ public class VistaPrincipal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gimnasio AboriGym - Sistema de Gestión");
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/usuario_icon.png"))); // NOI18N
-        jButton1.setText("Gestion de Socios");
+        btnClases.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/clase_icon.png"))); // NOI18N
+        btnClases.setText("Gestion de Clases        ");
+        btnClases.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClasesActionPerformed(evt);
+            }
+        });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/entrenador_icon.png"))); // NOI18N
-        jButton2.setText("Gestion de Entrenadores");
+        btnSocios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/usuario_icon.png"))); // NOI18N
+        btnSocios.setText("Gestion de Socios");
+        btnSocios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSociosActionPerformed(evt);
+            }
+        });
 
-        escritorio.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        escritorio.setLayer(jButton2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        btnEntrenadores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/entrenador_icon.png"))); // NOI18N
+        btnEntrenadores.setText("Gestion de Entrenadores");
+        btnEntrenadores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEntrenadoresActionPerformed(evt);
+            }
+        });
+
+        btnPases.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pases_icon.png"))); // NOI18N
+        btnPases.setText("Gestion de Pases");
+        btnPases.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPasesActionPerformed(evt);
+            }
+        });
+
+        escritorio.setLayer(btnClases, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        escritorio.setLayer(btnSocios, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        escritorio.setLayer(btnEntrenadores, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        escritorio.setLayer(btnPases, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout escritorioLayout = new javax.swing.GroupLayout(escritorio);
         escritorio.setLayout(escritorioLayout);
         escritorioLayout.setHorizontalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(escritorioLayout.createSequentialGroup()
-                .addContainerGap(146, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addGap(148, 148, 148))
-            .addGroup(escritorioLayout.createSequentialGroup()
-                .addGap(162, 162, 162)
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(36, 36, 36)
+                .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnSocios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnPases, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnEntrenadores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnClases, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(35, 35, 35))
         );
         escritorioLayout.setVerticalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
                 .addGap(43, 43, 43)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 238, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(44, 44, 44))
+                .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEntrenadores)
+                    .addComponent(btnSocios))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 237, Short.MAX_VALUE)
+                .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPases)
+                    .addComponent(btnClases))
+                .addGap(43, 43, 43))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -102,6 +138,46 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSociosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSociosActionPerformed
+        // TODO add your handling code here:
+        escritorio.removeAll();
+        escritorio.repaint();
+        PrincipalSocios ventanaSocio= new PrincipalSocios();
+        escritorio.add(ventanaSocio);
+        ventanaSocio.setVisible(true);
+        
+    }//GEN-LAST:event_btnSociosActionPerformed
+
+    private void btnPasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPasesActionPerformed
+        // TODO add your handling code here:
+        escritorio.removeAll();
+        escritorio.repaint();
+        PrincipalPases ventanaPases= new PrincipalPases();
+        escritorio.add(ventanaPases);
+        ventanaPases.setVisible(true);
+        
+    }//GEN-LAST:event_btnPasesActionPerformed
+
+    private void btnEntrenadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrenadoresActionPerformed
+        // TODO add your handling code here:
+        escritorio.removeAll();
+        escritorio.repaint();
+        PrincipalEntrenadores ventanaEntrenador= new PrincipalEntrenadores();
+        escritorio.add(ventanaEntrenador);
+        ventanaEntrenador.setVisible(true);
+        
+    }//GEN-LAST:event_btnEntrenadoresActionPerformed
+
+    private void btnClasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClasesActionPerformed
+        // TODO add your handling code here:
+        escritorio.removeAll();
+        escritorio.repaint();
+        PrincipalClases ventanaClase= new PrincipalClases();
+        escritorio.add(ventanaClase);
+        ventanaClase.setVisible(true);
+        
+    }//GEN-LAST:event_btnClasesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -139,9 +215,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnClases;
+    private javax.swing.JButton btnEntrenadores;
+    private javax.swing.JButton btnPases;
+    private javax.swing.JButton btnSocios;
     private javax.swing.JDesktopPane escritorio;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JFrame jFrame1;
     // End of variables declaration//GEN-END:variables
 }
