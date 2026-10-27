@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="entidades">
+  <ClassDiagramComponents>
+    <Class name="Asistencias" package="entidades" visibility="public" xPosition="79.0" yPosition="600.0">
+      <Fields>
+        <Field name="idAsistencia" type="int" visibility="private"/>
+        <Field name="socio" type="Socio" visibility="private"/>
+        <Field name="clase" type="Clases" visibility="private"/>
+        <Field name="fechaAsistencia" type="LocalDate" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+        <Constructor visibility="public">
+          <Argument type="Socio" name="socio"/>
+          <Argument type="Clases" name="clase"/>
+          <Argument type="LocalDate" name="fechaAsistencia"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="int" name="idAsistencia"/>
+          <Argument type="Socio" name="socio"/>
+          <Argument type="Clases" name="clase"/>
+          <Argument type="LocalDate" name="fechaAsistencia"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getIdAsistencia" returnType="int" visibility="public"/>
+        <Method name="setIdAsistencia" returnType="void" visibility="public">
+          <Argument type="int" name="idAsistencia"/>
+        </Method>
+        <Method name="getSocio" returnType="Socio" visibility="public"/>
+        <Method name="setSocio" returnType="void" visibility="public">
+          <Argument type="Socio" name="socio"/>
+        </Method>
+        <Method name="getClase" returnType="Clases" visibility="public"/>
+        <Method name="setClase" returnType="void" visibility="public">
+          <Argument type="Clases" name="clase"/>
+        </Method>
+        <Method name="getFechaAsistencia" returnType="LocalDate" visibility="public"/>
+        <Method name="setFechaAsistencia" returnType="void" visibility="public">
+          <Argument type="LocalDate" name="fechaAsistencia"/>
+        </Method>
+        <Method name="toString" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="Clases" package="entidades" visibility="public" xPosition="6.0" yPosition="9.0">
+      <Fields>
+        <Field name="idClase" type="int" visibility="private"/>
+        <Field name="nombre" type="String" visibility="private"/>
+        <Field name="entrenador" type="Entrenadores" visibility="private"/>
+        <Field name="horario" type="LocalTime" visibility="private"/>
+        <Field name="capacidad" type="int" visibility="private"/>
+        <Field name="estado" type="boolean" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+        <Constructor visibility="public">
+          <Argument type="String" name="nombre"/>
+          <Argument type="Entrenadores" name="entrenador"/>
+          <Argument type="LocalTime" name="horario"/>
+          <Argument type="int" name="capacidad"/>
+          <Argument type="boolean" name="estado"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="int" name="idClase"/>
+          <Argument type="String" name="nombre"/>
+          <Argument type="Entrenadores" name="entrenador"/>
+          <Argument type="LocalTime" name="horario"/>
+          <Argument type="int" name="capacidad"/>
+          <Argument type="boolean" name="estado"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getIdClase" returnType="int" visibility="public"/>
+        <Method name="setIdClase" returnType="void" visibility="public">
+          <Argument type="int" name="idClase"/>
+        </Method>
+        <Method name="getNombre" returnType="String" visibility="public"/>
+        <Method name="setNombre" returnType="void" visibility="public">
+          <Argument type="String" name="nombre"/>
+        </Method>
+        <Method name="getEntrenador" returnType="Entrenadores" visibility="public"/>
+        <Method name="setEntrenador" returnType="void" visibility="public">
+          <Argument type="Entrenadores" name="entrenador"/>
+        </Method>
+        <Method name="getHorario" returnType="LocalTime" visibility="public"/>
+        <Method name="setHorario" returnType="void" visibility="public">
+          <Argument type="LocalTime" name="horario"/>
+        </Method>
+        <Method name="getCapacidad" returnType="int" visibility="public"/>
+        <Method name="setCapacidad" returnType="void" visibility="public">
+          <Argument type="int" name="capacidad"/>
+        </Method>
+        <Method name="isEstado" returnType="boolean" visibility="public"/>
+        <Method name="setEstado" returnType="void" visibility="public">
+          <Argument type="boolean" name="estado"/>
+        </Method>
+        <Method name="getHorarioFin" returnType="LocalTime" visibility="public"/>
+        <Method name="toString" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="Entrenadores" package="entidades" visibility="public" xPosition="750.0" yPosition="9.0">
+      <Fields>
+        <Field name="idEntrenador" type="int" visibility="private"/>
+        <Field name="dni" type="String" visibility="private"/>
+        <Field name="nombre" type="String" visibility="private"/>
+        <Field name="apellido" type="String" visibility="private"/>
+        <Field name="especialidad" type="String" visibility="private"/>
+        <Field name="estado" type="boolean" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+        <Constructor visibility="public">
+          <Argument type="String" name="dni"/>
+          <Argument type="String" name="nombre"/>
+          <Argument type="String" name="apellido"/>
+          <Argument type="String" name="especialidad"/>
+          <Argument type="boolean" name="estado"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="int" name="idEntrenador"/>
+          <Argument type="String" name="dni"/>
+          <Argument type="String" name="nombre"/>
+          <Argument type="String" name="apellido"/>
+          <Argument type="String" name="especialidad"/>
+          <Argument type="boolean" name="estado"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getIdEntrenadores" returnType="int" visibility="public"/>
+        <Method name="setIdEntrenadores" returnType="void" visibility="public">
+          <Argument type="int" name="idEntrenador"/>
+        </Method>
+        <Method name="getDni" returnType="String" visibility="public"/>
+        <Method name="setDni" returnType="void" visibility="public">
+          <Argument type="String" name="dni"/>
+        </Method>
+        <Method name="getNombre" returnType="String" visibility="public"/>
+        <Method name="setNombre" returnType="void" visibility="public">
+          <Argument type="String" name="nombre"/>
+        </Method>
+        <Method name="getApellido" returnType="String" visibility="public"/>
+        <Method name="setApellido" returnType="void" visibility="public">
+          <Argument type="String" name="apellido"/>
+        </Method>
+        <Method name="getEspecialidad" returnType="String" visibility="public"/>
+        <Method name="setEspecialidad" returnType="void" visibility="public">
+          <Argument type="String" name="especialidad"/>
+        </Method>
+        <Method name="isEstado" returnType="boolean" visibility="public"/>
+        <Method name="setEstado" returnType="void" visibility="public">
+          <Argument type="boolean" name="estado"/>
+        </Method>
+        <Method name="toString" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="Pases" package="entidades" visibility="public" xPosition="1423.0" yPosition="281.0">
+      <Fields>
+        <Field name="DIAS_VALIDEZ" type="int" visibility="public" isStatic="true" isFinal="true"/>
+        <Field name="idMembresia" type="int" visibility="private"/>
+        <Field name="socio" type="Socio" visibility="private"/>
+        <Field name="cantidadPases" type="int" visibility="private"/>
+        <Field name="fechaInicio" type="LocalDate" visibility="private"/>
+        <Field name="fechaFin" type="LocalDate" visibility="private"/>
+        <Field name="costo" type="double" visibility="private"/>
+        <Field name="estado" type="boolean" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+        <Constructor visibility="public">
+          <Argument type="Socio" name="socio"/>
+          <Argument type="int" name="cantidadPases"/>
+          <Argument type="LocalDate" name="fechaInicio"/>
+          <Argument type="double" name="costo"/>
+          <Argument type="boolean" name="estado"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="int" name="idMembresia"/>
+          <Argument type="Socio" name="socio"/>
+          <Argument type="int" name="cantidadPases"/>
+          <Argument type="LocalDate" name="fechaInicio"/>
+          <Argument type="LocalDate" name="fechaFin"/>
+          <Argument type="double" name="costo"/>
+          <Argument type="boolean" name="estado"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getIdMembresia" returnType="int" visibility="public"/>
+        <Method name="setIdMembresia" returnType="void" visibility="public">
+          <Argument type="int" name="idMembresia"/>
+        </Method>
+        <Method name="getSocio" returnType="Socio" visibility="public"/>
+        <Method name="setSocio" returnType="void" visibility="public">
+          <Argument type="Socio" name="socio"/>
+        </Method>
+        <Method name="getCantidadPases" returnType="int" visibility="public"/>
+        <Method name="setCantidadPases" returnType="void" visibility="public">
+          <Argument type="int" name="cantidadPases"/>
+        </Method>
+        <Method name="getFechaInicio" returnType="LocalDate" visibility="public"/>
+        <Method name="setFechaInicio" returnType="void" visibility="public">
+          <Argument type="LocalDate" name="fechaInicio"/>
+        </Method>
+        <Method name="getFechaFin" returnType="LocalDate" visibility="public"/>
+        <Method name="setFechaFin" returnType="void" visibility="public">
+          <Argument type="LocalDate" name="fechaFin"/>
+        </Method>
+        <Method name="getCosto" returnType="double" visibility="public"/>
+        <Method name="setCosto" returnType="void" visibility="public">
+          <Argument type="double" name="costo"/>
+        </Method>
+        <Method name="isEstado" returnType="boolean" visibility="public"/>
+        <Method name="setEstado" returnType="void" visibility="public">
+          <Argument type="boolean" name="estado"/>
+        </Method>
+        <Method name="estaVigente" returnType="boolean" visibility="public"/>
+        <Method name="tienePases" returnType="boolean" visibility="public"/>
+        <Method name="descontarPase" returnType="boolean" visibility="public"/>
+        <Method name="toString" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="Socio" package="entidades" visibility="public" xPosition="686.0" yPosition="529.0">
+      <Fields>
+        <Field name="idSocio" type="int" visibility="private"/>
+        <Field name="dni" type="String" visibility="private"/>
+        <Field name="nombre" type="String" visibility="private"/>
+        <Field name="apellido" type="String" visibility="private"/>
+        <Field name="edad" type="int" visibility="private"/>
+        <Field name="correo" type="String" visibility="private"/>
+        <Field name="telefono" type="String" visibility="private"/>
+        <Field name="estado" type="boolean" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+        <Constructor visibility="public">
+          <Argument type="String" name="dni"/>
+          <Argument type="String" name="nombre"/>
+          <Argument type="String" name="apellido"/>
+          <Argument type="int" name="edad"/>
+          <Argument type="String" name="correo"/>
+          <Argument type="String" name="telefono"/>
+          <Argument type="boolean" name="estado"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="int" name="idSocio"/>
+          <Argument type="String" name="dni"/>
+          <Argument type="String" name="nombre"/>
+          <Argument type="String" name="apellido"/>
+          <Argument type="int" name="edad"/>
+          <Argument type="String" name="correo"/>
+          <Argument type="String" name="telefono"/>
+          <Argument type="boolean" name="estado"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getIdSocio" returnType="int" visibility="public"/>
+        <Method name="setIdSocio" returnType="void" visibility="public">
+          <Argument type="int" name="idSocio"/>
+        </Method>
+        <Method name="getDni" returnType="String" visibility="public"/>
+        <Method name="setDni" returnType="void" visibility="public">
+          <Argument type="String" name="dni"/>
+        </Method>
+        <Method name="getNombre" returnType="String" visibility="public"/>
+        <Method name="setNombre" returnType="void" visibility="public">
+          <Argument type="String" name="nombre"/>
+        </Method>
+        <Method name="getApellido" returnType="String" visibility="public"/>
+        <Method name="setApellido" returnType="void" visibility="public">
+          <Argument type="String" name="apellido"/>
+        </Method>
+        <Method name="getEdad" returnType="int" visibility="public"/>
+        <Method name="setEdad" returnType="void" visibility="public">
+          <Argument type="int" name="edad"/>
+        </Method>
+        <Method name="getCorreo" returnType="String" visibility="public"/>
+        <Method name="setCorreo" returnType="void" visibility="public">
+          <Argument type="String" name="correo"/>
+        </Method>
+        <Method name="getTelefono" returnType="String" visibility="public"/>
+        <Method name="setTelefono" returnType="void" visibility="public">
+          <Argument type="String" name="telefono"/>
+        </Method>
+        <Method name="isEstado" returnType="boolean" visibility="public"/>
+        <Method name="setEstado" returnType="void" visibility="public">
+          <Argument type="boolean" name="estado"/>
+        </Method>
+        <Method name="toString" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <UseRelation source="entidades.Asistencias" target="entidades.Clases" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="socio" source="entidades.Pases" target="entidades.Socio" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="entidades.Asistencias" target="entidades.Socio" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="clase" source="entidades.Asistencias" target="entidades.Clases" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="entidades.Pases" target="entidades.Socio" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="entrenador" source="entidades.Clases" target="entidades.Entrenadores" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="entidades.Clases" target="entidades.Entrenadores" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="socio" source="entidades.Asistencias" target="entidades.Socio" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+  </ClassDiagramRelations>
+</ClassDiagram>
