@@ -15,19 +15,19 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
      */
     public PrincipalSocios() {
         initComponents();
-try {
-    java.net.URL rutaImagen = getClass().getClassLoader().getResource("imagenes/fondo.jpg");
-    if (rutaImagen != null) {
-        ImageIcon iconoOriginal = new ImageIcon(rutaImagen);
-        Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(490, 402, Image.SCALE_SMOOTH);
-        labelFondo.setIcon(new ImageIcon(imagenEscalada));
-        labelFondo.setBounds(0, 0, 490, 402);
-        this.getContentPane().setComponentZOrder(labelFondo, this.getContentPane().getComponentCount() - 1);
-        labelFondo.setEnabled(false);
-        
-    }
-} catch (Exception e) {
-    }
+//try {
+//    java.net.URL rutaImagen = getClass().getClassLoader().getResource("imagenes/fondo.jpg");
+//    if (rutaImagen != null) {
+//        ImageIcon iconoOriginal = new ImageIcon(rutaImagen);
+//        Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(490, 402, Image.SCALE_SMOOTH);
+//        labelFondo.setIcon(new ImageIcon(imagenEscalada));
+//        labelFondo.setBounds(0, 0, 490, 402);
+//        this.getContentPane().setComponentZOrder(labelFondo, this.getContentPane().getComponentCount() - 1);
+//        labelFondo.setEnabled(false);
+//        
+//    }
+//} catch (Exception e) {
+//    }
     }
 
     /**
@@ -44,10 +44,8 @@ try {
         jButton3 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        labelFondo = new javax.swing.JLabel();
 
         setTitle("Gestion de Socios");
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btn_volver.setText("Volver");
         btn_volver.addActionListener(new java.awt.event.ActionListener() {
@@ -55,30 +53,63 @@ try {
                 btn_volverActionPerformed(evt);
             }
         });
-        getContentPane().add(btn_volver, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 10, -1, -1));
 
         jButton4.setBackground(new java.awt.Color(204, 204, 204));
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/listar_usuario.png"))); // NOI18N
         jButton4.setText("Listado Socios");
-        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 230, -1, -1));
 
         jButton3.setBackground(new java.awt.Color(204, 204, 204));
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/modificar_usuario.png"))); // NOI18N
         jButton3.setText("Modificar Socio");
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 230, -1, -1));
 
         jButton2.setBackground(new java.awt.Color(204, 204, 204));
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/baja_usuario.png"))); // NOI18N
         jButton2.setText("Baja Socio      ");
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 120, -1, -1));
 
         jButton1.setBackground(new java.awt.Color(204, 204, 204));
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/agregar_usuario.png"))); // NOI18N
         jButton1.setText("Registrar Socio");
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 120, -1, -1));
-        getContentPane().add(labelFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 491, 400));
-        labelFondo.getAccessibleContext().setAccessibleName("");
-        labelFondo.setRequestFocusEnabled(false);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(410, 410, 410)
+                        .addComponent(btn_volver))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(270, 270, 270)
+                        .addComponent(jButton2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(80, 80, 80)
+                        .addComponent(jButton3)
+                        .addGap(40, 40, 40)
+                        .addComponent(jButton4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(80, 80, 80)
+                        .addComponent(jButton1)))
+                .addGap(10, 10, 10))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(btn_volver)
+                        .addGap(87, 87, 87)
+                        .addComponent(jButton2)
+                        .addGap(71, 71, 71)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3)
+                            .addComponent(jButton4)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(120, 120, 120)
+                        .addComponent(jButton1)))
+                .addGap(133, 133, 133))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -97,6 +128,5 @@ try {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JLabel labelFondo;
     // End of variables declaration//GEN-END:variables
 }

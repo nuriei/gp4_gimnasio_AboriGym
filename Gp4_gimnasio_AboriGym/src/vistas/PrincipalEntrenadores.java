@@ -18,19 +18,19 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
      */
     public PrincipalEntrenadores() {
         initComponents();
-        try {
-    java.net.URL rutaImagen = getClass().getClassLoader().getResource("imagenes/fondo.jpg");
-    if (rutaImagen != null) {
-        ImageIcon iconoOriginal = new ImageIcon(rutaImagen);
-        Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(490, 402, Image.SCALE_SMOOTH);
-        labelFondo.setIcon(new ImageIcon(imagenEscalada));
-        labelFondo.setBounds(0, 0, 490, 402);
-        this.getContentPane().setComponentZOrder(labelFondo, this.getContentPane().getComponentCount() - 1);
-        labelFondo.setEnabled(false);
-        
-    }
-} catch (Exception e) {
-    }
+//        try {
+//    java.net.URL rutaImagen = getClass().getClassLoader().getResource("imagenes/fondo.jpg");
+//    if (rutaImagen != null) {
+//        ImageIcon iconoOriginal = new ImageIcon(rutaImagen);
+//        Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(490, 402, Image.SCALE_SMOOTH);
+//        labelFondo.setIcon(new ImageIcon(imagenEscalada));
+//        labelFondo.setBounds(0, 0, 490, 402);
+//        this.getContentPane().setComponentZOrder(labelFondo, this.getContentPane().getComponentCount() - 1);
+//        labelFondo.setEnabled(false);
+//        
+//    }
+//} catch (Exception e) {
+//    }
     }
 
     /**
@@ -47,10 +47,8 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         btn_registrar = new javax.swing.JButton();
         btn_Modificar = new javax.swing.JButton();
         btn_Listar = new javax.swing.JButton();
-        labelFondo = new javax.swing.JLabel();
 
         setTitle("Gestion Entrenadores");
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btn_volver.setText("Volver");
         btn_volver.addActionListener(new java.awt.event.ActionListener() {
@@ -58,30 +56,63 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
                 btn_volverActionPerformed(evt);
             }
         });
-        getContentPane().add(btn_volver, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 10, -1, -1));
 
         btn_Baja.setBackground(new java.awt.Color(204, 204, 204));
         btn_Baja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/baja_usuario.png"))); // NOI18N
         btn_Baja.setText("Baja Entrenador      ");
-        getContentPane().add(btn_Baja, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 120, -1, -1));
 
         btn_registrar.setBackground(new java.awt.Color(204, 204, 204));
         btn_registrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/agregar_usuario.png"))); // NOI18N
         btn_registrar.setText("Registrar Entrenador");
-        getContentPane().add(btn_registrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 120, -1, -1));
 
         btn_Modificar.setBackground(new java.awt.Color(204, 204, 204));
         btn_Modificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/modificar_usuario.png"))); // NOI18N
         btn_Modificar.setText("Modificar Entrenador");
-        getContentPane().add(btn_Modificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 230, -1, -1));
 
         btn_Listar.setBackground(new java.awt.Color(204, 204, 204));
         btn_Listar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/listar_usuario.png"))); // NOI18N
         btn_Listar.setText("Lista Entrenadores  ");
-        getContentPane().add(btn_Listar, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 230, -1, -1));
 
-        labelFondo.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        getContentPane().add(labelFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 491, 401));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(410, 410, 410)
+                        .addComponent(btn_volver))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(btn_registrar)
+                        .addGap(35, 35, 35)
+                        .addComponent(btn_Baja))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(btn_Modificar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(270, 270, 270)
+                        .addComponent(btn_Listar)))
+                .addGap(9, 9, 9))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(btn_volver)
+                        .addGap(87, 87, 87)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btn_registrar)
+                            .addComponent(btn_Baja))
+                        .addGap(71, 71, 71)
+                        .addComponent(btn_Modificar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(230, 230, 230)
+                        .addComponent(btn_Listar)))
+                .addGap(134, 134, 134))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -99,6 +130,5 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
     private javax.swing.JButton btn_Modificar;
     private javax.swing.JButton btn_registrar;
     private javax.swing.JButton btn_volver;
-    private javax.swing.JLabel labelFondo;
     // End of variables declaration//GEN-END:variables
 }

@@ -18,19 +18,19 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
      */
     public PrincipalClases() {
         initComponents();
-         try {
-    java.net.URL rutaImagen = getClass().getClassLoader().getResource("imagenes/fondo.jpg");
-    if (rutaImagen != null) {
-        ImageIcon iconoOriginal = new ImageIcon(rutaImagen);
-        Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(490, 402, Image.SCALE_SMOOTH);
-        labelFondo.setIcon(new ImageIcon(imagenEscalada));
-        labelFondo.setBounds(0, 0, 490, 402);
-        this.getContentPane().setComponentZOrder(labelFondo, this.getContentPane().getComponentCount() - 1);
-        labelFondo.setEnabled(false);
-        
-    }
-} catch (Exception e) {
-    }
+//         try {
+//    java.net.URL rutaImagen = getClass().getClassLoader().getResource("imagenes/fondo.jpg");
+//    if (rutaImagen != null) {
+//        ImageIcon iconoOriginal = new ImageIcon(rutaImagen);
+//        Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(490, 402, Image.SCALE_SMOOTH);
+//        labelFondo.setIcon(new ImageIcon(imagenEscalada));
+//        labelFondo.setBounds(0, 0, 490, 402);
+//        this.getContentPane().setComponentZOrder(labelFondo, this.getContentPane().getComponentCount() - 1);
+//        labelFondo.setEnabled(false);
+//        
+//    }
+//} catch (Exception e) {
+//    }
     }
 
     /**
@@ -43,10 +43,8 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         btn_volver = new javax.swing.JButton();
-        labelFondo = new javax.swing.JLabel();
 
         setTitle("Gestion de Clases");
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btn_volver.setText("Volver");
         btn_volver.addActionListener(new java.awt.event.ActionListener() {
@@ -54,10 +52,23 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
                 btn_volverActionPerformed(evt);
             }
         });
-        getContentPane().add(btn_volver, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 10, -1, -1));
 
-        labelFondo.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        getContentPane().add(labelFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 491, 401));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(410, 410, 410)
+                .addComponent(btn_volver)
+                .addGap(9, 9, 9))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(btn_volver)
+                .addGap(371, 371, 371))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -71,6 +82,5 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_volver;
-    private javax.swing.JLabel labelFondo;
     // End of variables declaration//GEN-END:variables
 }
