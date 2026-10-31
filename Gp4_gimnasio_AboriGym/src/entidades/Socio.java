@@ -2,7 +2,7 @@
 package entidades;
 
 public class Socio {
-     private int idSocio;
+    private int idSocio;
     private String dni;
     private String nombre;
     private String apellido;
