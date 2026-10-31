@@ -24,7 +24,8 @@ public class EntrenadorData {
     }
  
     // ALTA: INSERT
-    public void guardarEntrenador(Entrenadores entrenador) {
+// ALTA: INSERT
+    public void guardarEntrenador(Entrenadores entrenador) throws SQLException {
         String sql = "INSERT INTO entrenadores (dni, nombre, apellido, especialidad, estado) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, entrenador.getDni());
@@ -42,6 +43,7 @@ public class EntrenadorData {
             }
         } catch (SQLException ex) {
             System.out.println("Error al guardar el entrenador: " + ex.getMessage());
+            throw ex; // <-- Esto es clave para que la vista se entere de que falló el SQL
         }
     }
  

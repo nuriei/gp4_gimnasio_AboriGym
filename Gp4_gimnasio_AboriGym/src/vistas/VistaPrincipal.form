@@ -71,7 +71,7 @@
                       <Component id="btnSocios" max="32767" attributes="0"/>
                       <Component id="btnPases" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="65" max="32767" attributes="0"/>
+                  <EmptySpace pref="264" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="btnEntrenadores" max="32767" attributes="0"/>
                       <Component id="btnClases" max="32767" attributes="0"/>
@@ -88,7 +88,7 @@
                       <Component id="btnEntrenadores" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnSocios" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="237" max="32767" attributes="0"/>
+                  <EmptySpace pref="560" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnPases" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnClases" alignment="3" min="-2" max="-2" attributes="0"/>
