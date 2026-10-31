@@ -179,5 +179,33 @@ public class EntrenadorData {
         e.setEstado(rs.getBoolean("estado"));
         return e;
     }
+    // listar entrenadores que esten activos 
+    public List<Entrenadores> listarActivos() {
+        String sql = "SELECT * FROM entrenadores WHERE estado = 1";
+        List<Entrenadores> lista = new ArrayList<>();
+        try (PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(mapearEntrenador(rs));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al listar entrenadores activos: " + ex.getMessage());
+        }
+        return lista;
+    }
+    //listar entrenadores que estan inactivos
+    public List<Entrenadores> listarInactivos() {
+        String sql = "SELECT * FROM entrenadores WHERE estado = 0";
+        List<Entrenadores> lista = new ArrayList<>();
+        try (PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(mapearEntrenador(rs));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al listar entrenadores inactivos: " + ex.getMessage());
+        }
+        return lista;
+    }
 }
 
