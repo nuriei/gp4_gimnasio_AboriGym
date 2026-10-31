@@ -19,6 +19,57 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
     
     public PrincipalEntrenadores() {
         initComponents();
+        // --- FILTRO PARA PERMITIR SOLO NÚMEROS EN EL DNI ---
+        ((javax.swing.text.AbstractDocument) txtDni.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
+            @Override
+            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
+                if (string != null && string.matches("\\d*")) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
+                if (text != null && text.matches("\\d*")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+        // --- FILTRO SOLO LETRAS Y ESPACIOS PARA EL NOMBRE ---
+        ((javax.swing.text.AbstractDocument) txtNombre.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
+            @Override
+            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
+                if (string != null && string.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
+                if (text != null && text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+
+        // --- FILTRO SOLO LETRAS Y ESPACIOS PARA EL APELLIDO ---
+        ((javax.swing.text.AbstractDocument) txtApellido.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
+            @Override
+            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
+                if (string != null && string.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
+                if (text != null && text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+        // ----------------------------------------------------
+        
  // --- CONFIGURACIÓN DE LÍMITES Y FECHA INICIAL DEL JDATECHOOSER ---
     java.time.LocalDate hoy = java.time.LocalDate.now();
     
@@ -298,7 +349,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jbNuevo)
-                .addGap(75, 75, 75))
+                .addGap(69, 69, 69))
         );
         PanelBuscarLayout.setVerticalGroup(
             PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -307,14 +358,14 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(txtBuscarPorNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jbNuevo)
+                .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(PanelBuscarLayout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtBuscarPorID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtBuscarPorNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8))
+                    .addComponent(jbNuevo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtBuscarPorID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbBuscar)
@@ -646,32 +697,41 @@ int fila = tablaEntrenadores.getSelectedRow();
     }//GEN-LAST:event_jBAltaActionPerformed
 
     private void jbBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBuscarActionPerformed
-        String dniBuscado = txtBuscarPorNombre.getText().trim(); // Asumiendo que este campo es para DNI o nombre
-    String idBuscado = txtBuscarPorID.getText().trim(); // Campo para ID
+    String nombreBuscado = txtBuscarPorNombre.getText().trim(); // Campo para Nombre
+    String idBuscado = txtBuscarPorID.getText().trim();        // Campo para ID
     
     modeloTabla.setRowCount(0); // Limpio la tabla
 
-    // Si escriben DNI (o nombre, según prefieras mapear)
-    if (!dniBuscado.isEmpty() && idBuscado.isEmpty()) {
-        // Usamos buscarEntrenadorPorDni que ya tenés en EntrenadorData
-        Entrenadores e = entrenadorData.buscarEntrenadorPorDni(dniBuscado);
+    // Si escriben en el campo de nombre (búsqueda parcial)
+    if (!nombreBuscado.isEmpty() && idBuscado.isEmpty()) {
+        if (nombreBuscado.matches(".*\\d.*")) {
+            JOptionPane.showMessageDialog(this, "El campo de búsqueda por nombre solo debe contener letras.", "Error de formato", JOptionPane.WARNING_MESSAGE);
+            cargarEntrenadores(); // Recargamos la tabla completa
+            return;
+        }
         
-        if (e != null) {
-            modeloTabla.addRow(new Object[]{
-                e.getIdEntrenadores(),
-                e.getDni(),
-                e.getNombre(),
-                e.getApellido(),
-                e.getEspecialidad(),
-                e.isEstado() ? "Activo" : "Inactivo"
-            });
+        // Usamos listarEntrenadoresPorNombre para traer coincidencias
+        List<Entrenadores> lista = entrenadorData.listarEntrenadoresPorNombre(nombreBuscado);
+        
+        if (!lista.isEmpty()) {
+            for (Entrenadores e : lista) {
+                modeloTabla.addRow(new Object[]{
+                    e.getIdEntrenadores(),
+                    e.getDni(),
+                    e.getNombre(),
+                    e.getApellido(),
+                    e.getEspecialidad(),
+                    e.isEstado() ? "Activo" : "Inactivo"
+                });
+            }
         } else {
-            JOptionPane.showMessageDialog(this, "No se encontró ningún entrenador con ese DNI.");
-            cargarEntrenadores(); // Recarga la tabla nuevamente
+            // 🛑 ESTE ES EL CARTEL QUE SALTA CUANDO NO ENCUENTRA NADA CON LO QUE BUSCARON
+            JOptionPane.showMessageDialog(this, "No se encontró ningún entrenador con el nombre: " + nombreBuscado, "Sin resultados", JOptionPane.INFORMATION_MESSAGE);
+            cargarEntrenadores(); // Recarga la tabla nuevamente con todos
         }
     }
     // Si se busca por ID
-    else if (!idBuscado.isEmpty() && dniBuscado.isEmpty()) {
+    else if (!idBuscado.isEmpty() && nombreBuscado.isEmpty()) {
         try {
             int id = Integer.parseInt(idBuscado);
             Entrenadores e = entrenadorData.buscarEntrenadorPorId(id);
@@ -691,6 +751,8 @@ int fila = tablaEntrenadores.getSelectedRow();
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "El ID debe ser numérico.");
+            txtBuscarPorID.setText("");
+            
         }
     }
     // Si no hay texto en ningún campo o hay en ambos
