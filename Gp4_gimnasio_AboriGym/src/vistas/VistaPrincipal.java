@@ -45,6 +45,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
         btnSocios = new javax.swing.JButton();
         btnEntrenadores = new javax.swing.JButton();
         btnPases = new javax.swing.JButton();
+        jBSalir = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -94,38 +95,57 @@ public class VistaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        jBSalir.setBackground(new java.awt.Color(153, 153, 153));
+        jBSalir.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jBSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/exit.png"))); // NOI18N
+        jBSalir.setText("Salir");
+        jBSalir.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jBSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBSalirActionPerformed(evt);
+            }
+        });
+
         escritorio.setLayer(btnClases, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(btnSocios, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(btnEntrenadores, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(btnPases, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        escritorio.setLayer(jBSalir, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout escritorioLayout = new javax.swing.GroupLayout(escritorio);
         escritorio.setLayout(escritorioLayout);
         escritorioLayout.setHorizontalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(escritorioLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnSocios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnPases, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
-                .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnEntrenadores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnClases, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
+                .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(escritorioLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jBSalir))
+                    .addGroup(escritorioLayout.createSequentialGroup()
+                        .addGap(47, 47, 47)
+                        .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnPases, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSocios))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 259, Short.MAX_VALUE)
+                        .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnEntrenadores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnClases, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(35, 35, 35))
         );
         escritorioLayout.setVerticalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
-                .addGap(43, 43, 43)
+                .addGap(103, 103, 103)
                 .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEntrenadores)
-                    .addComponent(btnSocios))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 237, Short.MAX_VALUE)
+                    .addComponent(btnSocios)
+                    .addComponent(btnEntrenadores))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 447, Short.MAX_VALUE)
                 .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPases)
-                    .addComponent(btnClases))
-                .addGap(43, 43, 43))
+                    .addComponent(btnClases)
+                    .addComponent(btnPases))
+                .addGap(84, 84, 84)
+                .addComponent(jBSalir)
+                .addGap(18, 18, 18))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -182,6 +202,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnClasesActionPerformed
 
+    private void jBSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBSalirActionPerformed
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_jBSalirActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -223,6 +248,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnPases;
     private javax.swing.JButton btnSocios;
     private javax.swing.JDesktopPane escritorio;
+    private javax.swing.JButton jBSalir;
     private javax.swing.JFrame jFrame1;
     // End of variables declaration//GEN-END:variables
 }

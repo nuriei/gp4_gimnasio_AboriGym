@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package persistencia;
 
 import entidades.Entrenadores;   
@@ -24,13 +21,14 @@ public class EntrenadorData {
     }
  
     // ALTA: INSERT
-    public void guardarEntrenador(Entrenadores entrenador) {
+// ALTA: INSERT
+    public void guardarEntrenador(Entrenadores entrenador) throws SQLException {
         String sql = "INSERT INTO entrenadores (dni, nombre, apellido, especialidad, estado) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, entrenador.getDni());
             ps.setString(2, entrenador.getNombre());
             ps.setString(3, entrenador.getApellido());
-            ps.setString(4, entrenador.getEspecialidad());
+            ps.setString(4, entrenador.getEspecialidad().name());
             ps.setBoolean(5, entrenador.isEstado());
  
             ps.executeUpdate();
@@ -42,6 +40,7 @@ public class EntrenadorData {
             }
         } catch (SQLException ex) {
             System.out.println("Error al guardar el entrenador: " + ex.getMessage());
+            throw ex; // <-- Esto es clave para que la vista se entere de que falló el SQL
         }
     }
  
@@ -52,7 +51,7 @@ public class EntrenadorData {
             ps.setString(1, entrenador.getDni());
             ps.setString(2, entrenador.getNombre());
             ps.setString(3, entrenador.getApellido());
-            ps.setString(4, entrenador.getEspecialidad());
+            ps.setString(4, entrenador.getEspecialidad().name());
             ps.setBoolean(5, entrenador.isEstado());
             ps.setInt(6, entrenador.getIdEntrenadores());
  
@@ -137,6 +136,24 @@ public class EntrenadorData {
     }
  
     // LISTADOS
+    
+    // Listar entrenadores filtrando por nombre (búsqueda parcial)
+    public List<Entrenadores> listarEntrenadoresPorNombre(String textoBusqueda) {
+        String sql = "SELECT * FROM entrenadores WHERE nombre LIKE ?";
+        List<Entrenadores> lista = new ArrayList<>();
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            // Los '%' permiten buscar cualquier coincidencia que contenga las letras escritas
+            ps.setString(1, "%" + textoBusqueda + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapearEntrenador(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al buscar entrenadores por nombre: " + ex.getMessage());
+        }
+        return lista;
+    }
     public List<Entrenadores> listarEntrenadores() {
         String sql = "SELECT * FROM entrenadores";
         List<Entrenadores> lista = new ArrayList<>();
@@ -175,9 +192,53 @@ public class EntrenadorData {
         e.setDni(rs.getString("dni"));
         e.setNombre(rs.getString("nombre"));
         e.setApellido(rs.getString("apellido"));
-        e.setEspecialidad(rs.getString("especialidad"));
+        String espStr = rs.getString("especialidad");
+        e.setEspecialidad(entidades.Especialidad.valueOf(espStr));
         e.setEstado(rs.getBoolean("estado"));
         return e;
     }
+    // listar entrenadores que esten activos 
+    public List<Entrenadores> listarActivos() {
+        String sql = "SELECT * FROM entrenadores WHERE estado = 1";
+        List<Entrenadores> lista = new ArrayList<>();
+        try (PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(mapearEntrenador(rs));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al listar entrenadores activos: " + ex.getMessage());
+        }
+        return lista;
+    }
+    //listar entrenadores que estan inactivos
+    public List<Entrenadores> listarInactivos() {
+        String sql = "SELECT * FROM entrenadores WHERE estado = 0";
+        List<Entrenadores> lista = new ArrayList<>();
+        try (PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(mapearEntrenador(rs));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al listar entrenadores inactivos: " + ex.getMessage());
+        }
+        return lista;
+    }
+    public List<Entrenadores> listarPorEspecialidad(entidades.Especialidad especialidad) {
+    String sql = "SELECT * FROM entrenadores WHERE especialidad = ? AND estado = 1";
+    List<Entrenadores> lista = new ArrayList<>();
+    try (PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, especialidad.name()); // Pasamos el nombre del enum
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(mapearEntrenador(rs));
+            }
+        }
+    } catch (SQLException ex) {
+        System.out.println("Error al listar entrenadores por especialidad: " + ex.getMessage());
+    }
+    return lista;
+}
 }
 
