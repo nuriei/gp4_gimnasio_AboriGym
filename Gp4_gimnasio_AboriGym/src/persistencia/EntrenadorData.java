@@ -136,6 +136,24 @@ public class EntrenadorData {
     }
  
     // LISTADOS
+    
+    // Listar entrenadores filtrando por nombre (búsqueda parcial)
+    public List<Entrenadores> listarEntrenadoresPorNombre(String textoBusqueda) {
+        String sql = "SELECT * FROM entrenadores WHERE nombre LIKE ?";
+        List<Entrenadores> lista = new ArrayList<>();
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            // Los '%' permiten buscar cualquier coincidencia que contenga las letras escritas
+            ps.setString(1, "%" + textoBusqueda + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapearEntrenador(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al buscar entrenadores por nombre: " + ex.getMessage());
+        }
+        return lista;
+    }
     public List<Entrenadores> listarEntrenadores() {
         String sql = "SELECT * FROM entrenadores";
         List<Entrenadores> lista = new ArrayList<>();
