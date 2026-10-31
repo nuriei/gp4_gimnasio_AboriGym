@@ -3,6 +3,7 @@ package vistas;
 import entidades.Entrenadores;
 import entidades.Socio;
 import java.awt.Image;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -571,7 +572,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBuscarActionPerformed
-        String nombreBuscado = txtBuscarPorNombre.getText().trim(); // Campo para Nombre
+ String nombreBuscado = txtBuscarPorNombre.getText().trim(); // Campo para Nombre
         String idBuscado = txtBuscarPorID.getText().trim();        // Campo para ID
 
         modeloTabla.setRowCount(0); // Limpio la tabla
@@ -580,57 +581,57 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         if (!nombreBuscado.isEmpty() && idBuscado.isEmpty()) {
             if (nombreBuscado.matches(".*\\d.*")) {
                 JOptionPane.showMessageDialog(this, "El campo de búsqueda por nombre solo debe contener letras.", "Error de formato", JOptionPane.WARNING_MESSAGE);
-                cargarEntrenadores(); // Recargamos la tabla completa
+                cargarSocios(); // Recargamos la tabla completa
                 return;
             }
 
-            // Usamos listarEntrenadoresPorNombre para traer coincidencias
-            List<Entrenadores> lista = entrenadorData.listarEntrenadoresPorNombre(nombreBuscado);
+            // Usamos listarSociosPorNombre para traer coincidencias
+            List<Socio> lista = socioData.listarSociosPorNombre(nombreBuscado);
 
             if (!lista.isEmpty()) {
-                for (Entrenadores e : lista) {
+                for (Socio s : lista) {
                     modeloTabla.addRow(new Object[]{
-                        e.getIdEntrenadores(),
-                        e.getDni(),
-                        e.getNombre(),
-                        e.getApellido(),
-                        e.getEspecialidad(),
-                        e.isEstado() ? "Activo" : "Inactivo"
+                        s.getIdSocio(),
+                        s.getDni(),
+                        s.getNombre(),
+                        s.getApellido(),
+                        s.getEdad(),
+                        s.isEstado() ? "Activo" : "Inactivo"
                     });
                 }
             } else {
-                // 🛑 ESTE ES EL CARTEL QUE SALTA CUANDO NO ENCUENTRA NADA CON LO QUE BUSCARON
-                JOptionPane.showMessageDialog(this, "No se encontró ningún entrenador con el nombre: " + nombreBuscado, "Sin resultados", JOptionPane.INFORMATION_MESSAGE);
-                cargarEntrenadores(); // Recarga la tabla nuevamente con todos
+                JOptionPane.showMessageDialog(this, "No se encontró ningún socio con el nombre: " + nombreBuscado, "Sin resultados", JOptionPane.INFORMATION_MESSAGE);
+                cargarSocios(); // Recarga la tabla nuevamente con todos
             }
-        } // Si se busca por ID
+        } 
+        // Si se busca por ID
         else if (!idBuscado.isEmpty() && nombreBuscado.isEmpty()) {
             try {
                 int id = Integer.parseInt(idBuscado);
-                Entrenadores e = entrenadorData.buscarEntrenadorPorId(id);
+                Socio s = socioData.buscarSocioPorId(id);
 
-                if (e != null) {
+                if (s != null) {
                     modeloTabla.addRow(new Object[]{
-                        e.getIdEntrenadores(),
-                        e.getDni(),
-                        e.getNombre(),
-                        e.getApellido(),
-                        e.getEspecialidad(),
-                        e.isEstado() ? "Activo" : "Inactivo"
+                        s.getIdSocio(),
+                        s.getDni(),
+                        s.getNombre(),
+                        s.getApellido(),
+                        s.getEdad(),
+                        s.isEstado() ? "Activo" : "Inactivo"
                     });
                 } else {
-                    JOptionPane.showMessageDialog(this, "No existe un entrenador con ese ID.");
-                    cargarEntrenadores();
+                    JOptionPane.showMessageDialog(this, "No existe un socio con ese ID.");
+                    cargarSocios();
                 }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "El ID debe ser numérico.");
                 txtBuscarPorID.setText("");
-
             }
-        } // Si no hay texto en ningún campo o hay en ambos
+        } 
+        // Si no hay texto en ningún campo o hay en ambos
         else {
             JOptionPane.showMessageDialog(this, "Por favor, ingrese un solo valor a buscar por vez.");
-            cargarEntrenadores();
+            cargarSocios();
         }
     }//GEN-LAST:event_jbBuscarActionPerformed
 
