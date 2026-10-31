@@ -8,25 +8,26 @@ public class Entrenadores {
     private String dni;
     private String nombre;
     private String apellido;
-    private String especialidad;
+    private Especialidad especialidad;
     private boolean estado;
 
     public Entrenadores() {
     }
 
-    public Entrenadores(String dni, String nombre, String apellido,
-                      String especialidad, boolean estado) {
+    public Entrenadores(int idEntrenador, String dni, String nombre, String apellido, Especialidad especialidad, boolean estado) {
+        this.idEntrenador = idEntrenador;
         this.dni = dni;
         this.nombre = nombre;
         this.apellido = apellido;
         this.especialidad = especialidad;
         this.estado = estado;
     }
-
-    public Entrenadores(int idEntrenador, String dni, String nombre, String apellido,
-                      String especialidad, boolean estado) {
-        this(dni, nombre, apellido, especialidad, estado);
-        this.idEntrenador = idEntrenador;
+    public Entrenadores(String dni, String nombre, String apellido, Especialidad especialidad, boolean estado) {
+        this.dni = dni;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.especialidad = especialidad;
+        this.estado = estado;
     }
 
     public int getIdEntrenadores() { return idEntrenador; }
@@ -41,8 +42,23 @@ public class Entrenadores {
     public String getApellido() { return apellido; }
     public void setApellido(String apellido) { this.apellido = apellido; }
 
-    public String getEspecialidad() { return especialidad; }
-    public void setEspecialidad(String especialidad) { this.especialidad = especialidad; }
+    public int getIdEntrenador() {
+        return idEntrenador;
+    }
+
+    public Especialidad getEspecialidad() {
+        return especialidad;
+    }
+
+    public void setIdEntrenador(int idEntrenador) {
+        this.idEntrenador = idEntrenador;
+    }
+
+    public void setEspecialidad(Especialidad especialidad) {
+        this.especialidad = especialidad;
+    }
+
+    
 
     public boolean isEstado() { return estado; }
     public void setEstado(boolean estado) { this.estado = estado; }

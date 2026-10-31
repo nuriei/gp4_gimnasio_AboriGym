@@ -2,6 +2,7 @@
 package vistas;
 
 import entidades.Entrenadores;
+import entidades.Especialidad;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -23,6 +24,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         entrenadorData = new EntrenadorData(conexion);
         
         cargarEntrenadores();
+        llenarComboEspecialidad();
         
         jbModificar.setEnabled(false);
         jBBaja.setEnabled(false);
@@ -108,8 +110,8 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
-        txtEspecialidad = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
+        comboBoxEspecialidad = new javax.swing.JComboBox<>();
 
         setTitle("Gestion Entrenadores");
 
@@ -361,6 +363,8 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel12.setText("Especialidad:");
 
+        comboBoxEspecialidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout panelFormularioLayout = new javax.swing.GroupLayout(panelFormulario);
         panelFormulario.setLayout(panelFormularioLayout);
         panelFormularioLayout.setHorizontalGroup(
@@ -378,12 +382,11 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
                             .addComponent(jLabel4)
                             .addComponent(jLabel12))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtApellido)
-                                .addComponent(txtDni)
-                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtApellido)
+                            .addComponent(txtDni)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                            .addComponent(comboBoxEspecialidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(panelFormularioLayout.createSequentialGroup()
@@ -434,9 +437,9 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12))
-                .addGap(14, 14, 14))
+                    .addComponent(jLabel12)
+                    .addComponent(comboBoxEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -521,24 +524,29 @@ int fila = tablaEntrenadores.getSelectedRow();
     }//GEN-LAST:event_jbEliminarActionPerformed
 
     private void jbModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarActionPerformed
-    // Coloca en el formulario los valores de la fila seleccionada y muestra el formulario oculto.
-    // También guarda el ID del entrenador seleccionado
-    int fila = tablaEntrenadores.getSelectedRow();
+// Coloca en el formulario los valores de la fila seleccionada y muestra el formulario oculto.
+        // También guarda el ID del entrenador seleccionado
+        int fila = tablaEntrenadores.getSelectedRow();
 
-    if (fila == -1) {
-        return;
-    }
-    
-    idEntrenadorActual = Integer.parseInt(tablaEntrenadores.getValueAt(fila, 0).toString());
+        if (fila == -1) {
+            return;
+        }
+        
+        editando = true; // Activamos el modo edición
+        idEntrenadorActual = Integer.parseInt(tablaEntrenadores.getValueAt(fila, 0).toString());
 
-    txtDni.setText(tablaEntrenadores.getValueAt(fila, 1).toString());
-    txtApellido.setText(tablaEntrenadores.getValueAt(fila, 2).toString());
-    txtNombre.setText(tablaEntrenadores.getValueAt(fila, 3).toString());
-    txtEspecialidad.setText(tablaEntrenadores.getValueAt(fila, 4).toString());
+        txtDni.setText(tablaEntrenadores.getValueAt(fila, 1).toString());
+        txtApellido.setText(tablaEntrenadores.getValueAt(fila, 2).toString());
+        txtNombre.setText(tablaEntrenadores.getValueAt(fila, 3).toString());
 
-    comboBoxEstado.setSelectedItem(tablaEntrenadores.getValueAt(fila, 5).toString());
-    
-    panelFormulario.setVisible(true);
+        // SELECCIONAMOS LA ESPECIALIDAD EN EL COMBOBOX SEGÚN LO QUE VENGA DE LA TABLA
+        String especialidadTabla = tablaEntrenadores.getValueAt(fila, 4).toString();
+        comboBoxEspecialidad.setSelectedItem(especialidadTabla);
+
+        // Estado
+        comboBoxEstado.setSelectedItem(tablaEntrenadores.getValueAt(fila, 5).toString());
+        
+        panelFormulario.setVisible(true);
     }//GEN-LAST:event_jbModificarActionPerformed
 
     private void jBBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBBajaActionPerformed
@@ -696,9 +704,13 @@ int fila = tablaEntrenadores.getSelectedRow();
 String documento = txtDni.getText().trim();
     String apellido = txtApellido.getText().trim();
     String nombre = txtNombre.getText().trim();
-    String especialidad = txtEspecialidad.getText().trim();
+    
+    // 1. OBTENEMOS LA ESPECIALIDAD SELECCIONADA DEL COMBOBOX Y LA CONVERTIMOS A NUESTRO ENUM
+    String seleccionStr = comboBoxEspecialidad.getSelectedItem().toString();
+    Especialidad especialidadSeleccionada = Especialidad.valueOf(seleccionStr);
 
-    if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty() || especialidad.isEmpty()) {
+    // Validamos que los campos obligatorios no estén vacíos
+    if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Completá todos los campos.");
         return;
     }
@@ -707,32 +719,33 @@ String documento = txtDni.getText().trim();
         boolean estado = comboBoxEstado.getSelectedItem().toString().equals("Activo");
 
         if (idEntrenadorActual == -1) {
-            // Guardar nuevo entrenador
-            Entrenadores entrenador = new Entrenadores(documento, nombre, apellido, especialidad, estado);
-            entrenadorData.guardarEntrenador(entrenador); // Si falla, salta al catch de SQL
+            // Guardar nuevo entrenador (le pasamos la especialidad seleccionada del combo)
+            Entrenadores entrenador = new Entrenadores(documento, nombre, apellido, especialidadSeleccionada, estado);
+            entrenadorData.guardarEntrenador(entrenador);
             
             JOptionPane.showMessageDialog(this, "Entrenador guardado.");
         } else {
-            // Modificar entrenador existente
-            Entrenadores entrenador = new Entrenadores(idEntrenadorActual, documento, nombre, apellido, especialidad, estado);
+            // Modificar entrenador existente (le pasamos el ID y la especialidad seleccionada)
+            Entrenadores entrenador = new Entrenadores(idEntrenadorActual, documento, nombre, apellido, especialidadSeleccionada, estado);
             entrenadorData.modificarEntrenador(entrenador);
             
             JOptionPane.showMessageDialog(this, "Entrenador modificado.");
         }
 
-        // Si llegó hasta acá sin errores, recién limpiamos y recargamos la tabla
+        // Recargamos la tabla, ocultamos el formulario y reseteamos las variables
         cargarEntrenadores();
         panelFormulario.setVisible(false);
         idEntrenadorActual = -1;
 
+        // Limpiamos los campos
         txtDni.setText("");
         txtApellido.setText("");
         txtNombre.setText("");
-        txtEspecialidad.setText("");
         comboBoxEstado.setSelectedItem("Activo");
+        // Opcional: el combo se puede dejar en la primera opción por defecto
+        comboBoxEspecialidad.setSelectedIndex(0);
 
     } catch (java.sql.SQLException e) {
-        // Acá atrapamos el error real de la Base de Datos (ej: DNI duplicado si es UNIQUE)
         JOptionPane.showMessageDialog(this, "Error en la Base de Datos: " + e.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -753,6 +766,7 @@ String documento = txtDni.getText().trim();
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btn_volver;
+    private javax.swing.JComboBox<String> comboBoxEspecialidad;
     private javax.swing.JComboBox<String> comboBoxEstado;
     private javax.swing.JButton jBAlta;
     private javax.swing.JButton jBBaja;
@@ -783,7 +797,6 @@ String documento = txtDni.getText().trim();
     private javax.swing.JTextField txtBuscarPorNombre;
     private javax.swing.JTextField txtBuscarPorNombre1;
     private javax.swing.JTextField txtDni;
-    private javax.swing.JTextField txtEspecialidad;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 private void cargarEntrenadores() {
@@ -797,6 +810,12 @@ private void cargarEntrenadores() {
             e.getEspecialidad(),
             e.isEstado() ? "Activo" : "Inactivo"
         });
+    }
+}
+private void llenarComboEspecialidad() {
+    comboBoxEspecialidad.removeAllItems(); // Limpia por las dudas
+    for (entidades.Especialidad esp : entidades.Especialidad.values()) {
+        comboBoxEspecialidad.addItem(esp.name()); // Agrega el nombre del enum como String
     }
 }
 }

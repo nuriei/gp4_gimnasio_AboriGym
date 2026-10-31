@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package persistencia;
 
 import entidades.Entrenadores;   
@@ -31,7 +28,7 @@ public class EntrenadorData {
             ps.setString(1, entrenador.getDni());
             ps.setString(2, entrenador.getNombre());
             ps.setString(3, entrenador.getApellido());
-            ps.setString(4, entrenador.getEspecialidad());
+            ps.setString(4, entrenador.getEspecialidad().name());
             ps.setBoolean(5, entrenador.isEstado());
  
             ps.executeUpdate();
@@ -54,7 +51,7 @@ public class EntrenadorData {
             ps.setString(1, entrenador.getDni());
             ps.setString(2, entrenador.getNombre());
             ps.setString(3, entrenador.getApellido());
-            ps.setString(4, entrenador.getEspecialidad());
+            ps.setString(4, entrenador.getEspecialidad().name());
             ps.setBoolean(5, entrenador.isEstado());
             ps.setInt(6, entrenador.getIdEntrenadores());
  
@@ -177,7 +174,8 @@ public class EntrenadorData {
         e.setDni(rs.getString("dni"));
         e.setNombre(rs.getString("nombre"));
         e.setApellido(rs.getString("apellido"));
-        e.setEspecialidad(rs.getString("especialidad"));
+        String espStr = rs.getString("especialidad");
+        e.setEspecialidad(entidades.Especialidad.valueOf(espStr));
         e.setEstado(rs.getBoolean("estado"));
         return e;
     }
@@ -209,5 +207,20 @@ public class EntrenadorData {
         }
         return lista;
     }
+    public List<Entrenadores> listarPorEspecialidad(entidades.Especialidad especialidad) {
+    String sql = "SELECT * FROM entrenadores WHERE especialidad = ? AND estado = 1";
+    List<Entrenadores> lista = new ArrayList<>();
+    try (PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, especialidad.name()); // Pasamos el nombre del enum
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(mapearEntrenador(rs));
+            }
+        }
+    } catch (SQLException ex) {
+        System.out.println("Error al listar entrenadores por especialidad: " + ex.getMessage());
+    }
+    return lista;
+}
 }
 
