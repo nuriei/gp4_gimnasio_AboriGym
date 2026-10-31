@@ -1,34 +1,164 @@
 package vistas;
 
 import entidades.Entrenadores;
+import entidades.Socio;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import persistencia.MiConexion;
+import persistencia.SocioData;
 
 public class PrincipalSocios extends javax.swing.JInternalFrame {
+    private SocioData socioData;
+    private DefaultTableModel modeloTabla;
+    private boolean editando = false;
+    private int idSocioActual = -1;
 
     public PrincipalSocios() {
         initComponents();
-//try {
-//    java.net.URL rutaImagen = getClass().getClassLoader().getResource("imagenes/fondo.jpg");
-//    if (rutaImagen != null) {
-//        ImageIcon iconoOriginal = new ImageIcon(rutaImagen);
-//        Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(490, 402, Image.SCALE_SMOOTH);
-//        labelFondo.setIcon(new ImageIcon(imagenEscalada));
-//        labelFondo.setBounds(0, 0, 490, 402);
-//        this.getContentPane().setComponentZOrder(labelFondo, this.getContentPane().getComponentCount() - 1);
-//        labelFondo.setEnabled(false);
-//        
-//    }
-//} catch (Exception e) {
-//    }
+        
+        ((javax.swing.text.AbstractDocument) txtDni.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
+            @Override
+            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
+                if (string != null && string.matches("\\d*")) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
+                if (text != null && text.matches("\\d*")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+
+        // --- FILTRO PARA PERMITIR SOLO NÚMEROS EN LA EDAD ---
+        ((javax.swing.text.AbstractDocument) txtEdad.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
+            @Override
+            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
+                if (string != null && string.matches("\\d*")) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
+                if (text != null && text.matches("\\d*")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+
+        // --- FILTRO SOLO LETRAS Y ESPACIOS PARA EL NOMBRE ---
+        ((javax.swing.text.AbstractDocument) txtNombre.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
+            @Override
+            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
+                if (string != null && string.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
+                if (text != null && text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+
+        // --- FILTRO SOLO LETRAS Y ESPACIOS PARA EL APELLIDO ---
+        ((javax.swing.text.AbstractDocument) txtApellido.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
+            @Override
+            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
+                if (string != null && string.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
+                if (text != null && text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+
+        btnGuardar.setEnabled(false); // Arranca apagado
+
+        javax.swing.event.DocumentListener validadorListener = new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+        };
+
+        txtDni.getDocument().addDocumentListener(validadorListener);
+        txtApellido.getDocument().addDocumentListener(validadorListener);
+        txtNombre.getDocument().addDocumentListener(validadorListener);
+        txtEdad.getDocument().addDocumentListener(validadorListener); // Incluimos edad como campo obligatorio
+
+        panelFormulario.setVisible(false);
+        modeloTabla = (DefaultTableModel) tablaSocios.getModel(); // Asegurate que tu JTable se llame tablaSocios
+        MiConexion conexion = new MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym", "root", "");
+        socioData = new SocioData(conexion);
+
+        cargarSocios();
+
+        jbModificar.setEnabled(false);
+        jBBaja.setEnabled(false);
+        jBAlta.setEnabled(false);
+        jbEliminar.setEnabled(false);
+
+        tablaSocios.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int fila = tablaSocios.getSelectedRow();
+                boolean seleccionado = fila != -1;
+
+                jbModificar.setEnabled(seleccionado);
+                jbEliminar.setEnabled(seleccionado);
+
+                // Dependiendo del estado activo o inactivo del socio se habilita el btn baja y alta
+                if (seleccionado) {
+                    String estado = tablaSocios.getValueAt(fila, 5).toString(); // Columna de Estado
+
+                    jBBaja.setEnabled(estado.equals("Activo"));
+                    jBAlta.setEnabled(estado.equals("Inactivo"));
+                } else {
+                    jBBaja.setEnabled(false);
+                    jBAlta.setEnabled(false);
+                }
+            }
+        });
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+    private void verificarCamposCompletos() {
+        boolean dniLleno = !txtDni.getText().trim().isEmpty();
+        boolean apellidoLleno = !txtApellido.getText().trim().isEmpty();
+        boolean nombreLleno = !txtNombre.getText().trim().isEmpty();
+        boolean edadLlena = !txtEdad.getText().trim().isEmpty();
+        
+        // El botón se activa solo si los campos obligatorios principales tienen texto
+        btnGuardar.setEnabled(dniLleno && apellidoLleno && nombreLleno && edadLlena);
+    }
+
+    private void cargarSocios() {
+        modeloTabla.setRowCount(0);
+        for (Socio s : socioData.listarSocios()) {
+            modeloTabla.addRow(new Object[]{
+                s.getIdSocio(),
+                s.getDni(),
+                s.getNombre(),
+                s.getApellido(),
+                s.getEdad(),
+                s.isEstado() ? "Activo" : "Inactivo"
+            });
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -66,7 +196,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         jBBaja = new javax.swing.JButton();
         jBAlta = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaEntrenadores = new javax.swing.JTable();
+        tablaSocios = new javax.swing.JTable();
         jLabel9 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         btn_volver = new javax.swing.JButton();
@@ -247,9 +377,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addComponent(txtTelefono2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txtTelefono2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelFormularioLayout.createSequentialGroup()
                         .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelFormularioLayout.createSequentialGroup()
@@ -276,13 +404,11 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                         .addGap(6, 6, 6)))
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addGap(0, 0, 0)
                         .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel10)
                             .addComponent(txtEdad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(4, 4, 4))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormularioLayout.createSequentialGroup()
-                        .addGap(0, 0, 0)
                         .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnGuardar)
                             .addComponent(btnCancelar))
@@ -331,7 +457,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
             }
         });
 
-        tablaEntrenadores.setModel(new javax.swing.table.DefaultTableModel(
+        tablaSocios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -350,7 +476,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tablaEntrenadores);
+        jScrollPane1.setViewportView(tablaSocios);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setText("Listado de Entrenadores");
@@ -409,25 +535,22 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_volver)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(panelFormulario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(PanelBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(panelLista, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                        .addContainerGap())))
             .addGroup(layout.createSequentialGroup()
                 .addGap(215, 215, 215)
                 .addComponent(jLabel5)
                 .addContainerGap(192, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_volver))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(panelFormulario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(PanelBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelLista, javax.swing.GroupLayout.PREFERRED_SIZE, 593, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -628,7 +751,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
 
     private void jbEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEliminarActionPerformed
         // TODO add your handling code here:
-        int fila = tablaEntrenadores.getSelectedRow();
+        int fila = tablaSocios.getSelectedRow();
 
         if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione un entrenador de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -636,7 +759,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         }
 
         int id = Integer.parseInt(
-            tablaEntrenadores.getValueAt(fila, 0).toString()
+            tablaSocios.getValueAt(fila, 0).toString()
         );
 
         Object[] opciones = {"Sí", "No"};
@@ -663,7 +786,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jbEliminarActionPerformed
 
     private void jbModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarActionPerformed
-        int fila = tablaEntrenadores.getSelectedRow();
+        int fila = tablaSocios.getSelectedRow();
 
         if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione un entrenador de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -671,7 +794,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         }
 
         editando = true; // Activamos el modo edición
-        idEntrenadorActual = Integer.parseInt(tablaEntrenadores.getValueAt(fila, 0).toString());
+        idEntrenadorActual = Integer.parseInt(tablaSocios.getValueAt(fila, 0).toString());
 
         // 💡 BUENAS PRÁCTICAS: Buscamos el objeto completo desde la base de datos usando el ID
         Entrenadores e = entrenadorData.buscarEntrenadorPorId(idEntrenadorActual);
@@ -694,14 +817,14 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
 
     private void jBBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBBajaActionPerformed
         // TODO add your handling code here:
-        int fila = tablaEntrenadores.getSelectedRow();
+        int fila = tablaSocios.getSelectedRow();
 
         if (fila == -1) {
             return;
         }
 
         int id = Integer.parseInt(
-            tablaEntrenadores.getValueAt(fila, 0).toString()
+            tablaSocios.getValueAt(fila, 0).toString()
         );
 
         Object[] opciones = {"Sí", "No"};
@@ -727,14 +850,14 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jBBajaActionPerformed
 
     private void jBAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAltaActionPerformed
-        int fila = tablaEntrenadores.getSelectedRow();
+        int fila = tablaSocios.getSelectedRow();
 
         if (fila == -1) {
             return;
         }
 
         int id = Integer.parseInt(
-            tablaEntrenadores.getValueAt(fila, 0).toString()
+            tablaSocios.getValueAt(fila, 0).toString()
         );
 
         Object[] opciones = {"Sí", "No"};
@@ -795,7 +918,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     private javax.swing.JButton jbNuevo;
     private javax.swing.JPanel panelFormulario;
     private javax.swing.JPanel panelLista;
-    private javax.swing.JTable tablaEntrenadores;
+    private javax.swing.JTable tablaSocios;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtBuscarPorID;
     private javax.swing.JTextField txtBuscarPorNombre;
