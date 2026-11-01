@@ -824,7 +824,7 @@ int fila = tablaSocios.getSelectedRow();
     }//GEN-LAST:event_jbModificarActionPerformed
 
     private void jBBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBBajaActionPerformed
-        // TODO add your handling code here:
+       // TODO add your handling code here:
         int fila = tablaSocios.getSelectedRow();
 
         if (fila == -1) {
@@ -839,7 +839,7 @@ int fila = tablaSocios.getSelectedRow();
 
         int respuesta = JOptionPane.showOptionDialog(
             this,
-            "¿Desea dar de baja este entrenador?",
+            "¿Desea dar de baja este socio?",
             "Confirmar baja",
             JOptionPane.YES_NO_OPTION,
             JOptionPane.QUESTION_MESSAGE,
@@ -849,11 +849,11 @@ int fila = tablaSocios.getSelectedRow();
         );
 
         if (respuesta == 0) {
-            // Usamos el objeto de entrenador y su método de baja lógica
-            entrenadorData.bajaLogicaEntrenador(id);
-            cargarEntrenadores(); // Recarga la tabla de entrenadores
+            // Usamos el objeto de socio y su método de baja lógica
+            socioData.bajaLogicaSocio(id);
+            cargarSocios(); // Recarga la tabla de socios
 
-            JOptionPane.showMessageDialog(this, "Se dio de baja al entrenador correctamente.");
+            JOptionPane.showMessageDialog(this, "Se dio de baja al socio correctamente.");
         }
     }//GEN-LAST:event_jBBajaActionPerformed
 
