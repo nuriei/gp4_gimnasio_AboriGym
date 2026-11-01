@@ -118,17 +118,14 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             .addGroup(panelFormularioLayout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel12)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel12)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelFormularioLayout.createSequentialGroup()
                         .addComponent(jRadioButton1)
                         .addGap(33, 33, 33)
-                        .addComponent(jRBInactivo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jRBInactivo)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
                     .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -229,7 +226,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jbEliminar.setBackground(new java.awt.Color(153, 153, 153));
-        jbEliminar.setText("Elimnar");
+        jbEliminar.setText("Eliminar");
         jbEliminar.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jbEliminar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jbEliminar.addActionListener(new java.awt.event.ActionListener() {
@@ -328,6 +325,8 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
+        btn_volver.setBackground(new java.awt.Color(153, 153, 153));
+        btn_volver.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         btn_volver.setText("Volver");
         btn_volver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
