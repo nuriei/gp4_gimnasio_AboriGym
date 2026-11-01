@@ -19,6 +19,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     public PrincipalSocios() {
         initComponents();
         
+  // --- FILTRO PARA PERMITIR SOLO NÚMEROS EN EL DNI ---
         ((javax.swing.text.AbstractDocument) txtDni.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
             @Override
             public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
@@ -34,7 +35,6 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                 }
             }
         });
-
         // --- FILTRO PARA PERMITIR SOLO NÚMEROS EN LA EDAD ---
         ((javax.swing.text.AbstractDocument) txtEdad.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
             @Override
@@ -51,7 +51,22 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                 }
             }
         });
+        // --- FILTRO PARA PERMITIR SOLO NÚMEROS EN EL TELÉFONO ---
+        ((javax.swing.text.AbstractDocument) txtTelefono.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
+            @Override
+            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
+                if (string != null && string.matches("\\d*")) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
 
+            @Override
+            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
+                if (text != null && text.matches("\\d*")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
         // --- FILTRO SOLO LETRAS Y ESPACIOS PARA EL NOMBRE ---
         ((javax.swing.text.AbstractDocument) txtNombre.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
             @Override
@@ -83,7 +98,9 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                 if (text != null && text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
                     super.replace(fb, offset, length, text, attrs);
                 }
+                
             }
+            
         });
 
         btnGuardar.setEnabled(false); // Arranca apagado
@@ -100,10 +117,11 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         txtDni.getDocument().addDocumentListener(validadorListener);
         txtApellido.getDocument().addDocumentListener(validadorListener);
         txtNombre.getDocument().addDocumentListener(validadorListener);
-        txtEdad.getDocument().addDocumentListener(validadorListener); // Incluimos edad como campo obligatorio
+        txtTelefono.getDocument().addDocumentListener(validadorListener);
+        txtEdad.getDocument().addDocumentListener(validadorListener); // Incluimos la edad obligatoria
 
         panelFormulario.setVisible(false);
-        modeloTabla = (DefaultTableModel) tablaSocios.getModel(); // Asegurate que tu JTable se llame tablaSocios
+        modeloTabla = (DefaultTableModel) tablaSocios.getModel();
         MiConexion conexion = new MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym", "root", "");
         socioData = new SocioData(conexion);
 
