@@ -1,14 +1,19 @@
 package pruebasMain;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+
 import persistencia.MiConexion;
 import persistencia.SocioData;
 import entidades.Socio;
+import persistencia.EntrenadorData;
+import entidades.Entrenadores;
+import entidades.Especialidad;
 
 
 public class PruebaConexion {
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  throws SQLException  {
         
         String url = "jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym";
         String usuario = "root";
@@ -49,6 +54,54 @@ public class PruebaConexion {
                 
             } else {
                 System.out.println("Error: No se pudo encontrar al socio ingresado.");
+            }
+            
+            
+            
+            System.out.println("\n--- INICIANDO PRUEBAS DE ENTRENADORES ---");
+
+            // Creamos un entrenador
+
+            EntrenadorData entrenadorData = new EntrenadorData(con);
+
+            // Busca entrenador por dni
+            Entrenadores encontrado = entrenadorData.buscarEntrenadorPorDni("30123456");
+
+            if (encontrado == null) {
+
+                Entrenadores nuevoEntrenador = new Entrenadores("30123456","Carlos","Perez",Especialidad.MUSCULACION,true);
+
+                // Damos de alta al entrenador en la bdd
+                entrenadorData.guardarEntrenador(nuevoEntrenador);
+
+                // Busca nuevamente al entrenador
+                encontrado = entrenadorData.buscarEntrenadorPorDni("30123456");
+            }
+
+            if (encontrado != null) {
+
+                System.out.println("Entrenador encontrado: "+ encontrado.getNombre() + " " + encontrado.getApellido());
+
+                // Si lo encuentra
+                //Podemos modificarlo
+                encontrado.setApellido("Gonzalez");
+                entrenadorData.modificarEntrenador(encontrado);
+
+                // Podemos darlo de baja, cambiando el estado a false
+                entrenadorData.bajaLogicaEntrenador(encontrado.getIdEntrenadores());
+
+                // Verificamos su estado en el sistema
+                Entrenadores verificado = entrenadorData.buscarEntrenadorPorDni("30123456");
+
+                System.out.println("Estado después de la baja: " + verificado.isEstado());
+
+                //Podemos darlo de alta, cambiando el estado a false
+                entrenadorData.altaLogicaEntrenador(
+                    encontrado.getIdEntrenadores()
+                );
+
+            } else {
+                System.out.println("No se encontró el entrenador.");
             }
             
             System.out.println("\n--- FIN DE LAS PRUEBAS ---");
