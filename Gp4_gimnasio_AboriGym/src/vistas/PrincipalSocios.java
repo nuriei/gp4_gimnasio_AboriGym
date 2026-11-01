@@ -19,6 +19,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     public PrincipalSocios() {
         initComponents();
         
+  // --- FILTRO PARA PERMITIR SOLO NÚMEROS EN EL DNI ---
         ((javax.swing.text.AbstractDocument) txtDni.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
             @Override
             public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
@@ -34,7 +35,6 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                 }
             }
         });
-
         // --- FILTRO PARA PERMITIR SOLO NÚMEROS EN LA EDAD ---
         ((javax.swing.text.AbstractDocument) txtEdad.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
             @Override
@@ -51,7 +51,22 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                 }
             }
         });
+        // --- FILTRO PARA PERMITIR SOLO NÚMEROS EN EL TELÉFONO ---
+        ((javax.swing.text.AbstractDocument) txtTelefono.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
+            @Override
+            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
+                if (string != null && string.matches("\\d*")) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
 
+            @Override
+            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
+                if (text != null && text.matches("\\d*")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
         // --- FILTRO SOLO LETRAS Y ESPACIOS PARA EL NOMBRE ---
         ((javax.swing.text.AbstractDocument) txtNombre.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
             @Override
@@ -83,7 +98,9 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                 if (text != null && text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
                     super.replace(fb, offset, length, text, attrs);
                 }
+                
             }
+            
         });
 
         btnGuardar.setEnabled(false); // Arranca apagado
@@ -100,10 +117,11 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         txtDni.getDocument().addDocumentListener(validadorListener);
         txtApellido.getDocument().addDocumentListener(validadorListener);
         txtNombre.getDocument().addDocumentListener(validadorListener);
-        txtEdad.getDocument().addDocumentListener(validadorListener); // Incluimos edad como campo obligatorio
+        txtTelefono.getDocument().addDocumentListener(validadorListener);
+        txtEdad.getDocument().addDocumentListener(validadorListener); // Incluimos la edad obligatoria
 
         panelFormulario.setVisible(false);
-        modeloTabla = (DefaultTableModel) tablaSocios.getModel(); // Asegurate que tu JTable se llame tablaSocios
+        modeloTabla = (DefaultTableModel) tablaSocios.getModel();
         MiConexion conexion = new MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym", "root", "");
         socioData = new SocioData(conexion);
 
@@ -190,7 +208,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         txtEdad = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         txtCorreo = new javax.swing.JTextField();
-        txtTelefono2 = new javax.swing.JTextField();
+        txtTelefono = new javax.swing.JTextField();
         panelLista = new javax.swing.JPanel();
         jbEliminar = new javax.swing.JButton();
         jbModificar = new javax.swing.JButton();
@@ -364,7 +382,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                                             .addComponent(jLabel11))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtTelefono2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(comboBoxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -378,7 +396,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtTelefono2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelFormularioLayout.createSequentialGroup()
                         .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelFormularioLayout.createSequentialGroup()
@@ -466,11 +484,11 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "id", "DNI", "Nombre", "Apellido", "Especialidad", "Estado"
+                "id", "DNI", "Nombre", "Apellido", "Edad", "Estado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, true
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -478,6 +496,9 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
             }
         });
         jScrollPane1.setViewportView(tablaSocios);
+        if (tablaSocios.getColumnModel().getColumnCount() > 0) {
+            tablaSocios.getColumnModel().getColumn(0).setPreferredWidth(1);
+        }
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setText("Listado de Entrenadores");
@@ -636,19 +657,23 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jbBuscarActionPerformed
 
     private void jbNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbNuevoActionPerformed
+        idSocioActual = -1; // Seteamos en -1 para indicar que es un socio nuevo
 
-        idEntrenadorActual = -1;
-
+        // Limpiamos todos los campos del formulario de socios
         txtDni.setText("");
-        txtApellido.setText("");
         txtNombre.setText("");
+        txtApellido.setText("");
+        txtEdad.setText("");
+        txtTelefono.setText("");
+        txtCorreo.setText("");
 
         comboBoxEstado.setSelectedItem("Activo");
-        panelFormulario.setVisible(true);
+        btnGuardar.setEnabled(false); // Arranca deshabilitado hasta que llene los obligatorios
+        panelFormulario.setVisible(true); // Mostramos el panel de registro
     }//GEN-LAST:event_jbNuevoActionPerformed
 
     private void txtBuscarPorNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarPorNombreKeyReleased
-        // TODO add your handling code here:
+// TODO add your handling code here:
         String textoBuscado = txtBuscarPorNombre.getText().trim();
 
         // Si el usuario empieza a escribir el nombre, limpiamos el campo de ID para que no se mezcle
@@ -658,21 +683,21 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
 
         modeloTabla.setRowCount(0); // Limpiamos la tabla antes de cargar resultados
 
-        // Si borra todo el texto, recargamos la lista completa de entrenadores
+        // Si borra todo el texto, recargamos la lista completa de socios
         if (textoBuscado.isEmpty()) {
-            cargarEntrenadores();
+            cargarSocios();
         } else {
-            // Buscamos los entrenadores que coincidan parcialmente con las letras escritas
-            List<Entrenadores> lista = entrenadorData.listarEntrenadoresPorNombre(textoBuscado);
+            // Buscamos los socios que coincidan parcialmente con las letras escritas
+            List<Socio> lista = socioData.listarSociosPorNombre(textoBuscado);
 
-            for (Entrenadores e : lista) {
+            for (Socio s : lista) {
                 modeloTabla.addRow(new Object[]{
-                    e.getIdEntrenadores(),
-                    e.getDni(),
-                    e.getNombre(),
-                    e.getApellido(),
-                    e.getEspecialidad(),
-                    e.isEstado() ? "Activo" : "Inactivo"
+                    s.getIdSocio(),
+                    s.getDni(),
+                    s.getNombre(),
+                    s.getApellido(),
+                    s.getEdad(),
+                    s.isEstado() ? "Activo" : "Inactivo"
                 });
             }
         }
@@ -683,61 +708,65 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         txtBuscarPorID.setText("");
         txtBuscarPorNombre.requestFocus();
 
-        cargarEntrenadores(); // Recarga la lista completa
+        cargarSocios(); // Recarga la lista completa
     }//GEN-LAST:event_jBLimpiarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        String documento = txtDni.getText().trim();
+String documento = txtDni.getText().trim();
         String apellido = txtApellido.getText().trim();
         String nombre = txtNombre.getText().trim();
+        String edadStr = txtEdad.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String correo = txtCorreo.getText().trim();
 
+        // Validación de longitud del DNI
         if (documento.length() < 7 || documento.length() > 8) {
             JOptionPane.showMessageDialog(this, "El DNI ingresado no es válido (debe tener entre 7 y 8 dígitos).", "Error en DNI", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // 1. OBTENEMOS LA ESPECIALIDAD SELECCIONADA DEL COMBOBOX Y LA CONVERTIMOS A NUESTRO ENUM
-        String seleccionStr = comboBoxEspecialidad.getSelectedItem().toString();
-        Especialidad especialidadSeleccionada = Especialidad.valueOf(seleccionStr);
-
-        // Validamos que los campos obligatorios no estén vacíos
-        if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Completá todos los campos.");
+        // Validamos que los campos obligatorios principales no estén vacíos
+        if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty() || edadStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Completá todos los campos obligatorios.");
             return;
         }
 
         try {
+            int edad = Integer.parseInt(edadStr);
             boolean estado = comboBoxEstado.getSelectedItem().toString().equals("Activo");
 
-            if (idEntrenadorActual == -1) {
-                // Guardar nuevo entrenador (le pasamos la especialidad seleccionada del combo)
-                Entrenadores entrenador = new Entrenadores(documento, nombre, apellido, especialidadSeleccionada, estado);
-                entrenadorData.guardarEntrenador(entrenador);
+            if (idSocioActual == -1) {
+                // Guardar nuevo socio
+                Socio socio = new Socio(documento, nombre, apellido, edad, correo, telefono, estado);
+                socioData.guardarSocio(socio);
 
-                JOptionPane.showMessageDialog(this, "Entrenador guardado.");
+                JOptionPane.showMessageDialog(this, "Socio guardado exitosamente.");
             } else {
-                // Modificar entrenador existente (le pasamos el ID y la especialidad seleccionada)
-                Entrenadores entrenador = new Entrenadores(idEntrenadorActual, documento, nombre, apellido, especialidadSeleccionada, estado);
-                entrenadorData.modificarEntrenador(entrenador);
+                // Modificar socio existente (pasando el ID actual)
+                Socio socio = new Socio(idSocioActual, documento, nombre, apellido, edad, correo, telefono, estado);
+                socioData.modificarSocio(socio);
 
-                JOptionPane.showMessageDialog(this, "Entrenador modificado.");
+                JOptionPane.showMessageDialog(this, "Socio modificado exitosamente.");
             }
 
             // Recargamos la tabla, ocultamos el formulario y reseteamos las variables
-            cargarEntrenadores();
+            cargarSocios();
             panelFormulario.setVisible(false);
-            idEntrenadorActual = -1;
+            idSocioActual = -1;
 
-            // Limpiamos los campos
+            // Limpiamos los campos del formulario
             txtDni.setText("");
             txtApellido.setText("");
             txtNombre.setText("");
+            txtEdad.setText("");
+            txtTelefono.setText("");
+            txtCorreo.setText("");
             comboBoxEstado.setSelectedItem("Activo");
-            // Opcional: el combo se puede dejar en la primera opción por defecto
-            comboBoxEspecialidad.setSelectedIndex(0);
+            btnGuardar.setEnabled(false);
 
-        } catch (java.sql.SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error en la Base de Datos: " + e.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "La edad debe ser un número válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            txtEdad.requestFocus();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -755,7 +784,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         int fila = tablaSocios.getSelectedRow();
 
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Por favor, seleccione un entrenador de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un socio de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -767,7 +796,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
 
         int respuesta = JOptionPane.showOptionDialog(
             this,
-            "¿Seguro desea eliminar el entrenador permanentemente de la BD?",
+            "¿Seguro desea eliminar el socio permanentemente de la BD?",
             "Confirmación",
             JOptionPane.YES_NO_OPTION,
             JOptionPane.WARNING_MESSAGE,
@@ -777,47 +806,46 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         );
 
         if (respuesta == 0) {
-            // CORRECCIÓN: pasarle 'id' en lugar de idEntrenadorActual
-            entrenadorData.borrarEntrenador(id);
+            // Llamamos al método de borrado físico en SocioData
+            socioData.borrarSocio(id);
+            
+            cargarSocios(); // Recarga la tabla de socios
 
-            cargarEntrenadores(); // Recarga la tabla de entrenadores
-
-            JOptionPane.showMessageDialog(this, "Se borró el entrenador correctamente.");
+            JOptionPane.showMessageDialog(this, "Se borró el socio correctamente.");
         }
     }//GEN-LAST:event_jbEliminarActionPerformed
 
     private void jbModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarActionPerformed
-        int fila = tablaSocios.getSelectedRow();
+int fila = tablaSocios.getSelectedRow();
 
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Por favor, seleccione un entrenador de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un socio de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         editando = true; // Activamos el modo edición
-        idEntrenadorActual = Integer.parseInt(tablaSocios.getValueAt(fila, 0).toString());
+        idSocioActual = Integer.parseInt(tablaSocios.getValueAt(fila, 0).toString());
 
-        // 💡 BUENAS PRÁCTICAS: Buscamos el objeto completo desde la base de datos usando el ID
-        Entrenadores e = entrenadorData.buscarEntrenadorPorId(idEntrenadorActual);
+        // Buscamos el objeto completo desde la base de datos usando el ID del socio
+        Socio s = socioData.buscarSocioPorId(idSocioActual);
 
-        if (e != null) {
-            txtDni.setText(e.getDni());
-            txtApellido.setText(e.getApellido()); // Ojo acá: en tu código anterior tenías invertidos nombre y apellido según el orden de la tabla, asegurate que coincidan con tu objeto
-            txtNombre.setText(e.getNombre());
-
-            // SELECCIONAMOS LA ESPECIALIDAD
-            comboBoxEspecialidad.setSelectedItem(e.getEspecialidad().toString());
+        if (s != null) {
+            txtDni.setText(s.getDni());
+            txtNombre.setText(s.getNombre());
+            txtApellido.setText(s.getApellido());
+            txtEdad.setText(String.valueOf(s.getEdad())); // Convertimos la edad a String para el JTextField
+            txtTelefono.setText(s.getTelefono());
+            txtCorreo.setText(s.getCorreo());
 
             // Estado
-            comboBoxEstado.setSelectedItem(e.isEstado() ? "Activo" : "Inactivo");
-
+            comboBoxEstado.setSelectedItem(s.isEstado() ? "Activo" : "Inactivo");
         }
 
         panelFormulario.setVisible(true);
     }//GEN-LAST:event_jbModificarActionPerformed
 
     private void jBBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBBajaActionPerformed
-        // TODO add your handling code here:
+       // TODO add your handling code here:
         int fila = tablaSocios.getSelectedRow();
 
         if (fila == -1) {
@@ -832,7 +860,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
 
         int respuesta = JOptionPane.showOptionDialog(
             this,
-            "¿Desea dar de baja este entrenador?",
+            "¿Desea dar de baja este socio?",
             "Confirmar baja",
             JOptionPane.YES_NO_OPTION,
             JOptionPane.QUESTION_MESSAGE,
@@ -842,16 +870,16 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         );
 
         if (respuesta == 0) {
-            // Usamos el objeto de entrenador y su método de baja lógica
-            entrenadorData.bajaLogicaEntrenador(id);
-            cargarEntrenadores(); // Recarga la tabla de entrenadores
+            // Usamos el objeto de socio y su método de baja lógica
+            socioData.bajaLogicaSocio(id);
+            cargarSocios(); // Recarga la tabla de socios
 
-            JOptionPane.showMessageDialog(this, "Se dio de baja al entrenador correctamente.");
+            JOptionPane.showMessageDialog(this, "Se dio de baja al socio correctamente.");
         }
     }//GEN-LAST:event_jBBajaActionPerformed
 
     private void jBAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAltaActionPerformed
-        int fila = tablaSocios.getSelectedRow();
+       int fila = tablaSocios.getSelectedRow();
 
         if (fila == -1) {
             return;
@@ -865,7 +893,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
 
         int respuesta = JOptionPane.showOptionDialog(
             this,
-            "¿Desea dar de alta este entrenador?",
+            "¿Desea dar de alta este socio?",
             "Confirma",
             JOptionPane.YES_NO_OPTION,
             JOptionPane.QUESTION_MESSAGE,
@@ -875,11 +903,11 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         );
 
         if (respuesta == 0) {
-            // Llamamos al método de alta lógica en EntrenadorData
-            entrenadorData.altaLogicaEntrenador(id);
-            cargarEntrenadores(); // Recarga la tabla
+            // Llamamos al método de alta lógica en SocioData
+            socioData.altaLogicaSocio(id);
+            cargarSocios(); // Recarga la tabla de socios
 
-            JOptionPane.showMessageDialog(this, "Entrenador dado de alta correctamente.");
+            JOptionPane.showMessageDialog(this, "Socio dado de alta correctamente.");
         }
     }//GEN-LAST:event_jBAltaActionPerformed
 
@@ -927,6 +955,6 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtDni;
     private javax.swing.JTextField txtEdad;
     private javax.swing.JTextField txtNombre;
-    private javax.swing.JTextField txtTelefono2;
+    private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }
