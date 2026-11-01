@@ -652,7 +652,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jbNuevoActionPerformed
 
     private void txtBuscarPorNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarPorNombreKeyReleased
-        // TODO add your handling code here:
+// TODO add your handling code here:
         String textoBuscado = txtBuscarPorNombre.getText().trim();
 
         // Si el usuario empieza a escribir el nombre, limpiamos el campo de ID para que no se mezcle
@@ -662,21 +662,21 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
 
         modeloTabla.setRowCount(0); // Limpiamos la tabla antes de cargar resultados
 
-        // Si borra todo el texto, recargamos la lista completa de entrenadores
+        // Si borra todo el texto, recargamos la lista completa de socios
         if (textoBuscado.isEmpty()) {
-            cargarEntrenadores();
+            cargarSocios();
         } else {
-            // Buscamos los entrenadores que coincidan parcialmente con las letras escritas
-            List<Entrenadores> lista = entrenadorData.listarEntrenadoresPorNombre(textoBuscado);
+            // Buscamos los socios que coincidan parcialmente con las letras escritas
+            List<Socio> lista = socioData.listarSociosPorNombre(textoBuscado);
 
-            for (Entrenadores e : lista) {
+            for (Socio s : lista) {
                 modeloTabla.addRow(new Object[]{
-                    e.getIdEntrenadores(),
-                    e.getDni(),
-                    e.getNombre(),
-                    e.getApellido(),
-                    e.getEspecialidad(),
-                    e.isEstado() ? "Activo" : "Inactivo"
+                    s.getIdSocio(),
+                    s.getDni(),
+                    s.getNombre(),
+                    s.getApellido(),
+                    s.getEdad(),
+                    s.isEstado() ? "Activo" : "Inactivo"
                 });
             }
         }
