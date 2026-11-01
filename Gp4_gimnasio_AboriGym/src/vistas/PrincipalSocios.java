@@ -691,57 +691,61 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jBLimpiarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        String documento = txtDni.getText().trim();
+String documento = txtDni.getText().trim();
         String apellido = txtApellido.getText().trim();
         String nombre = txtNombre.getText().trim();
+        String edadStr = txtEdad.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String correo = txtCorreo.getText().trim();
 
+        // Validación de longitud del DNI
         if (documento.length() < 7 || documento.length() > 8) {
             JOptionPane.showMessageDialog(this, "El DNI ingresado no es válido (debe tener entre 7 y 8 dígitos).", "Error en DNI", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // 1. OBTENEMOS LA ESPECIALIDAD SELECCIONADA DEL COMBOBOX Y LA CONVERTIMOS A NUESTRO ENUM
-        String seleccionStr = comboBoxEspecialidad.getSelectedItem().toString();
-        Especialidad especialidadSeleccionada = Especialidad.valueOf(seleccionStr);
-
-        // Validamos que los campos obligatorios no estén vacíos
-        if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Completá todos los campos.");
+        // Validamos que los campos obligatorios principales no estén vacíos
+        if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty() || edadStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Completá todos los campos obligatorios.");
             return;
         }
 
         try {
+            int edad = Integer.parseInt(edadStr);
             boolean estado = comboBoxEstado.getSelectedItem().toString().equals("Activo");
 
-            if (idEntrenadorActual == -1) {
-                // Guardar nuevo entrenador (le pasamos la especialidad seleccionada del combo)
-                Entrenadores entrenador = new Entrenadores(documento, nombre, apellido, especialidadSeleccionada, estado);
-                entrenadorData.guardarEntrenador(entrenador);
+            if (idSocioActual == -1) {
+                // Guardar nuevo socio
+                Socio socio = new Socio(documento, nombre, apellido, edad, correo, telefono, estado);
+                socioData.guardarSocio(socio);
 
-                JOptionPane.showMessageDialog(this, "Entrenador guardado.");
+                JOptionPane.showMessageDialog(this, "Socio guardado exitosamente.");
             } else {
-                // Modificar entrenador existente (le pasamos el ID y la especialidad seleccionada)
-                Entrenadores entrenador = new Entrenadores(idEntrenadorActual, documento, nombre, apellido, especialidadSeleccionada, estado);
-                entrenadorData.modificarEntrenador(entrenador);
+                // Modificar socio existente (pasando el ID actual)
+                Socio socio = new Socio(idSocioActual, documento, nombre, apellido, edad, correo, telefono, estado);
+                socioData.modificarSocio(socio);
 
-                JOptionPane.showMessageDialog(this, "Entrenador modificado.");
+                JOptionPane.showMessageDialog(this, "Socio modificado exitosamente.");
             }
 
             // Recargamos la tabla, ocultamos el formulario y reseteamos las variables
-            cargarEntrenadores();
+            cargarSocios();
             panelFormulario.setVisible(false);
-            idEntrenadorActual = -1;
+            idSocioActual = -1;
 
-            // Limpiamos los campos
+            // Limpiamos los campos del formulario
             txtDni.setText("");
             txtApellido.setText("");
             txtNombre.setText("");
+            txtEdad.setText("");
+            txtTelefono.setText("");
+            txtCorreo.setText("");
             comboBoxEstado.setSelectedItem("Activo");
-            // Opcional: el combo se puede dejar en la primera opción por defecto
-            comboBoxEspecialidad.setSelectedIndex(0);
+            btnGuardar.setEnabled(false);
 
-        } catch (java.sql.SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error en la Base de Datos: " + e.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "La edad debe ser un número válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            txtEdad.requestFocus();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
