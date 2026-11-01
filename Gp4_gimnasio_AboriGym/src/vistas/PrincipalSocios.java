@@ -466,11 +466,11 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "id", "DNI", "Nombre", "Apellido", "Especialidad", "Estado"
+                "id", "DNI", "Nombre", "Apellido", "Edad", "Estado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, true
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -478,6 +478,9 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
             }
         });
         jScrollPane1.setViewportView(tablaSocios);
+        if (tablaSocios.getColumnModel().getColumnCount() > 0) {
+            tablaSocios.getColumnModel().getColumn(0).setPreferredWidth(1);
+        }
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setText("Listado de Entrenadores");
