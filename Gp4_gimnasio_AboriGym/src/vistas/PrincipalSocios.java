@@ -687,7 +687,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         txtBuscarPorID.setText("");
         txtBuscarPorNombre.requestFocus();
 
-        cargarEntrenadores(); // Recarga la lista completa
+        cargarSocios(); // Recarga la lista completa
     }//GEN-LAST:event_jBLimpiarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
