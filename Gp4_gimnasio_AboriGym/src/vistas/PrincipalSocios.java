@@ -763,7 +763,7 @@ String documento = txtDni.getText().trim();
         int fila = tablaSocios.getSelectedRow();
 
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Por favor, seleccione un entrenador de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un socio de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -775,7 +775,7 @@ String documento = txtDni.getText().trim();
 
         int respuesta = JOptionPane.showOptionDialog(
             this,
-            "¿Seguro desea eliminar el entrenador permanentemente de la BD?",
+            "¿Seguro desea eliminar el socio permanentemente de la BD?",
             "Confirmación",
             JOptionPane.YES_NO_OPTION,
             JOptionPane.WARNING_MESSAGE,
@@ -785,12 +785,12 @@ String documento = txtDni.getText().trim();
         );
 
         if (respuesta == 0) {
-            // CORRECCIÓN: pasarle 'id' en lugar de idEntrenadorActual
-            entrenadorData.borrarEntrenador(id);
+            // Llamamos al método de borrado físico en SocioData
+            socioData.borrarSocio(id);
+            
+            cargarSocios(); // Recarga la tabla de socios
 
-            cargarEntrenadores(); // Recarga la tabla de entrenadores
-
-            JOptionPane.showMessageDialog(this, "Se borró el entrenador correctamente.");
+            JOptionPane.showMessageDialog(this, "Se borró el socio correctamente.");
         }
     }//GEN-LAST:event_jbEliminarActionPerformed
 
