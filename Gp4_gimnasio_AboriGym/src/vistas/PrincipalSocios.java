@@ -795,30 +795,29 @@ String documento = txtDni.getText().trim();
     }//GEN-LAST:event_jbEliminarActionPerformed
 
     private void jbModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarActionPerformed
-        int fila = tablaSocios.getSelectedRow();
+int fila = tablaSocios.getSelectedRow();
 
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Por favor, seleccione un entrenador de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un socio de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         editando = true; // Activamos el modo edición
-        idEntrenadorActual = Integer.parseInt(tablaSocios.getValueAt(fila, 0).toString());
+        idSocioActual = Integer.parseInt(tablaSocios.getValueAt(fila, 0).toString());
 
-        // 💡 BUENAS PRÁCTICAS: Buscamos el objeto completo desde la base de datos usando el ID
-        Entrenadores e = entrenadorData.buscarEntrenadorPorId(idEntrenadorActual);
+        // Buscamos el objeto completo desde la base de datos usando el ID del socio
+        Socio s = socioData.buscarSocioPorId(idSocioActual);
 
-        if (e != null) {
-            txtDni.setText(e.getDni());
-            txtApellido.setText(e.getApellido()); // Ojo acá: en tu código anterior tenías invertidos nombre y apellido según el orden de la tabla, asegurate que coincidan con tu objeto
-            txtNombre.setText(e.getNombre());
-
-            // SELECCIONAMOS LA ESPECIALIDAD
-            comboBoxEspecialidad.setSelectedItem(e.getEspecialidad().toString());
+        if (s != null) {
+            txtDni.setText(s.getDni());
+            txtNombre.setText(s.getNombre());
+            txtApellido.setText(s.getApellido());
+            txtEdad.setText(String.valueOf(s.getEdad())); // Convertimos la edad a String para el JTextField
+            txtTelefono.setText(s.getTelefono());
+            txtCorreo.setText(s.getCorreo());
 
             // Estado
-            comboBoxEstado.setSelectedItem(e.isEstado() ? "Activo" : "Inactivo");
-
+            comboBoxEstado.setSelectedItem(s.isEstado() ? "Activo" : "Inactivo");
         }
 
         panelFormulario.setVisible(true);
