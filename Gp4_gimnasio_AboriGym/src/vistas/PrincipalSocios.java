@@ -190,7 +190,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         txtEdad = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         txtCorreo = new javax.swing.JTextField();
-        txtTelefono2 = new javax.swing.JTextField();
+        txtTelefono = new javax.swing.JTextField();
         panelLista = new javax.swing.JPanel();
         jbEliminar = new javax.swing.JButton();
         jbModificar = new javax.swing.JButton();
@@ -364,7 +364,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                                             .addComponent(jLabel11))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtTelefono2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(comboBoxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -378,7 +378,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtTelefono2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelFormularioLayout.createSequentialGroup()
                         .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelFormularioLayout.createSequentialGroup()
@@ -636,15 +636,19 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jbBuscarActionPerformed
 
     private void jbNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbNuevoActionPerformed
+        idSocioActual = -1; // Seteamos en -1 para indicar que es un socio nuevo
 
-        idEntrenadorActual = -1;
-
+        // Limpiamos todos los campos del formulario de socios
         txtDni.setText("");
-        txtApellido.setText("");
         txtNombre.setText("");
+        txtApellido.setText("");
+        txtEdad.setText("");
+        txtTelefono.setText("");
+        txtCorreo.setText("");
 
         comboBoxEstado.setSelectedItem("Activo");
-        panelFormulario.setVisible(true);
+        btnGuardar.setEnabled(false); // Arranca deshabilitado hasta que llene los obligatorios
+        panelFormulario.setVisible(true); // Mostramos el panel de registro
     }//GEN-LAST:event_jbNuevoActionPerformed
 
     private void txtBuscarPorNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarPorNombreKeyReleased
@@ -927,6 +931,6 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtDni;
     private javax.swing.JTextField txtEdad;
     private javax.swing.JTextField txtNombre;
-    private javax.swing.JTextField txtTelefono2;
+    private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }

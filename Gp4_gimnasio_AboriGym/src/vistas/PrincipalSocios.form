@@ -233,7 +233,7 @@
                                           </Group>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="txtTelefono2" min="-2" pref="180" max="-2" attributes="0"/>
+                                              <Component id="txtTelefono" min="-2" pref="180" max="-2" attributes="0"/>
                                               <Component id="txtCorreo" min="-2" pref="180" max="-2" attributes="0"/>
                                               <Component id="comboBoxEstado" min="-2" pref="139" max="-2" attributes="0"/>
                                           </Group>
@@ -256,7 +256,7 @@
                   <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txtTelefono2" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtTelefono" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
@@ -420,7 +420,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtCorreo">
         </Component>
-        <Component class="javax.swing.JTextField" name="txtTelefono2">
+        <Component class="javax.swing.JTextField" name="txtTelefono">
         </Component>
       </SubComponents>
     </Container>
