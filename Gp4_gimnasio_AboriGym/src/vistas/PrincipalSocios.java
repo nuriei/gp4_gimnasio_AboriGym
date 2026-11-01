@@ -858,7 +858,7 @@ int fila = tablaSocios.getSelectedRow();
     }//GEN-LAST:event_jBBajaActionPerformed
 
     private void jBAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAltaActionPerformed
-        int fila = tablaSocios.getSelectedRow();
+       int fila = tablaSocios.getSelectedRow();
 
         if (fila == -1) {
             return;
@@ -872,7 +872,7 @@ int fila = tablaSocios.getSelectedRow();
 
         int respuesta = JOptionPane.showOptionDialog(
             this,
-            "¿Desea dar de alta este entrenador?",
+            "¿Desea dar de alta este socio?",
             "Confirma",
             JOptionPane.YES_NO_OPTION,
             JOptionPane.QUESTION_MESSAGE,
@@ -882,11 +882,11 @@ int fila = tablaSocios.getSelectedRow();
         );
 
         if (respuesta == 0) {
-            // Llamamos al método de alta lógica en EntrenadorData
-            entrenadorData.altaLogicaEntrenador(id);
-            cargarEntrenadores(); // Recarga la tabla
+            // Llamamos al método de alta lógica en SocioData
+            socioData.altaLogicaSocio(id);
+            cargarSocios(); // Recarga la tabla de socios
 
-            JOptionPane.showMessageDialog(this, "Entrenador dado de alta correctamente.");
+            JOptionPane.showMessageDialog(this, "Socio dado de alta correctamente.");
         }
     }//GEN-LAST:event_jBAltaActionPerformed
 
