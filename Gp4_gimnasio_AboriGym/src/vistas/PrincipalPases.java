@@ -4,6 +4,7 @@
  */
 package vistas;
 
+import entidades.Pases;
 import entidades.Socio;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -30,7 +31,285 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
  
     public PrincipalPases(MiConexion conexion) {
         initComponents();
-  
+     paseData = new PaseData(conexion);
+        socioData = new SocioData(conexion);
+        modeloTabla = (DefaultTableModel) tablaPases.getModel();
+ 
+        cmbEntradas.setModel(new DefaultComboBoxModel<>(new String[]{"8", "12", "20"}));
+        txtSocio.setEditable(false);          // lo completa el botón Buscar socio
+        jdcFechaFin.setEnabled(false);        // se calcula sola (inicio + 30 días)
+        tablaPases.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+ 
+        // Conexión de eventos
+        btnBuscarSocio.addActionListener(e -> buscarSocio());
+        btnNuevo.addActionListener(e -> nuevo());
+        btnGuardar.addActionListener(e -> guardar());
+        btnCancelar.addActionListener(e -> cancelar());
+        btnModificar.addActionListener(e -> modificar());
+        btnAlta.addActionListener(e -> alta());
+        btnBaja.addActionListener(e -> baja());
+        btnEliminar.addActionListener(e -> eliminar());
+        btn_volver.addActionListener(e -> dispose());
+        jdcFechaInicio.addPropertyChangeListener("date", e -> actualizarFechaFin());
+        tablaPases.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                actualizarBotones();
+            }
+        });
+ 
+        limpiarFormulario();
+        cargarPases();
+        actualizarBotones();
+    }
+     public PrincipalPases() {                       // constructor nuevo, sin parámetros
+        this(new MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym", "root", ""));
+    }
+ 
+ 
+// ===== 3) MÉTODOS: pegalos antes de la línea "// Variables declaration - do not modify" =====
+ 
+    // ---------------- BUSCAR SOCIO ----------------
+    private void buscarSocio() {
+        String dni = txtDniSocio.getText().trim();
+        if (dni.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el DNI del socio.");
+            txtDniSocio.requestFocus();
+            return;
+        }
+        Socio socio = socioData.buscarSocioPorDni(dni);
+        if (socio == null) {
+            JOptionPane.showMessageDialog(this, "No existe un socio con ese DNI.");
+            txtSocio.setText("");
+        } else {
+            txtSocio.setText(socio.getApellido() + ", " + socio.getNombre());
+        }
+    }
+ 
+    // ---------------- NUEVO ----------------
+    private void nuevo() {
+        tablaPases.clearSelection();
+        limpiarFormulario();
+        jdcFechaInicio.setDate(aDate(LocalDate.now()));   // por defecto, hoy
+        txtDniSocio.requestFocus();
+    }
+ 
+    // ---------------- GUARDAR (alta o modificación) ----------------
+    private void guardar() {
+        java.util.Date d = jdcFechaInicio.getDate();
+        if (d == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione la fecha de inicio.");
+            return;
+        }
+        LocalDate inicio = aLocalDate(d);
+ 
+        double costo;
+        try {
+            costo = Double.parseDouble(txtCosto.getText().trim());
+            if (costo <= 0) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Ingrese un costo numérico mayor a 0.");
+            txtCosto.requestFocus();
+            return;
+        }
+ 
+        if (editando) {
+            // Las entradas no se editan a mano: se consumen con las asistencias.
+            Pases p = paseData.buscarPasePorId(idPaseActual);
+            p.setFechaInicio(inicio);
+            p.setFechaFin(inicio.plusDays(Pases.DIAS_VALIDEZ));
+            p.setCosto(costo);
+            p.setEstado(checkEstado.isSelected());
+            paseData.modificarPase(p);
+            JOptionPane.showMessageDialog(this, "Pase modificado correctamente.");
+        } else {
+            String dni = txtDniSocio.getText().trim();
+            if (dni.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Ingrese el DNI del socio.");
+                txtDniSocio.requestFocus();
+                return;
+            }
+            Socio socio = socioData.buscarSocioPorDni(dni);
+            if (socio == null) {
+                JOptionPane.showMessageDialog(this, "No existe un socio con ese DNI.");
+                txtDniSocio.requestFocus();
+                return;
+            }
+            if (!socio.isEstado()) {
+                JOptionPane.showMessageDialog(this, "El socio está dado de baja. No se le puede asignar un pase.");
+                return;
+            }
+ 
+            int entradas = Integer.parseInt(cmbEntradas.getSelectedItem().toString());
+ 
+            // El constructor calcula la fechaFin (inicio + 30 días)
+            Pases nuevo = new Pases(socio, entradas, inicio, costo, checkEstado.isSelected());
+            paseData.guardarPase(nuevo);
+ 
+            if (nuevo.getIdMembresia() == 0) {
+                JOptionPane.showMessageDialog(this, "No se pudo guardar el pase. Revise la consola.");
+                return;
+            }
+            JOptionPane.showMessageDialog(this, "Pase agregado correctamente.");
+        }
+ 
+        cargarPases();
+        limpiarFormulario();
+    }
+ 
+    // ---------------- CANCELAR ----------------
+    private void cancelar() {
+        if (editando) {
+            JOptionPane.showMessageDialog(this, "No se hicieron modificaciones en el pase.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Se canceló el guardado del pase nuevo.");
+        }
+        tablaPases.clearSelection();
+        limpiarFormulario();
+    }
+ 
+    // ---------------- MODIFICAR (carga la fila elegida en el formulario) ----------------
+    private void modificar() {
+        int fila = tablaPases.getSelectedRow();
+        if (fila == -1) {
+            return;
+        }
+        editando = true;
+        idPaseActual = Integer.parseInt(tablaPases.getValueAt(fila, 0).toString());
+ 
+        txtDniSocio.setText(tablaPases.getValueAt(fila, 1).toString());
+        txtSocio.setText(tablaPases.getValueAt(fila, 2).toString());
+        jdcFechaInicio.setDate(aDate(LocalDate.parse(tablaPases.getValueAt(fila, 4).toString())));
+        txtCosto.setText(tablaPases.getValueAt(fila, 6).toString());
+        checkEstado.setSelected(tablaPases.getValueAt(fila, 7).toString().equals("Activo"));
+ 
+        // El socio y las entradas no se cambian desde acá
+        txtDniSocio.setEnabled(false);
+        btnBuscarSocio.setEnabled(false);
+        cmbEntradas.setEnabled(false);
+    }
+ 
+    // ---------------- ALTA / BAJA / ELIMINAR ----------------
+    private void alta() {
+        int id = idFilaSeleccionada();
+        if (id == -1) {
+            return;
+        }
+        if (confirmar("Confirmar alta", "¿Desea dar de alta este pase?", JOptionPane.QUESTION_MESSAGE, 0)) {
+            paseData.altaLogicaPase(id);
+            cargarPases();
+            JOptionPane.showMessageDialog(this, "Se dio de alta el pase.");
+        }
+    }
+ 
+    private void baja() {
+        int id = idFilaSeleccionada();
+        if (id == -1) {
+            return;
+        }
+        if (confirmar("Confirmar baja", "¿Desea dar de baja este pase?", JOptionPane.QUESTION_MESSAGE, 0)) {
+            paseData.bajaLogicaPase(id);
+            cargarPases();
+            JOptionPane.showMessageDialog(this, "Se dio de baja el pase.");
+        }
+    }
+ 
+    private void eliminar() {
+        int id = idFilaSeleccionada();
+        if (id == -1) {
+            return;
+        }
+        if (confirmar("Confirmación", "¿Seguro que desea eliminar el pase permanentemente de la base de datos?",
+                JOptionPane.WARNING_MESSAGE, 1)) {
+            paseData.borrarPase(id);
+            cargarPases();
+            JOptionPane.showMessageDialog(this, "Se borró el pase.");
+        }
+    }
+ 
+    // ---------------- MÉTODOS AUXILIARES ----------------
+    private void actualizarFechaFin() {
+        java.util.Date d = jdcFechaInicio.getDate();
+        if (d == null) {
+            jdcFechaFin.setDate(null);
+        } else {
+            jdcFechaFin.setDate(aDate(aLocalDate(d).plusDays(Pases.DIAS_VALIDEZ)));
+        }
+    }
+ 
+    private void actualizarBotones() {
+        int fila = tablaPases.getSelectedRow();
+        boolean seleccionado = fila != -1;
+ 
+        btnModificar.setEnabled(seleccionado);
+        btnEliminar.setEnabled(seleccionado);
+        if (seleccionado) {
+            String estado = tablaPases.getValueAt(fila, 7).toString();
+            btnBaja.setEnabled(estado.equals("Activo"));
+            btnAlta.setEnabled(estado.equals("Inactivo"));
+        } else {
+            btnBaja.setEnabled(false);
+            btnAlta.setEnabled(false);
+        }
+    }
+ 
+    private void limpiarFormulario() {
+        editando = false;
+        idPaseActual = -1;
+        txtDniSocio.setText("");
+        txtSocio.setText("");
+        cmbEntradas.setSelectedIndex(0);
+        jdcFechaInicio.setDate(null);
+        jdcFechaFin.setDate(null);
+        txtCosto.setText("");
+        checkEstado.setSelected(true);
+ 
+        txtDniSocio.setEnabled(true);
+        btnBuscarSocio.setEnabled(true);
+        cmbEntradas.setEnabled(true);
+    }
+ 
+    private int idFilaSeleccionada() {
+        int fila = tablaPases.getSelectedRow();
+        if (fila == -1) {
+            return -1;
+        }
+        return Integer.parseInt(tablaPases.getValueAt(fila, 0).toString());
+    }
+ 
+    private boolean confirmar(String titulo, String mensaje, int tipoMensaje, int opcionPorDefecto) {
+        Object[] opciones = {"Sí", "No"};
+        int respuesta = JOptionPane.showOptionDialog(this, mensaje, titulo, JOptionPane.YES_NO_OPTION,
+                tipoMensaje, null, opciones, opciones[opcionPorDefecto]);
+        return respuesta == 0;
+    }
+ 
+    private void cargarPases() {
+        modeloTabla.setRowCount(0);
+        List<Pases> lista = paseData.listarPases();
+        for (Pases p : lista) {
+            modeloTabla.addRow(new Object[]{
+                p.getIdMembresia(),
+                p.getSocio().getDni(),
+                p.getSocio().getApellido() + ", " + p.getSocio().getNombre(),
+                p.getCantidadPases(),
+                p.getFechaInicio(),
+                p.getFechaFin(),
+                p.getCosto(),
+                p.isEstado() ? "Activo" : "Inactivo"
+            });
+        }
+    }
+ 
+    // JDateChooser trabaja con java.util.Date; la entidad usa LocalDate
+    private LocalDate aLocalDate(java.util.Date d) {
+        return new java.sql.Date(d.getTime()).toLocalDate();
+    }
+ 
+    private java.util.Date aDate(LocalDate fecha) {
+        return java.util.Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
  
 //    java.net.URL rutaImagen = getClass().getClassLoader().getResource("imagenes/fondo.jpg");
 //    if (rutaImagen != null) {
@@ -44,7 +323,7 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
 //    }
 //} catch (Exception e) {
 //    }
-    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -57,7 +336,6 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
 
         btn_volver = new javax.swing.JButton();
         btnBuscarSocio = new javax.swing.JButton();
-        checkEstado = new java.awt.Checkbox();
         jdcFechaInicio = new com.toedter.calendar.JDateChooser();
         jdcFechaFin = new com.toedter.calendar.JDateChooser();
         cmbEntradas = new javax.swing.JComboBox<>();
@@ -80,6 +358,7 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
         btnAlta = new javax.swing.JButton();
         btnBaja = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
+        checkEstado = new javax.swing.JCheckBox();
 
         setTitle("Gestion de Pases");
 
@@ -145,6 +424,8 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
 
         btnEliminar.setText("Eliminar");
 
+        checkEstado.setSelected(true);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -171,7 +452,7 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jdcFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(checkEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(checkEstado)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -240,12 +521,13 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
                     .addComponent(jdcFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6)
+                        .addComponent(checkEstado))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel5)
-                        .addComponent(txtCosto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(checkEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(txtCosto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevo)
@@ -259,7 +541,7 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
                     .addComponent(btnAlta)
                     .addComponent(btnBaja)
                     .addComponent(btnEliminar))
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         pack();
@@ -281,7 +563,7 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton btn_volver;
-    private java.awt.Checkbox checkEstado;
+    private javax.swing.JCheckBox checkEstado;
     private javax.swing.JComboBox<String> cmbEntradas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

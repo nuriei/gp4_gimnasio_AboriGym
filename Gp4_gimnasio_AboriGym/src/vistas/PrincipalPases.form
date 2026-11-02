@@ -48,7 +48,7 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jdcFechaFin" min="-2" max="-2" attributes="0"/>
-                                  <Component id="checkEstado" min="-2" pref="42" max="-2" attributes="0"/>
+                                  <Component id="checkEstado" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -137,13 +137,15 @@
                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                      <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="checkEstado" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtCosto" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="checkEstado" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -160,7 +162,7 @@
                   <Component id="btnBaja" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnEliminar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="55" max="32767" attributes="0"/>
+              <EmptySpace pref="59" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -178,8 +180,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Buscar Socio"/>
       </Properties>
-    </Component>
-    <Component class="java.awt.Checkbox" name="checkEstado">
     </Component>
     <Component class="com.toedter.calendar.JDateChooser" name="jdcFechaInicio">
     </Component>
@@ -347,6 +347,11 @@
     <Component class="javax.swing.JButton" name="btnEliminar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Eliminar"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="checkEstado">
+      <Properties>
+        <Property name="selected" type="boolean" value="true"/>
       </Properties>
     </Component>
   </SubComponents>
