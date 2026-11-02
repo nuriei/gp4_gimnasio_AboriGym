@@ -47,7 +47,7 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
         checkEstado = new java.awt.Checkbox();
         jdcFechaInicio = new com.toedter.calendar.JDateChooser();
         jdcFechaFin = new com.toedter.calendar.JDateChooser();
-        cmbCreditos = new javax.swing.JComboBox<>();
+        cmbEntradas = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -55,11 +55,11 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        txtDni = new javax.swing.JTextField();
+        txtDniSocio = new javax.swing.JTextField();
         txtSocio = new javax.swing.JTextField();
         txtCosto = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaPases = new javax.swing.JTable();
         btnNuevo = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
@@ -79,6 +79,8 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
 
         btnBuscarSocio.setText("Buscar Socio");
 
+        jdcFechaFin.setEnabled(false);
+
         jLabel1.setText("DNI del Socio");
 
         jLabel2.setText("Socio");
@@ -89,11 +91,13 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
 
         jLabel5.setText("Costo");
 
-        jLabel6.setText("Estado");
+        jLabel6.setText("Activo");
 
-        jLabel7.setText("Creditos");
+        jLabel7.setText("Entradas");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        txtSocio.setEditable(false);
+
+        tablaPases.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
@@ -101,7 +105,7 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "id ", "dni socio", "socio", "creditos", "inicio", "fin", "costo", "estado"
+                "id ", "dni socio", "socio", "entradas", "inicio", "fin", "costo", "estado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -112,7 +116,7 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tablaPases);
 
         btnNuevo.setText("Nuevo");
 
@@ -162,12 +166,12 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel7)
                                 .addGap(18, 18, 18)
-                                .addComponent(cmbCreditos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(cmbEntradas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
-                        .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtDniSocio, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnBuscarSocio)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -209,10 +213,10 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBuscarSocio)
                     .addComponent(jLabel1)
-                    .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDniSocio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbCreditos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbEntradas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel7)
                     .addComponent(txtSocio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -266,7 +270,7 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton btn_volver;
     private java.awt.Checkbox checkEstado;
-    private javax.swing.JComboBox<String> cmbCreditos;
+    private javax.swing.JComboBox<String> cmbEntradas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -275,11 +279,11 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private com.toedter.calendar.JDateChooser jdcFechaFin;
     private com.toedter.calendar.JDateChooser jdcFechaInicio;
+    private javax.swing.JTable tablaPases;
     private javax.swing.JTextField txtCosto;
-    private javax.swing.JTextField txtDni;
+    private javax.swing.JTextField txtDniSocio;
     private javax.swing.JTextField txtSocio;
     // End of variables declaration//GEN-END:variables
 }
