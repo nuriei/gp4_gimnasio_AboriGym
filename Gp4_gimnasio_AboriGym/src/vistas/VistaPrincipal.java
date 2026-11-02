@@ -164,18 +164,15 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
     private void btnSociosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSociosActionPerformed
         // TODO add your handling code here:
-        escritorio.removeAll();
-        escritorio.repaint();
         PrincipalSocios ventanaSocio= new PrincipalSocios();
         escritorio.add(ventanaSocio);
         ventanaSocio.setVisible(true);
+        
         
     }//GEN-LAST:event_btnSociosActionPerformed
 
     private void btnPasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPasesActionPerformed
         // TODO add your handling code here:
-        escritorio.removeAll();
-        escritorio.repaint();
         PrincipalPases ventanaPases= new PrincipalPases();
         escritorio.add(ventanaPases);
         ventanaPases.setVisible(true);
@@ -184,8 +181,6 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
     private void btnEntrenadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrenadoresActionPerformed
         // TODO add your handling code here:
-        escritorio.removeAll();
-        escritorio.repaint();
         PrincipalEntrenadores ventanaEntrenador= new PrincipalEntrenadores();
         escritorio.add(ventanaEntrenador);
         ventanaEntrenador.setVisible(true);
@@ -194,8 +189,6 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
     private void btnClasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClasesActionPerformed
         // TODO add your handling code here:
-        escritorio.removeAll();
-        escritorio.repaint();
         PrincipalClases ventanaClase= new PrincipalClases();
         escritorio.add(ventanaClase);
         ventanaClase.setVisible(true);
