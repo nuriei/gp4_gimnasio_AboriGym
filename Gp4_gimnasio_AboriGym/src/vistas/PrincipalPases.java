@@ -4,8 +4,16 @@
  */
 package vistas;
 
-import java.awt.Image;
-import javax.swing.ImageIcon;
+import entidades.Socio;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import persistencia.MiConexion;
+import persistencia.PaseData;
+import persistencia.SocioData;
 
 /**
  *
@@ -13,12 +21,17 @@ import javax.swing.ImageIcon;
  */
 public class PrincipalPases extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form PrincipalPases
-     */
-    public PrincipalPases() {
+   
+    private PaseData paseData;
+    private SocioData socioData;
+    private DefaultTableModel modeloTabla;
+    private boolean editando = false;
+    private int idPaseActual = -1;
+ 
+    public PrincipalPases(MiConexion conexion) {
         initComponents();
-//         try {
+  
+ 
 //    java.net.URL rutaImagen = getClass().getClassLoader().getResource("imagenes/fondo.jpg");
 //    if (rutaImagen != null) {
 //        ImageIcon iconoOriginal = new ImageIcon(rutaImagen);
