@@ -26,7 +26,7 @@ public class ClaseData {
         String sql = "INSERT INTO clases (nombre, id_Entrenador,horario,capacidad,estado) VALUES(?,?,?,?,?)";
         try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, clase.getNombre());
-            ps.setInt(2, clase.getEntrenador().getIdEntrenadores());
+            ps.setInt(2, clase.getEntrenador().getIdEntrenador());
             ps.setTime(3, Time.valueOf(clase.getHorario())); // Convierte LocalTime a java.sql.Time
             ps.setInt(4, clase.getCapacidad());
             ps.setBoolean(5, clase.isEstado());
@@ -43,10 +43,10 @@ public class ClaseData {
     }
 
     public void modificarClase(Clases clase) {
-        String sql = "UPDATE clases SET nombre = ?, id_Entrenador = ?,horario = ?,capacidad = ?,estado= ? WHERE id_clase = ?; VALUES(?,?,?,?,?)";
+        String sql = "UPDATE clases SET nombre = ?, id_Entrenador = ?,horario = ?,capacidad = ?,estado= ? WHERE id_clase = ?";
         try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, clase.getNombre());
-            ps.setInt(2, clase.getEntrenador().getIdEntrenadores());
+            ps.setInt(2, clase.getEntrenador().getIdEntrenador());
             ps.setTime(3, Time.valueOf(clase.getHorario())); // Convierte LocalTime a java.sql.Time
             ps.setInt(4, clase.getCapacidad());
             ps.setBoolean(5, clase.isEstado());

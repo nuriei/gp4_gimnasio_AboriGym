@@ -1,37 +1,58 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
- */
 package vistas;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import entidades.Clases;
+import entidades.Entrenadores;
+import persistencia.ClaseData;
+import persistencia.EntrenadorData;
+import persistencia.MiConexion;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Nuri
+ * @author david vera barz
  */
 public class PrincipalClases extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form PrincipalClases
-     */
+    private persistencia.ClaseData claseData;
+    private DefaultTableModel modeloTabla;
+    private boolean editando = false;
+    private int idClaseActual = -1;
+
     public PrincipalClases() {
         initComponents();
-//         try {
-//    java.net.URL rutaImagen = getClass().getClassLoader().getResource("imagenes/fondo.jpg");
-//    if (rutaImagen != null) {
-//        ImageIcon iconoOriginal = new ImageIcon(rutaImagen);
-//        Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(490, 402, Image.SCALE_SMOOTH);
-//        labelFondo.setIcon(new ImageIcon(imagenEscalada));
-//        labelFondo.setBounds(0, 0, 490, 402);
-//        this.getContentPane().setComponentZOrder(labelFondo, this.getContentPane().getComponentCount() - 1);
-//        labelFondo.setEnabled(false);
-//        
-//    }
-//} catch (Exception e) {
-//    }
+        persistencia.MiConexion conexion = new persistencia.MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym", "root", "");
+        claseData = new persistencia.ClaseData(conexion);
+
+        editarEncabezado();
+        cargarClases();
+        panelFormulario.setVisible(false);
+    }
+
+    private boolean validarSoloLetras(String texto, String nombreCampo) {
+        if (texto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo '" + nombreCampo + "' no puede estar vacío.", "Error de Validación", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        if (!texto.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+            JOptionPane.showMessageDialog(this, "El campo '" + nombreCampo + "' solo debe contener letras.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validarSoloNumeros(String texto, String nombreCampo) {
+        if (texto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo '" + nombreCampo + "' no puede estar vacío.", "Error de Validación", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        if (!texto.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this, "El campo '" + nombreCampo + "' debe ser un número entero válido.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -67,7 +88,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         jBBaja = new javax.swing.JButton();
         jBAlta = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaMateria = new javax.swing.JTable();
+        tablaClases = new javax.swing.JTable();
         jLabel9 = new javax.swing.JLabel();
         btn_volver = new javax.swing.JButton();
         jBSalir = new javax.swing.JButton();
@@ -261,7 +282,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             }
         });
 
-        tablaMateria.setModel(new javax.swing.table.DefaultTableModel(
+        tablaClases.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -280,7 +301,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tablaMateria);
+        jScrollPane1.setViewportView(tablaClases);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setText("Listado de Clases.");
@@ -398,9 +419,9 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         String nombre = txtNombre.getText().trim();
-
+        // validacion interna tradicionals
         if (nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Ingrese el nombre de la materia.");
+            JOptionPane.showMessageDialog(this, "Ingrese el nombre de la clase.");
             txtNombre.requestFocus();
             return;
         }
@@ -409,97 +430,78 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             txtNombre.requestFocus();
             return;
         }
-        if (editando) {
-            // --- OPCIÓN MODIFICAR: Pasa el ID guardado y el nuevo nombre directamente ---
-            claseData.modificarMateria(idMateriaActual, nombre);
-            JOptionPane.showMessageDialog(this, "Materia modificada correctamente.");
-            cargarMaterias();
-            txtNombre.setText("");
-            GrupoRadioButton.clearSelection();
-            panelFormulario.setVisible(false);
-            editando = false;
-            jRadioButton1.setEnabled(true);
-            jRBInactivo.setEnabled(true);
-        } else {
-            if (!jRadioButton1.isSelected() && !jRBInactivo.isSelected()) {
-                JOptionPane.showMessageDialog(this, "Seleccione el estado: Activo o Inactivo.");
-                return;
+        if (nombre.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this, "El nombre de la clase no puede ser un número.", "Validación", JOptionPane.WARNING_MESSAGE);
+            txtNombre.requestFocus();
+            return;
+        }
+        boolean activo = jRadioButton1.isSelected();
+        try {
+            if (editando) {
+                entidades.Clases claseModificar = claseData.buscarClasePorId(idClaseActual);
+                if (claseModificar != null) {
+                    claseModificar.setNombre(nombre);
+                    claseModificar.setEstado(activo);
+                    claseData.modificarClase(claseModificar);
+                    JOptionPane.showMessageDialog(this, "Clase modificada correctamente.");
+                }
+            } else {
+                persistencia.MiConexion con = new persistencia.MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym", "root", "");
+                entidades.Entrenadores entren = new persistencia.EntrenadorData(con).buscarEntrenadorPorId(1);
+
+                entidades.Clases nuevaClase = new entidades.Clases(nombre, entren, java.time.LocalTime.of(19, 0), 20, activo);
+                claseData.guardarClase(nuevaClase);
+                JOptionPane.showMessageDialog(this, "Clase registrada con éxito.");
             }
-
-            boolean activo = jRadioButton1.isSelected();
-
-            Materia nueva = new Materia(nombre, activo);
-            materiaData.guardarMateria(nueva);
-
-            JOptionPane.showMessageDialog(this, "Materia agregada correctamente.");
-            cargarMaterias();
+            cargarClases();
             txtNombre.setText("");
-            GrupoRadioButton.clearSelection();
             panelFormulario.setVisible(false);
             editando = false;
-            jRadioButton1.setEnabled(true);
-            jRBInactivo.setEnabled(true);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
 
-        if (editando) {
-            JOptionPane.showMessageDialog(this, "no se hicieron modificaciones en materia");
-        } else {
-            JOptionPane.showMessageDialog(this, "se cancelo el guardado de una materia nueva");
-        }
-
         txtNombre.setText("");
-        GrupoRadioButton.clearSelection();
         panelFormulario.setVisible(false);
-
-        // TODO add your handling code here:
+        editando = false;
+        idClaseActual = -1;
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void jbBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBuscarActionPerformed
 
-        String nombreBuscado = txtBuscarPorNombre.getText().trim();//extraigo nombre
         String idBuscado = txtBuscarPorNombre1.getText().trim();//extraigo id
+        if (!validarSoloNumeros(idBuscado, "ID de Búsqueda")) {
+            return;
+        }
 
-        modeloTabla.setRowCount(0); // limpio la tabla
+        try {
+            int id = Integer.parseInt(idBuscado);
+            Clases c = claseData.buscarClasePorId(id);
+            modeloTabla.setRowCount(0);
 
-        //si escriben nombre
-        if (!nombreBuscado.isEmpty() && idBuscado.isEmpty()) {
-            Materia m = materiaData.buscarMateriaPorNombre(nombreBuscado);
-            if (m != null) {
+            if (c != null) {
+                String nombreEntrenador = (c.getEntrenador() != null)
+                        ? c.getEntrenador().getNombre() + " " + c.getEntrenador().getApellido()
+                        : "No asignado";
+
                 modeloTabla.addRow(new Object[]{
-                    m.getId_materia(),
-                    m.getNombre(),
-                    m.isActivo() ? "Activo" : "Inactivo"
+                    c.getIdClase(),
+                    c.getNombre(),
+                    c.getHorario(),
+                    c.getCapacidad() + " Alumnos",
+                    nombreEntrenador,
+                    c.isEstado() ? "Activo" : "Inactivo"
                 });
             } else {
-                JOptionPane.showMessageDialog(this, "no se encontro materia con el nombre exacto ingresado");
-                cargarMaterias(); //carga la tabla nuevamente
+                JOptionPane.showMessageDialog(this, "No se encontró ninguna clase con el ID: " + id, "Búsqueda", JOptionPane.INFORMATION_MESSAGE);
+                cargarClases();
             }
-        }
-        // si se busca por id
-        else if (!idBuscado.isEmpty() && nombreBuscado.isEmpty()) {//si nombre esta vacio e id no
-            try {
-                int id = Integer.parseInt(idBuscado);
-                Materia m = materiaData.buscarMateriaPorId(id);
-                if (m != null) {
-                    modeloTabla.addRow(new Object[]{
-                        m.getId_materia(),
-                        m.getNombre(),
-                        m.isActivo() ? "Activo" : "Inactivo"
-                    });
-                } else {
-                    JOptionPane.showMessageDialog(this, "no existe materia con ese id");
-                    cargarMaterias();
-                }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "el id debe ser numerico");
-            }
-        }
-        // si no hay texto en nungun campo
-        else {
-            JOptionPane.showMessageDialog(this, "ingrese valores a buscar uno por vez por favor");
-            cargarMaterias();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al procesar la búsqueda por ID.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jbBuscarActionPerformed
 
@@ -515,128 +517,96 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
     private void jBLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBLimpiarActionPerformed
         txtBuscarPorNombre.setText("");
         txtBuscarPorNombre1.setText("");
+        cargarClases();
         txtBuscarPorNombre.requestFocus();        // TODO add your handling code here:
     }//GEN-LAST:event_jBLimpiarActionPerformed
 
     private void jbEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEliminarActionPerformed
-        // TODO add your handling code here:
-        int fila = tablaMateria.getSelectedRow();
+        int fila = tablaClases.getSelectedRow();
 
         if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una clase de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        int id = Integer.parseInt(
-            tablaMateria.getValueAt(fila, 0).toString()
-        );
+        int id = Integer.parseInt(tablaClases.getValueAt(fila, 0).toString());
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Seguro desea eliminar esta clase de forma permanente de la BD?", "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
-        Object[] opciones = {"Sí", "No"};
-
-        int respuesta = JOptionPane.showOptionDialog(
-            this,
-            "¿seguro desea eliminar la materia permanentemente de la bd?",
-            "Confirmarcion",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.WARNING_MESSAGE,
-            null,
-            opciones,
-            opciones[1] // no seleccionado por defecto
-        );
-
-        if (respuesta == 0) {
-            materiaData.eliminarMateriaBaseDatos(id);
-            cargarMaterias(); // Recarga la tabla
-
-            JOptionPane.showMessageDialog(this, "se borro la materia");
+        if (respuesta == JOptionPane.YES_OPTION) {
+            // Suponiendo que usás el método bajaLogicaClase como borrado o si tu data tiene borrar, lo llamás acá
+            claseData.bajaLogicaClase(id);
+            cargarClases();
+            JOptionPane.showMessageDialog(this, "Clase eliminada correctamente.");
         }
     }//GEN-LAST:event_jbEliminarActionPerformed
 
     private void jbModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbModificarActionPerformed
         // TODO add your handling code here:
-        int fila = tablaMateria.getSelectedRow();
+        int fila = tablaClases.getSelectedRow();
 
         if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una clase de la tabla para modificar.", "Atención", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        editando = true;
-        idMateriaActual = Integer.parseInt(tablaMateria.getValueAt(fila, 0).toString());
 
-        txtNombre.setText(tablaMateria.getValueAt(fila, 1).toString());//lo seteo
-        String estado = tablaMateria.getValueAt(fila, 2).toString();//creo la variable para dar el accionar en los button
-        if (estado.equals("Activo")) {
-            jRadioButton1.setSelected(true);
-        } else {
-            jRBInactivo.setSelected(true);
+        idClaseActual = Integer.parseInt(tablaClases.getValueAt(fila, 0).toString());
+        Clases c = claseData.buscarClasePorId(idClaseActual);
+
+        if (c != null) {
+            txtNombre.setText(c.getNombre());
+            if (c.isEstado()) {
+                jRadioButton1.setSelected(true);
+            } else {
+                jRBInactivo.setSelected(true);
+            }
+
+            editando = true;
+            panelFormulario.setVisible(true);
+            txtNombre.requestFocus();
         }
-        jRadioButton1.setEnabled(false);//desactivo los button
-        jRBInactivo.setEnabled(false);
-
-        panelFormulario.setVisible(true);//muestro el panel
     }//GEN-LAST:event_jbModificarActionPerformed
 
     private void jBBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBBajaActionPerformed
-        // TODO add your handling code here:
-        int fila = tablaMateria.getSelectedRow();
+        int fila = tablaClases.getSelectedRow();
 
         if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una clase de la lista para darle la baja.", "Atención", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        int id = Integer.parseInt(
-            tablaMateria.getValueAt(fila, 0).toString()
-        );
+        int id = Integer.parseInt(tablaClases.getValueAt(fila, 0).toString());
+        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea aplicar la baja lógica a esta clase?", "Confirmar Acción", JOptionPane.YES_NO_OPTION);
 
-        Object[] opciones = {"Sí", "No"};
-
-        int respuesta = JOptionPane.showOptionDialog(//misma opcion de si o no
-            this,
-            "¿Desea dar de baja esta materia?",
-            "Confirmar baja",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            opciones,
-            opciones[0]
-        );
-
-        if (respuesta == 0) {
-            materiaData.bajaMateria(id);
-            cargarMaterias();
-
-            JOptionPane.showMessageDialog(this, "se dio de baja a la materia");
-        }
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            claseData.bajaLogicaClase(id);
+            cargarClases();
+            JOptionPane.showMessageDialog(null, "La clase fue desactivada (Estado = Inactivo) con éxito.", "Baja Lógica", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jBBajaActionPerformed
-
+           }
     private void jBAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAltaActionPerformed
-
-        int fila = tablaMateria.getSelectedRow();
+        int fila = tablaClases.getSelectedRow();
 
         if (fila == -1) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una clase de la lista para darle el alta.", "Atención", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        int id = Integer.parseInt(tablaClases.getValueAt(fila, 0).toString());
+        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea aplicar el alta lógica a esta clase?", "Confirmar Alta", JOptionPane.YES_NO_OPTION);
 
-        int id = Integer.parseInt(
-            tablaMateria.getValueAt(fila, 0).toString()
-        );
-
-        Object[] opciones = {"Sí", "No"};//como el panel es en ingles lo cambio
-
-        int respuesta = JOptionPane.showOptionDialog(
-            this,
-            "¿desea dar de alta esta materia?",
-            "confirma",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            opciones, // aca le digo si o no
-            opciones[0] // boton seleccionado or defecto que va a ser si
-        );
-
-        if (respuesta == 0) {
-            materiaData.altaMateria(id);
-            cargarMaterias();
-
-            JOptionPane.showMessageDialog(this, "materia dada de alta cerrectamente");
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            try {
+                Clases claseAlta = claseData.buscarClasePorId(id);
+                if (claseAlta != null) {
+                    claseAlta.setEstado(true);
+                    claseData.modificarClase(claseAlta);
+                    cargarClases();
+                    JOptionPane.showMessageDialog(this, "La clase fue activada (Estado = Activo) con éxito.", "Alta Lógica", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se encontró la clase en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al procesar el alta: " + e.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_jBAltaActionPerformed
 
@@ -672,9 +642,42 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
     private javax.swing.JButton jbModificar;
     private javax.swing.JButton jbNuevo;
     private javax.swing.JPanel panelFormulario;
-    private javax.swing.JTable tablaMateria;
+    private javax.swing.JTable tablaClases;
     private javax.swing.JTextField txtBuscarPorNombre;
     private javax.swing.JTextField txtBuscarPorNombre1;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
+
+    private void editarEncabezado() {
+        modeloTabla = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        modeloTabla.addColumn("ID Clase");
+        modeloTabla.addColumn("Nombre Clase");
+        modeloTabla.addColumn("Horario");
+        modeloTabla.addColumn("Capacidad Max");
+        modeloTabla.addColumn("Entrenador Asignado");
+        modeloTabla.addColumn("Estado");
+        tablaClases.setModel(modeloTabla);
+    }
+
+    private void cargarClases() {
+        modeloTabla.setRowCount(0);
+        for (Clases c : claseData.listarClasesActivas()) {
+            String nombreEntrenador = (c.getEntrenador() != null)
+                    ? c.getEntrenador().getNombre() + " " + c.getEntrenador().getApellido()
+                    : "No Asignado ";
+            modeloTabla.addRow(new Object[]{
+                c.getIdClase(),
+                c.getNombre(),
+                c.getHorario(),
+                c.getCapacidad() + "Alumnos",
+                nombreEntrenador,
+                c.isEstado() ? "Activo" : "Inactivo"
+            });
+        }
+    }
 }
