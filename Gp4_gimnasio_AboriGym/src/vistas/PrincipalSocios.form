@@ -28,19 +28,15 @@
               <EmptySpace pref="192" max="32767" attributes="0"/>
           </Group>
           <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="btn_volver" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="panelFormulario" max="32767" attributes="0"/>
-                          <Component id="PanelBuscar" alignment="0" max="32767" attributes="0"/>
-                          <Component id="panelLista" alignment="0" pref="593" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
+                  <Component id="panelFormulario" max="32767" attributes="0"/>
+                  <Component id="PanelBuscar" alignment="0" max="32767" attributes="0"/>
+                  <Component id="panelLista" alignment="0" pref="597" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>

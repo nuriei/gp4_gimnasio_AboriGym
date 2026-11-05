@@ -95,7 +95,7 @@ public class EntrenadorData {
             ps.setBoolean(1, estado);
             ps.setInt(2, idEntrenador);
             if (ps.executeUpdate() == 1) {
-                System.out.println("[SQL] Entrenador " + (estado ? "activado" : "dado de baja lógica") + " correctamente.");
+                System.out.println("[SQL] Entrenador " + (estado ? "activado" : "dado de baja logica") + " correctamente.");
             }
         } catch (SQLException ex) {
             System.out.println("Error al cambiar el estado del entrenador: " + ex.getMessage());

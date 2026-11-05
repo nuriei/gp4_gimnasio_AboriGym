@@ -753,8 +753,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
 
     private void btn_volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_volverActionPerformed
         // TODO add your handling code here:
-        VistaPrincipal principal = new VistaPrincipal();
-        principal.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btn_volverActionPerformed
 
     private void txtBuscarPorNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarPorNombreKeyReleased
