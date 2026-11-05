@@ -183,7 +183,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         });
 
         jbNuevo.setBackground(new java.awt.Color(153, 153, 153));
-        jbNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/agregar_usuario.png"))); // NOI18N
+        jbNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/+.png"))); // NOI18N
         jbNuevo.setText("Nuevo");
         jbNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -252,7 +252,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jbEliminar.setBackground(new java.awt.Color(153, 153, 153));
-        jbEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar_usuario.png"))); // NOI18N
+        jbEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
         jbEliminar.setText("Eliminar");
         jbEliminar.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jbEliminar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -263,7 +263,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         });
 
         jbModificar.setBackground(new java.awt.Color(153, 153, 153));
-        jbModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/modificar_usuario.png"))); // NOI18N
+        jbModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/editar.png"))); // NOI18N
         jbModificar.setText("Modificar");
         jbModificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -272,7 +272,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         });
 
         jBBaja.setBackground(new java.awt.Color(153, 153, 153));
-        jBBaja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/baja_usuario.png"))); // NOI18N
+        jBBaja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/baja.png"))); // NOI18N
         jBBaja.setText("Baja ");
         jBBaja.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jBBaja.addActionListener(new java.awt.event.ActionListener() {
@@ -282,7 +282,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         });
 
         jBAlta.setBackground(new java.awt.Color(153, 153, 153));
-        jBAlta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/alta_usuario.png"))); // NOI18N
+        jBAlta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/alta.png"))); // NOI18N
         jBAlta.setText("Alta");
         jBAlta.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jBAlta.addActionListener(new java.awt.event.ActionListener() {
