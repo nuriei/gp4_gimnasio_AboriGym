@@ -394,7 +394,7 @@ public class PrincipalPases extends javax.swing.JInternalFrame {
 
         jRBPasesInactivos.setText("Pases Inactivos");
 
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo (3).png"))); // NOI18N
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/baja_usuario.png"))); // NOI18N
         jLabel10.setText("jLabel9");
 
         javax.swing.GroupLayout PanelBuscarLayout = new javax.swing.GroupLayout(PanelBuscar);
