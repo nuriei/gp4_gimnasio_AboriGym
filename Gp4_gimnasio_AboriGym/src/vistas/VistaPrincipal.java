@@ -46,6 +46,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
         btnEntrenadores = new javax.swing.JButton();
         btnPases = new javax.swing.JButton();
         jBSalir = new javax.swing.JButton();
+        btnAsistencias = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -106,11 +107,20 @@ public class VistaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        btnAsistencias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/usuario_icon.png"))); // NOI18N
+        btnAsistencias.setText("Asistencias");
+        btnAsistencias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAsistenciasActionPerformed(evt);
+            }
+        });
+
         escritorio.setLayer(btnClases, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(btnSocios, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(btnEntrenadores, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(btnPases, javax.swing.JLayeredPane.DEFAULT_LAYER);
         escritorio.setLayer(jBSalir, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        escritorio.setLayer(btnAsistencias, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout escritorioLayout = new javax.swing.GroupLayout(escritorio);
         escritorio.setLayout(escritorioLayout);
@@ -123,9 +133,10 @@ public class VistaPrincipal extends javax.swing.JFrame {
                         .addComponent(jBSalir))
                     .addGroup(escritorioLayout.createSequentialGroup()
                         .addGap(47, 47, 47)
-                        .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnPases, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSocios))
+                        .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnPases, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnSocios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnAsistencias, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 259, Short.MAX_VALUE)
                         .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnEntrenadores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -139,7 +150,9 @@ public class VistaPrincipal extends javax.swing.JFrame {
                 .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSocios)
                     .addComponent(btnEntrenadores))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 447, Short.MAX_VALUE)
+                .addGap(46, 46, 46)
+                .addComponent(btnAsistencias)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 362, Short.MAX_VALUE)
                 .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnClases)
                     .addComponent(btnPases))
@@ -200,6 +213,12 @@ public class VistaPrincipal extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_jBSalirActionPerformed
 
+    private void btnAsistenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAsistenciasActionPerformed
+        PrincipalAsistencias ventanaAsistencias= new PrincipalAsistencias();
+        escritorio.add(ventanaAsistencias);
+        ventanaAsistencias.setVisible(true);
+    }//GEN-LAST:event_btnAsistenciasActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -236,6 +255,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAsistencias;
     private javax.swing.JButton btnClases;
     private javax.swing.JButton btnEntrenadores;
     private javax.swing.JButton btnPases;
