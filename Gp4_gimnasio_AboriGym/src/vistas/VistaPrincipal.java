@@ -173,9 +173,9 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
     private void btnPasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPasesActionPerformed
         // TODO add your handling code here:
-        PrincipalPases ventanaPases= new PrincipalPases();
-        escritorio.add(ventanaPases);
-        ventanaPases.setVisible(true);
+       PrincipalPases ventanaPases = new PrincipalPases();
+       escritorio.add(ventanaPases);
+       ventanaPases.setVisible(true);
         
     }//GEN-LAST:event_btnPasesActionPerformed
 
