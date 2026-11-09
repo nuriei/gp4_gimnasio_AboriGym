@@ -73,9 +73,10 @@
                       </Group>
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="btnPases" min="-2" pref="160" max="-2" attributes="0"/>
-                              <Component id="btnSocios" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="btnPases" max="32767" attributes="0"/>
+                              <Component id="btnSocios" max="32767" attributes="0"/>
+                              <Component id="btnAsistencias" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace pref="259" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -96,7 +97,9 @@
                       <Component id="btnSocios" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnEntrenadores" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="447" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                  <Component id="btnAsistencias" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="362" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnClases" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnPases" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -169,6 +172,17 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBSalirActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnAsistencias">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/imagenes/usuario_icon.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Asistencias"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAsistenciasActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
