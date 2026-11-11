@@ -10,6 +10,9 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+# Configuración privada de NetBeans
+/nbproject/private/
+
 # Package Files #
 *.jar
 *.war
@@ -33,3 +36,5 @@ Gp4_gimnasio_AboriGym/nbproject/private/private.xml
 Gp4_gimnasio_AboriGym/nbproject/private/private.xml
 Gp4_gimnasio_AboriGym/nbproject/private/private.xml
 Gp4_gimnasio_AboriGym/nbproject/private/private.xml
+*.properties
+*.xml
