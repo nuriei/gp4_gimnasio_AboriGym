@@ -30,8 +30,12 @@ import persistencia.SocioData;
  
     public PrincipalPases(MiConexion conexion) {
         initComponents();
-        jdcFechaIniciou = new com.toedter.calendar.JDateChooser();
-        jdcFechaFin = new com.toedter.calendar.JDateChooser();
+        btnGuardar.addActionListener(e -> btnGuardarActionPerformed(e));
+        btnBuscarSocio.addActionListener(e -> btnBuscarSocioActionPerformed(e));
+        jBLimpiar.addActionListener(e -> jBLimpiarActionPerformed(e));
+        btnNuevo.addActionListener(e -> btnNuevoActionPerformed(e));
+        //jdcFechaIniciou = new com.toedter.calendar.JDateChooser();
+        //jdcFechaFin = new com.toedter.calendar.JDateChooser();
         paseData = new PaseData(conexion);
         socioData = new SocioData(conexion);
         modeloTabla = (DefaultTableModel) tablaPases.getModel();
@@ -514,17 +518,25 @@ import persistencia.SocioData;
         
     }//GEN-LAST:event_txtSocioActionPerformed
 
-    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        boolean veniaEditando = editando;
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    boolean veniaEditando = editando;
         tablaPases.clearSelection();
         limpiarCamposPase();
         if (veniaEditando) {
-            limpiarSocio();   // para no asignar el pase nuevo al socio del pase que se estaba editando
+            limpiarSocio();   
         }
-        jdcFechaIniciou.setDate(aDate(LocalDate.now()));   // por defecto, hoy
-        txtCosto.requestFocus();
-    }//GEN-LAST:event_btnNuevoActionPerformed
+        
+        // Liberar la búsqueda por DNI
+        txtDniSocio.setEnabled(true);
+        txtDniSocio.setText("");
+        txtDniSocio.requestFocus();
+        
+        // Asignar la fecha de hoy y calcular inmediatamente los 30 días
+        jdcFechaIniciou.setDate(aDate(LocalDate.now())); 
+        actualizarFechaFin();  
+    } 
 
+   
     private void btnBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBajaActionPerformed
         int id = idFilaSeleccionada();
         if (id == -1) {
@@ -584,7 +596,7 @@ import persistencia.SocioData;
  
         cargarPases();
         if (modeloTabla.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this, "No se encontraron pases con ese filtro.");
+            JOptionPane.showMessageDialog(this, "Asignele un pase!.");
         }
     
 
