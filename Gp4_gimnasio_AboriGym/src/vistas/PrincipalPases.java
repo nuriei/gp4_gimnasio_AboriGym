@@ -510,7 +510,7 @@ import persistencia.SocioData;
         jdcFechaIniciou.setDate(aDate(p.getFechaInicio()));
         txtCosto.setText(String.valueOf(p.getCosto()));
         checkEstado.setSelected(p.isEstado());
-        cmbEntradas.setEnabled(false);   // las entradas no se editan a mano
+        cmbEntradas.setEnabled(true);   //para q se edite las entradas si se modifica
     
     }//GEN-LAST:event_btnCancelar1ActionPerformed
 
@@ -641,7 +641,7 @@ import persistencia.SocioData;
         }
  
         if (editando) {
-            // 3a) MODIFICAR: se cambian fechas, costo y estado (las entradas se consumen con las asistencias)
+            // 3a) MODIFICAR: fechas, costo, estado y cantidad de entradas
             Pases p = paseData.buscarPasePorId(idPaseActual);
             if (p == null) {
                 JOptionPane.showMessageDialog(this, "El pase ya no existe.");
@@ -649,6 +649,13 @@ import persistencia.SocioData;
                 limpiarFormulario();
                 return;
             }
+            Object seleccion = cmbEntradas.getSelectedItem();
+            if (seleccion == null) {
+                JOptionPane.showMessageDialog(this, "Seleccione la cantidad de entradas.");
+                return;
+            }
+            
+            p.setCantidadPases(Integer.parseInt(seleccion.toString()));
             p.setFechaInicio(inicio);
             p.setFechaFin(inicio.plusDays(Pases.DIAS_VALIDEZ));
             p.setCosto(costo);
