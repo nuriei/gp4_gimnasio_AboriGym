@@ -8,13 +8,13 @@ public class Entrenadores {
     private String dni;
     private String nombre;
     private String apellido;
-    private Especialidad especialidad;
+    private String especialidad;
     private boolean estado;
 
     public Entrenadores() {
     }
 
-    public Entrenadores(int idEntrenador, String dni, String nombre, String apellido, Especialidad especialidad, boolean estado) {
+    public Entrenadores(int idEntrenador, String dni, String nombre, String apellido, String especialidad, boolean estado) {
         this.idEntrenador = idEntrenador;
         this.dni = dni;
         this.nombre = nombre;
@@ -22,7 +22,9 @@ public class Entrenadores {
         this.especialidad = especialidad;
         this.estado = estado;
     }
-    public Entrenadores(String dni, String nombre, String apellido, Especialidad especialidad, boolean estado) {
+
+    
+    public Entrenadores(String dni, String nombre, String apellido, String especialidad, boolean estado) {
         this.dni = dni;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -46,17 +48,21 @@ public class Entrenadores {
         return idEntrenador;
     }
 
-    public Especialidad getEspecialidad() {
+    public String getEspecialidad() {
         return especialidad;
     }
+
+    
 
     public void setIdEntrenador(int idEntrenador) {
         this.idEntrenador = idEntrenador;
     }
 
-    public void setEspecialidad(Especialidad especialidad) {
+    public void setEspecialidad(String especialidad) {
         this.especialidad = especialidad;
     }
+
+    
 
     
 

@@ -1,7 +1,7 @@
 package vistas;
 
 import entidades.Entrenadores;
-import entidades.Especialidad;
+
 import java.awt.Image;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -796,60 +796,59 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        String documento = txtDni.getText().trim();
-        String apellido = txtApellido.getText().trim();
-        String nombre = txtNombre.getText().trim();
-        
-        if (documento.length() < 7 || documento.length() > 8) {
+       String documento = txtDni.getText().trim();
+    String apellido = txtApellido.getText().trim();
+    String nombre = txtNombre.getText().trim();
+    
+    // 1. Validamos que los campos obligatorios no estén vacíos primero
+    if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Completá todos los campos.");
+        return;
+    }
+
+    // 2. Validamos la longitud del DNI
+    if (documento.length() < 7 || documento.length() > 8) {
         JOptionPane.showMessageDialog(this, "El DNI ingresado no es válido (debe tener entre 7 y 8 dígitos).", "Error en DNI", JOptionPane.WARNING_MESSAGE);
         return;
-}
+    }
 
-        // 1. OBTENEMOS LA ESPECIALIDAD SELECCIONADA DEL COMBOBOX Y LA CONVERTIMOS A NUESTRO ENUM
-        String seleccionStr = comboBoxEspecialidad.getSelectedItem().toString();
-        Especialidad especialidadSeleccionada = Especialidad.valueOf(seleccionStr);
+    // 3. OBTENEMOS LA ESPECIALIDAD SELECCIONADA DEL COMBOBOX COMO STRING DIRECTO
+    String especialidadSeleccionada = comboBoxEspecialidad.getSelectedItem().toString();
 
-        // Validamos que los campos obligatorios no estén vacíos
-        if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Completá todos los campos.");
-            return;
+    try {
+        boolean estado = comboBoxEstado.getSelectedItem().toString().equals("Activo");
+
+        if (idEntrenadorActual == -1) {
+            // Guardar nuevo entrenador (pasándole el String de la especialidad)
+            Entrenadores entrenador = new Entrenadores(documento, nombre, apellido, especialidadSeleccionada, estado);
+            entrenadorData.guardarEntrenador(entrenador);
+
+            JOptionPane.showMessageDialog(this, "Entrenador guardado.");
+        } else {
+            // Modificar entrenador existente (pasándole el ID y el String de la especialidad)
+            Entrenadores entrenador = new Entrenadores(idEntrenadorActual, documento, nombre, apellido, especialidadSeleccionada, estado);
+            entrenadorData.modificarEntrenador(entrenador);
+
+            JOptionPane.showMessageDialog(this, "Entrenador modificado.");
         }
 
-        try {
-            boolean estado = comboBoxEstado.getSelectedItem().toString().equals("Activo");
+        // Recargamos la tabla, ocultamos el formulario y reseteamos las variables
+        cargarEntrenadores();
+        panelFormulario.setVisible(false);
+        idEntrenadorActual = -1;
 
-            if (idEntrenadorActual == -1) {
-                // Guardar nuevo entrenador (le pasamos la especialidad seleccionada del combo)
-                Entrenadores entrenador = new Entrenadores(documento, nombre, apellido, especialidadSeleccionada, estado);
-                entrenadorData.guardarEntrenador(entrenador);
+        // Limpiamos los campos
+        txtDni.setText("");
+        txtApellido.setText("");
+        txtNombre.setText("");
+        comboBoxEstado.setSelectedItem("Activo");
+        comboBoxEspecialidad.setSelectedIndex(0);
 
-                JOptionPane.showMessageDialog(this, "Entrenador guardado.");
-            } else {
-                // Modificar entrenador existente (le pasamos el ID y la especialidad seleccionada)
-                Entrenadores entrenador = new Entrenadores(idEntrenadorActual, documento, nombre, apellido, especialidadSeleccionada, estado);
-                entrenadorData.modificarEntrenador(entrenador);
-
-                JOptionPane.showMessageDialog(this, "Entrenador modificado.");
-            }
-
-            // Recargamos la tabla, ocultamos el formulario y reseteamos las variables
-            cargarEntrenadores();
-            panelFormulario.setVisible(false);
-            idEntrenadorActual = -1;
-
-            // Limpiamos los campos
-            txtDni.setText("");
-            txtApellido.setText("");
-            txtNombre.setText("");
-            comboBoxEstado.setSelectedItem("Activo");
-            // Opcional: el combo se puede dejar en la primera opción por defecto
-            comboBoxEspecialidad.setSelectedIndex(0);
-
-        } catch (java.sql.SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error en la Base de Datos: " + e.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+    } catch (java.sql.SQLException e) {
+        JOptionPane.showMessageDialog(this, "Error en la Base de Datos: " + e.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
 
@@ -925,9 +924,13 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
     }
 
     private void llenarComboEspecialidad() {
-        comboBoxEspecialidad.removeAllItems(); // Limpia por las dudas
-        for (entidades.Especialidad esp : entidades.Especialidad.values()) {
-            comboBoxEspecialidad.addItem(esp.name()); // Agrega el nombre del enum como String
-        }
+comboBoxEspecialidad.removeAllItems(); // Limpia por las dudas
+    
+    // Lista de disciplinas directas en texto (sin depender de un enum)
+    String[] disciplinas = {"YOGA", "CROSSFIT", "MUSCULACION", "PILATES", "FUNCIONAL"};
+    
+    for (String disciplina : disciplinas) {
+        comboBoxEspecialidad.addItem(disciplina);
     }
+}
 }
