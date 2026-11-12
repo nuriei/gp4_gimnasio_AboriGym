@@ -110,7 +110,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        btnAsistencias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/usuario_icon.png"))); // NOI18N
+        btnAsistencias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/asistncia.png"))); // NOI18N
         btnAsistencias.setText("Asistencias");
         btnAsistencias.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

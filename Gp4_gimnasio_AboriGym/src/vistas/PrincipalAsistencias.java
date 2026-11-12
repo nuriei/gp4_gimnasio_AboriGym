@@ -188,6 +188,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         );
 
         btnRegistrarAsistencia.setBackground(new java.awt.Color(153, 153, 153));
+        btnRegistrarAsistencia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/asistncia.png"))); // NOI18N
         btnRegistrarAsistencia.setText("Registrar Asistencia");
         btnRegistrarAsistencia.addActionListener(this::btnRegistrarAsistenciaActionPerformed);
 
@@ -230,7 +231,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
                                 .addGap(69, 69, 69)
                                 .addComponent(btnLimpiar))
                             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelFormularioLayout.setVerticalGroup(
             panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
