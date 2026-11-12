@@ -82,6 +82,7 @@ import persistencia.SocioData;
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         btn_volver = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         PanelBuscar = new javax.swing.JPanel();
@@ -93,6 +94,8 @@ import persistencia.SocioData;
         jRBPasesInactivos = new javax.swing.JRadioButton();
         jLabel10 = new javax.swing.JLabel();
         txtDniSocio = new javax.swing.JTextField();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         btnNuevo = new javax.swing.JButton();
@@ -150,12 +153,19 @@ import persistencia.SocioData;
 
         jLabel9.setText("Por DNI:");
 
-        jRBPasesActivos.setText("Pases Activos");
+        buttonGroup1.add(jRBPasesActivos);
+        jRBPasesActivos.setText("Activos");
 
-        jRBPasesInactivos.setText("Pases Inactivos");
+        buttonGroup1.add(jRBPasesInactivos);
+        jRBPasesInactivos.setText("Inactivos");
 
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo (3).png"))); // NOI18N
         jLabel10.setText("jLabel9");
+
+        buttonGroup1.add(jRadioButton1);
+        jRadioButton1.setText("Sin asignar");
+
+        jLabel1.setText("Pases:");
 
         javax.swing.GroupLayout PanelBuscarLayout = new javax.swing.GroupLayout(PanelBuscar);
         PanelBuscar.setLayout(PanelBuscarLayout);
@@ -164,42 +174,52 @@ import persistencia.SocioData;
             .addGroup(PanelBuscarLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9)
+                    .addGroup(PanelBuscarLayout.createSequentialGroup()
+                        .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(PanelBuscarLayout.createSequentialGroup()
+                                .addComponent(btnBuscarSocio)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jBLimpiar))
+                            .addComponent(txtDniSocio, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31))
                     .addGroup(PanelBuscarLayout.createSequentialGroup()
                         .addComponent(jRBPasesActivos)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRBPasesInactivos))
-                    .addGroup(PanelBuscarLayout.createSequentialGroup()
-                        .addComponent(btnBuscarSocio)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jBLimpiar))
-                    .addComponent(txtDniSocio, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(80, 80, 80)
-                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jRBPasesInactivos)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jRadioButton1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         PanelBuscarLayout.setVerticalGroup(
             PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelBuscarLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16))
             .addGroup(PanelBuscarLayout.createSequentialGroup()
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtDniSocio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRBPasesActivos)
-                    .addComponent(jRBPasesInactivos))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBuscarSocio)
-                    .addComponent(jBLimpiar))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelBuscarLayout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtDniSocio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jRBPasesActivos)
+                            .addComponent(jRBPasesInactivos)
+                            .addComponent(jRadioButton1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnBuscarSocio)
+                            .addComponent(jBLimpiar)))
+                    .addGroup(PanelBuscarLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -309,6 +329,7 @@ import persistencia.SocioData;
         );
 
         panelFormulario.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panelFormulario.setEnabled(false);
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel13.setText("Nombre Socio:");
@@ -518,7 +539,8 @@ import persistencia.SocioData;
         
     }//GEN-LAST:event_txtSocioActionPerformed
 
-    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        panelFormulario.setVisible(true);
     boolean veniaEditando = editando;
         tablaPases.clearSelection();
         limpiarCamposPase();
@@ -850,9 +872,11 @@ import persistencia.SocioData;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton btn_volver;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox checkEstado;
     private javax.swing.JComboBox<String> cmbEntradas;
     private javax.swing.JButton jBLimpiar;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -870,6 +894,7 @@ import persistencia.SocioData;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButton jRBPasesActivos;
     private javax.swing.JRadioButton jRBPasesInactivos;
+    private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private com.toedter.calendar.JDateChooser jdcFechaFin;
     private com.toedter.calendar.JDateChooser jdcFechaIniciou;

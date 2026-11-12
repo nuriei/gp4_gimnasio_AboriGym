@@ -71,6 +71,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jLabel5 = new javax.swing.JLabel();
         panelFormulario = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -119,11 +120,13 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel12.setText("Registro de Clases:");
 
+        buttonGroup1.add(jRadioButton1);
         jRadioButton1.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jRadioButton1.setSelected(true);
         jRadioButton1.setText("Activo");
         jRadioButton1.setFocusCycleRoot(true);
 
+        buttonGroup1.add(jRBInactivo);
         jRBInactivo.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jRBInactivo.setText("Inactivo");
 
@@ -736,6 +739,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btn_volver;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jBAlta;
     private javax.swing.JButton jBBaja;
     private javax.swing.JButton jBLimpiar;
