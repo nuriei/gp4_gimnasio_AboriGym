@@ -9,19 +9,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-/**
- *
- * @author analf
- */
+
 public class EntrenadorData {
       private Connection con = null;
  
     public EntrenadorData(MiConexion conexion) {
         this.con = conexion.buscarConexion();
     }
- 
-    // ALTA: INSERT
-// ALTA: INSERT
+
     public void guardarEntrenador(Entrenadores entrenador) throws SQLException {
         String sql = "INSERT INTO entrenadores (dni, nombre, apellido, especialidad, estado) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -40,11 +35,11 @@ public class EntrenadorData {
             }
         } catch (SQLException ex) {
             System.out.println("Error al guardar el entrenador: " + ex.getMessage());
-            throw ex; // <-- Esto es clave para que la vista se entere de que falló el SQL
+            
         }
     }
  
-    // MODIFICACIÓN: UPDATE
+  
     public void modificarEntrenador(Entrenadores entrenador) {
         String sql = "UPDATE entrenadores SET dni = ?, nombre = ?, apellido = ?, especialidad = ?, estado = ? WHERE id_Entrenador = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {

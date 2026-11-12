@@ -926,7 +926,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
     private void llenarComboEspecialidad() {
 comboBoxEspecialidad.removeAllItems(); // Limpia por las dudas
     
-    // Lista de disciplinas directas en texto (sin depender de un enum)
+
     String[] disciplinas = {"YOGA", "CROSSFIT", "MUSCULACION", "PILATES", "FUNCIONAL"};
     
     for (String disciplina : disciplinas) {
