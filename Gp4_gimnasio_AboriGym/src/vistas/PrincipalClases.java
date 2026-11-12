@@ -23,11 +23,18 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
 
     public PrincipalClases() {
         initComponents();
+        //agregado de configuracion parajspiner adatespiner
+        javax.swing.SpinnerDateModel modeloHora = new javax.swing.SpinnerDateModel(new java.util.Date(), null, null, java.util.Calendar.MINUTE);
+        JSHorario.setModel(modeloHora);
+        javax.swing.JSpinner.DateEditor editorHora = new javax.swing.JSpinner.DateEditor(JSHorario, "HH:mm");
+        JSHorario.setEditor(editorHora);
+        //conexion
         persistencia.MiConexion conexion = new persistencia.MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym", "root", "");
         claseData = new persistencia.ClaseData(conexion);
 
         editarEncabezado();
         cargarClases();
+        LlenarComboEntrenadores();
         panelFormulario.setVisible(false);
     }
 
@@ -501,37 +508,37 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             return;
         }
         //validacion capacidad
-        if(capacidadStr.isEmpty()){
-        JOptionPane.showMessageDialog(this,"Por favor ingrese la capacidad maxima de alumnos","Validacion de Datos",JOptionPane.WARNING_MESSAGE);
-        JTxtCapacidad.requestFocus();
-        return;
+        if (capacidadStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor ingrese la capacidad maxima de alumnos", "Validacion de Datos", JOptionPane.WARNING_MESSAGE);
+            JTxtCapacidad.requestFocus();
+            return;
         }
-        if(!capacidadStr.matches("\\d+")){
-        JOptionPane.showMessageDialog(this,"La capacidad debe ser un numero entero","Error de tipo de dato",JOptionPane.WARNING_MESSAGE);
-        JTxtCapacidad.setText("");
-        JTxtCapacidad.requestFocus();
-        return;
+        if (!capacidadStr.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this, "La capacidad debe ser un numero entero", "Error de tipo de dato", JOptionPane.WARNING_MESSAGE);
+            JTxtCapacidad.setText("");
+            JTxtCapacidad.requestFocus();
+            return;
         }
         //validacion entrenador
-        if(JCBEntrenador.getSelectedItem() == null){
-        JOptionPane.showMessageDialog(this,"Debe seleccionar un entrenador para la clase","Validacion de Datos",JOptionPane.WARNING_MESSAGE);
-        
-        return;
+        if (JCBEntrenador.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un entrenador para la clase", "Validacion de Datos", JOptionPane.WARNING_MESSAGE);
+
+            return;
         }
 
         try {
             int capacidadReal = Integer.parseInt(capacidadStr);
-            if(capacidadReal<= 0){
-                javax.swing.JOptionPane.showMessageDialog(this, "La capacidad debe ser mayor a cero","Validacion de Datos",JOptionPane.WARNING_MESSAGE);
+            if (capacidadReal <= 0) {
+                javax.swing.JOptionPane.showMessageDialog(this, "La capacidad debe ser mayor a cero", "Validacion de Datos", JOptionPane.WARNING_MESSAGE);
                 JTxtCapacidad.requestFocus();
                 return;
             }
-            
+
             entidades.Entrenadores entrenadorSeleccionado = (entidades.Entrenadores) JCBEntrenador.getSelectedItem();
             java.util.Date fechaSpinner = (java.util.Date) JSHorario.getValue();
             java.time.LocalTime horarioClase = fechaSpinner.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalTime();
             boolean activo = jRadioButton1.isSelected();
-            
+
             if (editando) {
                 entidades.Clases claseModificar = claseData.buscarClasePorId(idClaseActual);
                 if (claseModificar != null) {
@@ -540,19 +547,19 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
                     claseModificar.setEntrenador(entrenadorSeleccionado);
                     claseModificar.setHorario(horarioClase);
                     claseModificar.setCapacidad(capacidadReal);
-                    
+
                     claseData.modificarClase(claseModificar);
-                    JOptionPane.showMessageDialog(this, "Clase modificada correctamente.","Exitoso",JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Clase modificada correctamente.", "Exitoso", JOptionPane.INFORMATION_MESSAGE);
                 }
             } else {
-               // persistencia.MiConexion con = new persistencia.MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym", "root", "");
-               // entidades.Entrenadores entren = new persistencia.EntrenadorData(con).buscarEntrenadorPorId(1);
+                // persistencia.MiConexion con = new persistencia.MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym", "root", "");
+                // entidades.Entrenadores entren = new persistencia.EntrenadorData(con).buscarEntrenadorPorId(1);
 
-                entidades.Clases nuevaClase = new entidades.Clases(nombre, entrenadorSeleccionado,horarioClase, capacidadReal, activo);
-                
+                entidades.Clases nuevaClase = new entidades.Clases(nombre, entrenadorSeleccionado, horarioClase, capacidadReal, activo);
+
                 claseData.guardarClase(nuevaClase);
-                JOptionPane.showMessageDialog(this, "Clase registrada con éxito y asociada al entrenador.","Exitoso", JOptionPane.INFORMATION_MESSAGE);
-                        
+                JOptionPane.showMessageDialog(this, "Clase registrada con éxito y asociada al entrenador.", "Exitoso", JOptionPane.INFORMATION_MESSAGE);
+
             }
             cargarClases();
             txtNombre.setText("");
@@ -561,8 +568,8 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             panelFormulario.setVisible(false);
             editando = false;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error de sistema",JOptionPane.ERROR_MESSAGE);
-            
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error de sistema", JOptionPane.ERROR_MESSAGE);
+
         }
 
     }//GEN-LAST:event_btnGuardarActionPerformed
@@ -686,7 +693,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             cargarClases();
             JOptionPane.showMessageDialog(null, "La clase fue desactivada (Estado = Inactivo) con éxito.", "Baja Lógica", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jBBajaActionPerformed
-           }
+    }
     private void jBAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAltaActionPerformed
         int fila = tablaClases.getSelectedRow();
 
@@ -790,22 +797,22 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             });
         }
     }
-    
-    private void llenarComboEntrenadores(){
-       JCBEntrenador.removeAllItems();
-        try{
-        persistencia.MiConexion con = new persistencia.MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym", "root", "");
-        persistencia.EntrenadorData entrenadorData = new persistencia.EntrenadorData(con);
-         
-        java.util.List<entidades.Entrenadores> lista = entrenadorData.listarEntrenadores();
-        
-        for(entidades.Entrenadores e : lista){
-        if(e.isEstado()){//revisamos el tributo booleano de estado
-        JCBEntrenador.addItem((Object)e);
-        }
-        }
-        }catch(Exception e){
-            javax.swing.JOptionPane.showMessageDialog(this, "Error al cargar la lista de entrenadores" + e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+
+    private void LlenarComboEntrenadores() {
+        JCBEntrenador.removeAllItems();
+        try {
+            persistencia.MiConexion con = new persistencia.MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym", "root", "");
+            persistencia.EntrenadorData entrenadorData = new persistencia.EntrenadorData(con);
+
+            java.util.List<entidades.Entrenadores> lista = entrenadorData.listarEntrenadores();
+
+            for (entidades.Entrenadores e : lista) {
+                if (e.isEstado()) {//revisamos el tributo booleano de estado
+                    JCBEntrenador.addItem((Object) e);
+                }
+            }
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al cargar la lista de entrenadores" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
