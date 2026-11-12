@@ -65,9 +65,9 @@ import java.time.LocalDate;
  
     // ---- Métodos de negocio ----
  
-    // Vigente: activa y no vencida por fecha
+    //Evalua que este dentro del rango de fecha de vigencia  que tnga fecha asignada
     public boolean estaVigente() {
-        return estado && !LocalDate.now().isAfter(fechaFin);
+       return estado && fechaInicio != null && fechaFin != null && !LocalDate.now().isBefore(fechaInicio) && !LocalDate.now().isAfter(fechaFin);
     }
  
     public boolean tienePases() {
