@@ -92,9 +92,9 @@ import persistencia.SocioData;
         jLabel9 = new javax.swing.JLabel();
         jRBPasesActivos = new javax.swing.JRadioButton();
         jRBPasesInactivos = new javax.swing.JRadioButton();
+        jRBSinAsignar = new javax.swing.JRadioButton();
         jLabel10 = new javax.swing.JLabel();
         txtDniSocio = new javax.swing.JTextField();
-        jRadioButton1 = new javax.swing.JRadioButton();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
@@ -159,11 +159,11 @@ import persistencia.SocioData;
         buttonGroup1.add(jRBPasesInactivos);
         jRBPasesInactivos.setText("Inactivos");
 
+        buttonGroup1.add(jRBSinAsignar);
+        jRBSinAsignar.setText("Sin asignar");
+
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo (3).png"))); // NOI18N
         jLabel10.setText("jLabel9");
-
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setText("Sin asignar");
 
         jLabel1.setText("Pases:");
 
@@ -192,7 +192,7 @@ import persistencia.SocioData;
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jRBPasesInactivos)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jRadioButton1)
+                        .addComponent(jRBSinAsignar)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         PanelBuscarLayout.setVerticalGroup(
@@ -211,7 +211,7 @@ import persistencia.SocioData;
                         .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jRBPasesActivos)
                             .addComponent(jRBPasesInactivos)
-                            .addComponent(jRadioButton1))
+                            .addComponent(jRBSinAsignar))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnBuscarSocio)
@@ -894,7 +894,7 @@ import persistencia.SocioData;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButton jRBPasesActivos;
     private javax.swing.JRadioButton jRBPasesInactivos;
-    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRBSinAsignar;
     private javax.swing.JScrollPane jScrollPane1;
     private com.toedter.calendar.JDateChooser jdcFechaFin;
     private com.toedter.calendar.JDateChooser jdcFechaIniciou;
