@@ -595,16 +595,16 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
  String nombreBuscado = txtBuscarPorNombre.getText().trim(); // Campo para Nombre
         String idBuscado = txtBuscarPorID.getText().trim();        // Campo para ID
 
-        modeloTabla.setRowCount(0); // Limpio la tabla
+       
 
         // Si escriben en el campo de nombre (búsqueda parcial)
         if (!nombreBuscado.isEmpty() && idBuscado.isEmpty()) {
-            if (nombreBuscado.matches(".*\\d.*")) {
+           if (!nombreBuscado.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*$")){
                 JOptionPane.showMessageDialog(this, "El campo de búsqueda por nombre solo debe contener letras.", "Error de formato", JOptionPane.WARNING_MESSAGE);
                 cargarSocios(); // Recargamos la tabla completa
                 return;
             }
-
+            modeloTabla.setRowCount(0); // Limpio la tabla
             // Usamos listarSociosPorNombre para traer coincidencias
             List<Socio> lista = socioData.listarSociosPorNombre(nombreBuscado);
 
@@ -628,6 +628,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         else if (!idBuscado.isEmpty() && nombreBuscado.isEmpty()) {
             try {
                 int id = Integer.parseInt(idBuscado);
+                 modeloTabla.setRowCount(0); // Limpio la tabla
                 Socio s = socioData.buscarSocioPorId(id);
 
                 if (s != null) {
