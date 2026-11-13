@@ -494,6 +494,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         String nombre = txtNombre.getText().trim();
         String capacidadStr = JTxtCapacidad.getText().trim();
+
         // validacion interna tradicionals: Nombre
         if (nombre.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ingrese el nombre de la clase.");
@@ -541,6 +542,38 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             java.util.Date fechaSpinner = (java.util.Date) JSHorario.getValue();
             java.time.LocalTime horarioClase = fechaSpinner.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalTime();
             boolean activo = jRadioButton1.isSelected();
+
+            //Agregacion de validacion de especialidd
+            if (entrenadorSeleccionado.getEspecialidad() == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "El entrenador selecionado no tiene una especialidad asignada", "Validacion", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            String especialidadProf = entrenadorSeleccionado.getEspecialidad().toString().trim().toLowerCase();
+            String nombreClaseMin = nombre.toLowerCase();
+
+            if (!nombreClaseMin.contains(especialidadProf) && !especialidadProf.contains(nombreClaseMin)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "La especialidad del entrenador (" + entrenadorSeleccionado.getEspecialidad().toString() + ") no coincide con la clase ' " + nombre + " '.", "Especialidad incompatible", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            //validacion de hora clase, evitar choque de horarios
+            horarioClase = horarioClase.withSecond(0).withNano(0);
+            for (entidades.Clases c : claseData.listarClasesActivas()) {
+                if (editando && c.getIdClase() == idClaseActual) {
+                    continue;
+                }
+                if (c.getEntrenador() != null && c.getEntrenador().getIdEntrenadores() == entrenadorSeleccionado.getIdEntrenadores()) {
+                    java.time.LocalTime horaExistente = c.getHorario().withSecond(0).withNano(0);
+                    long diferenciaMinutos = Math.abs(java.time.Duration.between(horaExistente, horarioClase).toMinutes());
+
+                    if (diferenciaMinutos < 60) {
+                        javax.swing.JOptionPane.showMessageDialog(this,
+                                "El entrenador " + entrenadorSeleccionado.getNombre() + " " + entrenadorSeleccionado.getApellido()
+                                + "ya dicta " + c.getNombre() + " de: " + horaExistente + " a " + horaExistente.plusHours(1) + " hs.\n"
+                                + "Se superponen los horarios","Horario ocupado", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                }
+            }
 
             if (editando) {
                 entidades.Clases claseModificar = claseData.buscarClasePorId(idClaseActual);
