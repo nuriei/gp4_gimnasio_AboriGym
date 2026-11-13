@@ -42,6 +42,7 @@ import persistencia.SocioData;
  
         grupoFiltro.add(jRBPasesActivos);
         grupoFiltro.add(jRBPasesInactivos);
+        grupoFiltro.add(jRBSinAsignar);
         cmbEntradas.setModel(new DefaultComboBoxModel<>(new String[]{"8", "12", "20"}));
  
         // Campos que el usuario NO escribe: los completa el programa
@@ -49,6 +50,7 @@ import persistencia.SocioData;
         txtNombreSocio.setEditable(false);
         txtApellidoSocio.setEditable(false);
         jdcFechaFin.setEnabled(false);
+        panelFormulario.setVisible(false);
         tablaPases.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
  
         // Las únicas 3 conexiones por código (no son botones comunes):
