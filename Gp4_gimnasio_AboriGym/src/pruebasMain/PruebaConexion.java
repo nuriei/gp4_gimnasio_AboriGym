@@ -8,7 +8,7 @@ import persistencia.SocioData;
 import entidades.Socio;
 import persistencia.EntrenadorData;
 import entidades.Entrenadores;
-import entidades.Especialidad;
+
 
 
 public class PruebaConexion {
@@ -69,7 +69,7 @@ public class PruebaConexion {
 
             if (encontrado == null) {
 
-                Entrenadores nuevoEntrenador = new Entrenadores("30123456","Carlos","Perez",Especialidad.MUSCULACION,true);
+                Entrenadores nuevoEntrenador = new Entrenadores("30123456","Carlos","Perez","musculacion",true);
 
                 // Damos de alta al entrenador en la bdd
                 entrenadorData.guardarEntrenador(nuevoEntrenador);

@@ -1,7 +1,7 @@
 package vistas;
 
 import entidades.Entrenadores;
-import entidades.Especialidad;
+
 import java.awt.Image;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -19,69 +19,69 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
 
     public PrincipalEntrenadores() {
         initComponents();
-        // --- FILTRO PARA PERMITIR SOLO NÚMEROS EN EL DNI ---
-        ((javax.swing.text.AbstractDocument) txtDni.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
-            @Override
-            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
-                if (string != null && string.matches("\\d*")) {
-                    super.insertString(fb, offset, string, attr);
-                }
-            }
-
-            @Override
-            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
-                if (text != null && text.matches("\\d*")) {
-                    super.replace(fb, offset, length, text, attrs);
-                }
-            }
-        });
-        // --- FILTRO SOLO LETRAS Y ESPACIOS PARA EL NOMBRE ---
-        ((javax.swing.text.AbstractDocument) txtNombre.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
-            @Override
-            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
-                if (string != null && string.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
-                    super.insertString(fb, offset, string, attr);
-                }
-            }
-
-            @Override
-            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
-                if (text != null && text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
-                    super.replace(fb, offset, length, text, attrs);
-                }
-            }
-        });
-
-        // --- FILTRO SOLO LETRAS Y ESPACIOS PARA EL APELLIDO ---
-        ((javax.swing.text.AbstractDocument) txtApellido.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
-            @Override
-            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
-                if (string != null && string.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
-                    super.insertString(fb, offset, string, attr);
-                }
-            }
-
-            @Override
-            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
-                if (text != null && text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
-                    super.replace(fb, offset, length, text, attrs);
-                }
-            }
-        });
-        btnGuardar.setEnabled(false); // Arranca apagado
-
-        javax.swing.event.DocumentListener validadorListener = new javax.swing.event.DocumentListener() {
-            @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
-            @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
-            @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
-        };
-
-        txtDni.getDocument().addDocumentListener(validadorListener);
-        txtApellido.getDocument().addDocumentListener(validadorListener);
-        txtNombre.getDocument().addDocumentListener(validadorListener);
+//        // --- FILTRO PARA PERMITIR SOLO NÚMEROS EN EL DNI ---
+//        ((javax.swing.text.AbstractDocument) txtDni.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
+//            @Override
+//            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
+//                if (string != null && string.matches("\\d*")) {
+//                    super.insertString(fb, offset, string, attr);
+//                }
+//            }
+//
+//            @Override
+//            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
+//                if (text != null && text.matches("\\d*")) {
+//                    super.replace(fb, offset, length, text, attrs);
+//                }
+//            }
+//        });
+//        // --- FILTRO SOLO LETRAS Y ESPACIOS PARA EL NOMBRE ---
+//        ((javax.swing.text.AbstractDocument) txtNombre.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
+//            @Override
+//            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
+//                if (string != null && string.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
+//                    super.insertString(fb, offset, string, attr);
+//                }
+//            }
+//
+//            @Override
+//            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
+//                if (text != null && text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
+//                    super.replace(fb, offset, length, text, attrs);
+//                }
+//            }
+//        });
+//
+//        // --- FILTRO SOLO LETRAS Y ESPACIOS PARA EL APELLIDO ---
+//        ((javax.swing.text.AbstractDocument) txtApellido.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
+//            @Override
+//            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
+//                if (string != null && string.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
+//                    super.insertString(fb, offset, string, attr);
+//                }
+//            }
+//
+//            @Override
+//            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
+//                if (text != null && text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
+//                    super.replace(fb, offset, length, text, attrs);
+//                }
+//            }
+//        });
+//        btnGuardar.setEnabled(false); // Arranca apagado
+//
+//        javax.swing.event.DocumentListener validadorListener = new javax.swing.event.DocumentListener() {
+//            @Override
+//            public void insertUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+//            @Override
+//            public void removeUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+//            @Override
+//            public void changedUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+//        };
+//
+//        txtDni.getDocument().addDocumentListener(validadorListener);
+//        txtApellido.getDocument().addDocumentListener(validadorListener);
+//        txtNombre.getDocument().addDocumentListener(validadorListener);
 
         panelFormulario.setVisible(false);
         modeloTabla = (DefaultTableModel) tablaEntrenadores.getModel();
@@ -669,16 +669,16 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
     private void jbBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBuscarActionPerformed
         String nombreBuscado = txtBuscarPorNombre.getText().trim(); // Campo para Nombre
         String idBuscado = txtBuscarPorID.getText().trim();        // Campo para ID
+   
 
-        modeloTabla.setRowCount(0); // Limpio la tabla
-
-        // Si escriben en el campo de nombre (búsqueda parcial)
+        // por si escriben en el campo de nombre (búsqueda parcial)
         if (!nombreBuscado.isEmpty() && idBuscado.isEmpty()) {
-            if (nombreBuscado.matches(".*\\d.*")) {
+           if (!nombreBuscado.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*$")){
                 JOptionPane.showMessageDialog(this, "El campo de búsqueda por nombre solo debe contener letras.", "Error de formato", JOptionPane.WARNING_MESSAGE);
                 cargarEntrenadores(); // Recargamos la tabla completa
                 return;
             }
+           modeloTabla.setRowCount(0); // Limpio la tabla
 
             // Usamos listarEntrenadoresPorNombre para traer coincidencias
             List<Entrenadores> lista = entrenadorData.listarEntrenadoresPorNombre(nombreBuscado);
@@ -695,14 +695,16 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
                     });
                 }
             } else {
-                // 🛑 ESTE ES EL CARTEL QUE SALTA CUANDO NO ENCUENTRA NADA CON LO QUE BUSCARON
+               
                 JOptionPane.showMessageDialog(this, "No se encontró ningún entrenador con el nombre: " + nombreBuscado, "Sin resultados", JOptionPane.INFORMATION_MESSAGE);
                 cargarEntrenadores(); // Recarga la tabla nuevamente con todos
             }
+            
         } // Si se busca por ID
         else if (!idBuscado.isEmpty() && nombreBuscado.isEmpty()) {
             try {
                 int id = Integer.parseInt(idBuscado);
+                modeloTabla.setRowCount(0);
                 Entrenadores e = entrenadorData.buscarEntrenadorPorId(id);
 
                 if (e != null) {
@@ -796,60 +798,72 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        String documento = txtDni.getText().trim();
-        String apellido = txtApellido.getText().trim();
-        String nombre = txtNombre.getText().trim();
-        
-        if (documento.length() < 7 || documento.length() > 8) {
+    String documento = txtDni.getText().trim();
+    String apellido = txtApellido.getText().trim();
+    String nombre = txtNombre.getText().trim();
+    
+    // 1. Validamos que los campos obligatorios no estén vacíos primero
+    if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Completá todos los campos.");
+        return;
+    }
+
+    // 2. Validamos la longitud del DNI
+    if (documento.length() < 7 || documento.length() > 8) {
         JOptionPane.showMessageDialog(this, "El DNI ingresado no es válido (debe tener entre 7 y 8 dígitos).", "Error en DNI", JOptionPane.WARNING_MESSAGE);
         return;
-}
+    }
 
-        // 1. OBTENEMOS LA ESPECIALIDAD SELECCIONADA DEL COMBOBOX Y LA CONVERTIMOS A NUESTRO ENUM
-        String seleccionStr = comboBoxEspecialidad.getSelectedItem().toString();
-        Especialidad especialidadSeleccionada = Especialidad.valueOf(seleccionStr);
+    
+  
+    if (!apellido.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*$")) {
+        JOptionPane.showMessageDialog(this, "apellido solo debe tener letras", "Error de formato", JOptionPane.WARNING_MESSAGE);
+        return; // Frena para que no siga guardando
+    }
 
-        // Validamos que los campos obligatorios no estén vacíos
-        if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Completá todos los campos.");
-            return;
+   
+    if (!nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*$")) {
+        JOptionPane.showMessageDialog(this, "nombre solo debe tener letras", "Error de formato", JOptionPane.WARNING_MESSAGE);
+        return; // Frena para que no siga guardando
+    }
+    
+    // especialidad capturada
+    String especialidadSeleccionada = comboBoxEspecialidad.getSelectedItem().toString();
+
+    try {
+        boolean estado = comboBoxEstado.getSelectedItem().toString().equals("Activo");
+
+        if (idEntrenadorActual == -1) {
+            // Guardar nuevo entrenador (pasándole el String de la especialidad)
+            Entrenadores entrenador = new Entrenadores(documento, nombre, apellido, especialidadSeleccionada, estado);
+            entrenadorData.guardarEntrenador(entrenador);
+
+            JOptionPane.showMessageDialog(this, "Entrenador guardado.");
+        } else {
+            // Modificar entrenador existente (pasándole el ID y el String de la especialidad)
+            Entrenadores entrenador = new Entrenadores(idEntrenadorActual, documento, nombre, apellido, especialidadSeleccionada, estado);
+            entrenadorData.modificarEntrenador(entrenador);
+
+            JOptionPane.showMessageDialog(this, "Entrenador modificado.");
         }
 
-        try {
-            boolean estado = comboBoxEstado.getSelectedItem().toString().equals("Activo");
+        // Recargamos la tabla, ocultamos el formulario y reseteamos las variables
+        cargarEntrenadores();
+        panelFormulario.setVisible(false);
+        idEntrenadorActual = -1;
 
-            if (idEntrenadorActual == -1) {
-                // Guardar nuevo entrenador (le pasamos la especialidad seleccionada del combo)
-                Entrenadores entrenador = new Entrenadores(documento, nombre, apellido, especialidadSeleccionada, estado);
-                entrenadorData.guardarEntrenador(entrenador);
+        // Limpiamos los campos
+        txtDni.setText("");
+        txtApellido.setText("");
+        txtNombre.setText("");
+        comboBoxEstado.setSelectedItem("Activo");
+        comboBoxEspecialidad.setSelectedIndex(0);
 
-                JOptionPane.showMessageDialog(this, "Entrenador guardado.");
-            } else {
-                // Modificar entrenador existente (le pasamos el ID y la especialidad seleccionada)
-                Entrenadores entrenador = new Entrenadores(idEntrenadorActual, documento, nombre, apellido, especialidadSeleccionada, estado);
-                entrenadorData.modificarEntrenador(entrenador);
-
-                JOptionPane.showMessageDialog(this, "Entrenador modificado.");
-            }
-
-            // Recargamos la tabla, ocultamos el formulario y reseteamos las variables
-            cargarEntrenadores();
-            panelFormulario.setVisible(false);
-            idEntrenadorActual = -1;
-
-            // Limpiamos los campos
-            txtDni.setText("");
-            txtApellido.setText("");
-            txtNombre.setText("");
-            comboBoxEstado.setSelectedItem("Activo");
-            // Opcional: el combo se puede dejar en la primera opción por defecto
-            comboBoxEspecialidad.setSelectedIndex(0);
-
-        } catch (java.sql.SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error en la Base de Datos: " + e.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+    } catch (java.sql.SQLException e) {
+        JOptionPane.showMessageDialog(this, "Error en la Base de Datos: " + e.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
 
@@ -925,9 +939,13 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
     }
 
     private void llenarComboEspecialidad() {
-        comboBoxEspecialidad.removeAllItems(); // Limpia por las dudas
-        for (entidades.Especialidad esp : entidades.Especialidad.values()) {
-            comboBoxEspecialidad.addItem(esp.name()); // Agrega el nombre del enum como String
-        }
+comboBoxEspecialidad.removeAllItems(); // Limpia por las dudas
+    
+
+    String[] disciplinas = {"YOGA", "CROSSFIT", "MUSCULACION", "PILATES", "FUNCIONAL"};
+    
+    for (String disciplina : disciplinas) {
+        comboBoxEspecialidad.addItem(disciplina);
     }
+}
 }
