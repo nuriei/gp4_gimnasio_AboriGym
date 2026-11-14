@@ -515,7 +515,7 @@ import persistencia.SocioData;
  
     // ---------------- BOTÓN MODIFICAR (btnModificar): carga el pase elegido en el formulario ----------------
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {
-        int id = idFilaSeleccionada();
+       int id = idFilaSeleccionada();
         if (id == -1) {
             JOptionPane.showMessageDialog(this, "Seleccione un pase de la tabla.");
             return;
@@ -533,7 +533,9 @@ import persistencia.SocioData;
         jdcFechaIniciou.setDate(aDate(p.getFechaInicio()));
         txtCosto.setText(String.valueOf(p.getCosto()));
         checkEstado.setSelected(p.isEstado());
-        cmbEntradas.setEnabled(true);   //para q se edite las entradas si se modifica
+        cmbEntradas.setEnabled(true);   // para q se editen las entradas si se modifica
+        
+        panelFormulario.setVisible(true); // <--- IMPORTANTE: Muestra el formulario al modificar
     
     }//GEN-LAST:event_btnCancelar1ActionPerformed
 
@@ -804,6 +806,8 @@ import persistencia.SocioData;
     private void limpiarFormulario() {
         limpiarSocio();
         limpiarCamposPase();
+        panelFormulario.setVisible(false); // oculta el panel
+        actualizarBotones();               //  bloquea los botones
     }
  
     private void actualizarFechaFin() {
