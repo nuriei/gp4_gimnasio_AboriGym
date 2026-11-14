@@ -1,9 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
- */
+
 package vistas;
 
+import persistencia.MiConexion;
+import persistencia.PaseData;
+import persistencia.SocioData;
+import entidades.Socio; //para poder trabajar con lalista del metood "listarSocios()"
+import java.util.List;
+import persistencia.ClaseData;
+import entidades.Clases;
 /**
  *
  * @author Jess Moran
@@ -13,10 +17,54 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     /**
      * Creates new form PrincipalAsistencias
      */
-    public PrincipalAsistencias() {
+    
+    
+    private SocioData socioData ;
+    private PaseData paseData;
+    
+    private ClaseData claseData;
+          
+    public PrincipalAsistencias()
+    {
         initComponents();
         this.setSize(800, 900);
+        
+        MiConexion conexion = new MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym","root","");
+    
+    
+        socioData = new SocioData(conexion);
+        paseData = new PaseData(conexion);
+        claseData =new ClaseData(conexion);
+        cargarSocios();
+        cargarClases();
     }
+    
+    //cargamos las clases Activas
+    
+    private void cargarClases()
+    {
+        cbClase.removeAllItems();
+        List<Clases> clase = claseData.listarClasesActivas();
+        
+        for(Clases i : clase )
+        {
+            cbClase.addItem(i.toString());
+        }
+    }
+    
+    // Carga los socios activos al combobox
+    private void cargarSocios() {
+    cbSocio.removeAllItems();
+
+    List<Socio> socios = socioData.listarSocios();
+
+    for (Socio socio : socios) {
+        if (socio.isEstado()) {
+            cbSocio.addItem(socio.getApellido() + ", " + socio.getNombre());
+        }
+    }
+}
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
