@@ -78,13 +78,13 @@ INSERT INTO `entrenadores` (`id_entrenador`, `dni`, `nombre`, `apellido`, `espec
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `membresias`
+-- Estructura de tabla para la tabla `pases`
 --
 
-CREATE TABLE `membresias` (
-  `id_membresia` int(11) NOT NULL,
+CREATE TABLE `pases` (
+  `id_pase` int(11) NOT NULL,
   `id_socio` int(11) NOT NULL,
-  `cantidad_pases` int(11) NOT NULL,
+  `cantidadEntradas` int(11) NOT NULL,
   `fecha_inicio` date NOT NULL,
   `fecha_fin` date NOT NULL,
   `costo` decimal(10,2) NOT NULL,
@@ -145,10 +145,10 @@ ALTER TABLE `entrenadores`
   ADD UNIQUE KEY `dni` (`dni`);
 
 --
--- Indices de la tabla `membresias`
+-- Indices de la tabla `pases`
 --
-ALTER TABLE `membresias`
-  ADD PRIMARY KEY (`id_membresia`),
+ALTER TABLE `pases`
+  ADD PRIMARY KEY (`id_pase`),
   ADD KEY `id_socio` (`id_socio`);
 
 --
@@ -182,10 +182,10 @@ ALTER TABLE `entrenadores`
   MODIFY `id_entrenador` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT de la tabla `membresias`
+-- AUTO_INCREMENT de la tabla `pases`
 --
-ALTER TABLE `membresias`
-  MODIFY `id_membresia` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `pases`
+  MODIFY `id_pase` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `socios`
@@ -211,9 +211,9 @@ ALTER TABLE `clases`
   ADD CONSTRAINT `fk_clase_entrenador` FOREIGN KEY (`id_entrenador`) REFERENCES `entrenadores` (`id_entrenador`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `membresias`
+-- Filtros para la tabla `pases`
 --
-ALTER TABLE `membresias`
+ALTER TABLE `pases`
   ADD CONSTRAINT `fk_membresia_socio` FOREIGN KEY (`id_socio`) REFERENCES `socios` (`id_socio`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 

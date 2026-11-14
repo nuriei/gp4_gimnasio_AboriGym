@@ -187,7 +187,8 @@ public class EntrenadorData {
         e.setDni(rs.getString("dni"));
         e.setNombre(rs.getString("nombre"));
         e.setApellido(rs.getString("apellido"));
-       
+        
+        e.setEspecialidad(rs.getString("especialidad"));
         
         e.setEstado(rs.getBoolean("estado"));
         return e;

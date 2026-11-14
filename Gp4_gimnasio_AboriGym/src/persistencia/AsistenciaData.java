@@ -20,7 +20,7 @@ public class AsistenciaData {
     
         public AsistenciaData() {
 
-            connection = new MiConexion("jdbc:mysql://localhost/nombre_de_tu_base", "root", "").buscarConexion();
+            connection = new MiConexion("jdbc:mysql://localhost/gp4_gimnasio_aborigym", "root", "").buscarConexion();
 
         }
     
