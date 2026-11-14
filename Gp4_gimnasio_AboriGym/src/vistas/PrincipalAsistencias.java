@@ -52,18 +52,38 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         }
     }
     
-    // Carga los socios activos al combobox
-    private void cargarSocios() {
-    cbSocio.removeAllItems();
+    // Carga el nombre y apellido de los socios activos al combobox
+    private void cargarSocios()
+    {
+        cbSocio.removeAllItems();
+        List<Socio> socios = socioData.listarSocios();
 
-    List<Socio> socios = socioData.listarSocios();
-
-    for (Socio socio : socios) {
-        if (socio.isEstado()) {
-            cbSocio.addItem(socio.getApellido() + ", " + socio.getNombre());
-        }
+            for (Socio socio : socios) 
+            {
+                if (socio.isEstado()) 
+                {
+                    cbSocio.addItem(socio.getApellido() + ", " + socio.getNombre()); //No carga objetos, solo carga el nombre y apellido 
+                }
+            }
     }
-}
+    //Busca el socio cargado en el cbSocio y lo compara con los datos reales en la base 
+    private Socio buscarSocioSeleccionado() 
+    {
+        String nombreSeleccionado = cbSocio.getSelectedItem().toString();
+        List<Socio> socios = socioData.listarSocios();
+
+        for (Socio socio : socios)
+        {
+            String nombreCompleto = socio.getApellido() + ", " + socio.getNombre();
+
+            if (nombreCompleto.equals(nombreSeleccionado)) 
+            {
+                return socio;
+            }
+        }
+
+        return null;
+    }
     
 
     /**
@@ -101,6 +121,8 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         btnRegistrarAsistencia = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
+        lblId = new javax.swing.JLabel();
+        cbID = new javax.swing.JComboBox<>();
         panelListado = new javax.swing.JPanel();
         lblBuscar = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
@@ -128,6 +150,8 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
 
         lblFecha.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblFecha.setText("Fecha");
+
+        cbSocio.addItemListener(this::cbSocioItemStateChanged);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
@@ -214,7 +238,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addComponent(jpInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 42, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblDisponibilidadTitulo)
                     .addComponent(lblDisponibilidad)
@@ -249,6 +273,11 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         btnLimpiar.setText("Limpiar");
         btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
 
+        lblId.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblId.setText("ID");
+
+        cbID.setEnabled(false);
+
         javax.swing.GroupLayout panelFormularioLayout = new javax.swing.GroupLayout(panelFormulario);
         panelFormulario.setLayout(panelFormularioLayout);
         panelFormularioLayout.setHorizontalGroup(
@@ -256,30 +285,28 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
             .addGroup(panelFormularioLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblSocio)
                     .addGroup(panelFormularioLayout.createSequentialGroup()
                         .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(panelFormularioLayout.createSequentialGroup()
-                                    .addComponent(btnRegistrarAsistencia)
-                                    .addGap(136, 136, 136))
-                                .addGroup(panelFormularioLayout.createSequentialGroup()
-                                    .addComponent(cbSocio, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGap(34, 34, 34)))
+                            .addComponent(dcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblSocio)
                             .addGroup(panelFormularioLayout.createSequentialGroup()
                                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbSocio, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblFecha)
-                                    .addComponent(dcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblId)
+                                    .addComponent(cbID, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblClase)
                                     .addComponent(cbClase, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(34, 34, 34)))
-                        .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelFormularioLayout.createSequentialGroup()
-                                .addComponent(btnEliminar)
-                                .addGap(69, 69, 69)
-                                .addComponent(btnLimpiar))
-                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(36, 36, 36)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(12, Short.MAX_VALUE))
+                    .addGroup(panelFormularioLayout.createSequentialGroup()
+                        .addComponent(btnRegistrarAsistencia)
+                        .addGap(136, 136, 136)
+                        .addComponent(btnEliminar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnLimpiar)
+                        .addGap(17, 17, 17))))
         );
         panelFormularioLayout.setVerticalGroup(
             panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -290,22 +317,25 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
                         .addComponent(lblSocio)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbSocio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblId)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblClase)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbClase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(12, 12, 12)
                         .addComponent(lblFecha)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                        .addComponent(dcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegistrarAsistencia, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEliminar)
                     .addComponent(btnLimpiar))
-                .addGap(20, 20, 20))
+                .addGap(55, 55, 55))
         );
 
         panelFormularioLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cbClase, cbSocio});
@@ -402,7 +432,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
                 .addComponent(lblTitulo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelFormulario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(60, 60, 60)
                 .addComponent(panelListado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addComponent(btnVolver)
@@ -415,11 +445,13 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sPanelAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE)
+            .addComponent(sPanelAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, 766, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sPanelAsistencia, javax.swing.GroupLayout.PREFERRED_SIZE, 614, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(sPanelAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -448,6 +480,37 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
+
+    private void cbSocioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbSocioItemStateChanged
+        if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) 
+        {
+
+            cbID.removeAllItems();
+            cbID.setEnabled(false);
+
+            String nombreSeleccionado = cbSocio.getSelectedItem().toString();
+
+            List<Socio> socios = socioData.listarSocios();
+            int coincidencias = 0; //contador de coincidencias, si hay mas de uno, habilita el cbId para elegir el correcto
+
+                for (Socio socio : socios) 
+                {
+
+                    String nombreCompleto = socio.getApellido() + ", " + socio.getNombre();
+
+                    if (nombreCompleto.equals(nombreSeleccionado)) {
+                        cbID.addItem(String.valueOf(socio.getIdSocio()));
+                        coincidencias++;
+                    }
+                }
+
+            if (coincidencias > 1) {
+                cbID.setEnabled(true);
+            }
+        }
+
+    }//GEN-LAST:event_cbSocioItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEliminar;
@@ -455,6 +518,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnRegistrarAsistencia;
     private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> cbClase;
+    private javax.swing.JComboBox<String> cbID;
     private javax.swing.JComboBox<String> cbSocio;
     private com.toedter.calendar.JDateChooser dcFecha;
     private javax.swing.JPanel jPanel3;
@@ -473,6 +537,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblHorario;
     private javax.swing.JLabel lblHorarioTitulo;
+    private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblPase;
     private javax.swing.JLabel lblSocio;
     private javax.swing.JLabel lblTipoPase;
