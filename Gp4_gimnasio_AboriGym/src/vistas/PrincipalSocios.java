@@ -185,6 +185,9 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel5 = new javax.swing.JLabel();
+        btn_volver = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
         PanelBuscar = new javax.swing.JPanel();
         jbBuscar = new javax.swing.JButton();
         jbNuevo = new javax.swing.JButton();
@@ -194,6 +197,14 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         jLabel8 = new javax.swing.JLabel();
         txtBuscarPorID = new javax.swing.JTextField();
         jBLimpiar = new javax.swing.JButton();
+        panelLista = new javax.swing.JPanel();
+        jbEliminar = new javax.swing.JButton();
+        jbModificar = new javax.swing.JButton();
+        jBBaja = new javax.swing.JButton();
+        jBAlta = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaSocios = new javax.swing.JTable();
+        jLabel9 = new javax.swing.JLabel();
         panelFormulario = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -212,18 +223,21 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         jLabel14 = new javax.swing.JLabel();
         txtCorreo = new javax.swing.JTextField();
         txtTelefono = new javax.swing.JTextField();
-        panelLista = new javax.swing.JPanel();
-        jbEliminar = new javax.swing.JButton();
-        jbModificar = new javax.swing.JButton();
-        jBBaja = new javax.swing.JButton();
-        jBAlta = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tablaSocios = new javax.swing.JTable();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        btn_volver = new javax.swing.JButton();
 
         setTitle("Gestion de Socios");
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel5.setText("Gestion de Socios");
+
+        btn_volver.setBackground(new java.awt.Color(153, 153, 153));
+        btn_volver.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        btn_volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/volver.png"))); // NOI18N
+        btn_volver.setText("Volver");
+        btn_volver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_volverActionPerformed(evt);
+            }
+        });
 
         PanelBuscar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -265,47 +279,109 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
             }
         });
 
-        javax.swing.GroupLayout PanelBuscarLayout = new javax.swing.GroupLayout(PanelBuscar);
-        PanelBuscar.setLayout(PanelBuscarLayout);
-        PanelBuscarLayout.setHorizontalGroup(
-            PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanelBuscarLayout.createSequentialGroup()
+        panelLista.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jbEliminar.setBackground(new java.awt.Color(153, 153, 153));
+        jbEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar_usuario.png"))); // NOI18N
+        jbEliminar.setText("Elimnar");
+        jbEliminar.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jbEliminar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jbEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbEliminarActionPerformed(evt);
+            }
+        });
+
+        jbModificar.setBackground(new java.awt.Color(153, 153, 153));
+        jbModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/modificar_usuario.png"))); // NOI18N
+        jbModificar.setText("Modificar");
+        jbModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbModificarActionPerformed(evt);
+            }
+        });
+
+        jBBaja.setBackground(new java.awt.Color(153, 153, 153));
+        jBBaja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/baja_usuario.png"))); // NOI18N
+        jBBaja.setText("Baja ");
+        jBBaja.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jBBaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBBajaActionPerformed(evt);
+            }
+        });
+
+        jBAlta.setBackground(new java.awt.Color(153, 153, 153));
+        jBAlta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/alta_usuario.png"))); // NOI18N
+        jBAlta.setText("Alta");
+        jBAlta.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jBAlta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBAltaActionPerformed(evt);
+            }
+        });
+
+        tablaSocios.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "id", "DNI", "Nombre", "Apellido", "Edad", "Estado"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tablaSocios);
+        if (tablaSocios.getColumnModel().getColumnCount() > 0) {
+            tablaSocios.getColumnModel().getColumn(0).setPreferredWidth(1);
+        }
+
+        javax.swing.GroupLayout panelListaLayout = new javax.swing.GroupLayout(panelLista);
+        panelLista.setLayout(panelListaLayout);
+        panelListaLayout.setHorizontalGroup(
+            panelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelListaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel8)
-                    .addComponent(txtBuscarPorNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
-                    .addComponent(txtBuscarPorID)
-                    .addGroup(PanelBuscarLayout.createSequentialGroup()
-                        .addComponent(jbBuscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jBLimpiar))
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jbNuevo)
-                .addGap(58, 58, 58))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jbEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jBBaja, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jBAlta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jbModificar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(14, 14, 14))
         );
-        PanelBuscarLayout.setVerticalGroup(
-            PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelBuscarLayout.createSequentialGroup()
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(PanelBuscarLayout.createSequentialGroup()
-                        .addComponent(txtBuscarPorNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        panelListaLayout.setVerticalGroup(
+            panelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelListaLayout.createSequentialGroup()
+                .addGroup(panelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelListaLayout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(panelListaLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jbModificar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8))
-                    .addComponent(jbNuevo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtBuscarPorID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jbBuscar)
-                    .addComponent(jBLimpiar))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jBBaja)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBAlta)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbEliminar)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel9.setText("Listado de Entrenadores");
 
         panelFormulario.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -437,125 +513,65 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                         .addContainerGap())))
         );
 
-        panelLista.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jbEliminar.setBackground(new java.awt.Color(153, 153, 153));
-        jbEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar_usuario.png"))); // NOI18N
-        jbEliminar.setText("Elimnar");
-        jbEliminar.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jbEliminar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jbEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbEliminarActionPerformed(evt);
-            }
-        });
-
-        jbModificar.setBackground(new java.awt.Color(153, 153, 153));
-        jbModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/modificar_usuario.png"))); // NOI18N
-        jbModificar.setText("Modificar");
-        jbModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbModificarActionPerformed(evt);
-            }
-        });
-
-        jBBaja.setBackground(new java.awt.Color(153, 153, 153));
-        jBBaja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/baja_usuario.png"))); // NOI18N
-        jBBaja.setText("Baja ");
-        jBBaja.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jBBaja.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBBajaActionPerformed(evt);
-            }
-        });
-
-        jBAlta.setBackground(new java.awt.Color(153, 153, 153));
-        jBAlta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/alta_usuario.png"))); // NOI18N
-        jBAlta.setText("Alta");
-        jBAlta.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jBAlta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBAltaActionPerformed(evt);
-            }
-        });
-
-        tablaSocios.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "id", "DNI", "Nombre", "Apellido", "Edad", "Estado"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(tablaSocios);
-        if (tablaSocios.getColumnModel().getColumnCount() > 0) {
-            tablaSocios.getColumnModel().getColumn(0).setPreferredWidth(1);
-        }
-
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel9.setText("Listado de Entrenadores");
-
-        javax.swing.GroupLayout panelListaLayout = new javax.swing.GroupLayout(panelLista);
-        panelLista.setLayout(panelListaLayout);
-        panelListaLayout.setHorizontalGroup(
-            panelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelListaLayout.createSequentialGroup()
+        javax.swing.GroupLayout PanelBuscarLayout = new javax.swing.GroupLayout(PanelBuscar);
+        PanelBuscar.setLayout(PanelBuscarLayout);
+        PanelBuscarLayout.setHorizontalGroup(
+            PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelBuscarLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
+                .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelBuscarLayout.createSequentialGroup()
+                        .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8)
+                            .addComponent(txtBuscarPorNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
+                            .addComponent(txtBuscarPorID)
+                            .addGroup(PanelBuscarLayout.createSequentialGroup()
+                                .addComponent(jbBuscar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jBLimpiar))
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
+                        .addComponent(jbNuevo)
+                        .addGap(58, 58, 58))
+                    .addGroup(PanelBuscarLayout.createSequentialGroup()
+                        .addComponent(panelLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(PanelBuscarLayout.createSequentialGroup()
+                        .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addComponent(panelFormulario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+        );
+        PanelBuscarLayout.setVerticalGroup(
+            PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelBuscarLayout.createSequentialGroup()
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(panelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jbEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jBBaja, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jBAlta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbModificar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(14, 14, 14))
-        );
-        panelListaLayout.setVerticalGroup(
-            panelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelListaLayout.createSequentialGroup()
-                .addGroup(panelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelListaLayout.createSequentialGroup()
-                        .addComponent(jLabel9)
+                .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(PanelBuscarLayout.createSequentialGroup()
+                        .addComponent(txtBuscarPorNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addGroup(panelListaLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jbModificar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBBaja)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBAlta)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbEliminar)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jLabel8))
+                    .addComponent(jbNuevo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtBuscarPorID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jbBuscar)
+                    .addComponent(jBLimpiar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(panelFormulario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(19, 19, 19))
         );
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel5.setText("Gestion de Socios");
-
-        btn_volver.setBackground(new java.awt.Color(153, 153, 153));
-        btn_volver.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        btn_volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/volver.png"))); // NOI18N
-        btn_volver.setText("Volver");
-        btn_volver.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_volverActionPerformed(evt);
-            }
-        });
+        jScrollPane2.setViewportView(PanelBuscar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -563,32 +579,22 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(215, 215, 215)
-                .addComponent(jLabel5)
-                .addContainerGap(192, Short.MAX_VALUE))
+                .addComponent(jLabel5))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btn_volver))
-                    .addComponent(panelFormulario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(PanelBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelLista, javax.swing.GroupLayout.PREFERRED_SIZE, 597, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_volver)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 615, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(PanelBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelFormulario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_volver, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -942,6 +948,7 @@ int fila = tablaSocios.getSelectedRow();
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton jbBuscar;
     private javax.swing.JButton jbEliminar;
     private javax.swing.JButton jbModificar;

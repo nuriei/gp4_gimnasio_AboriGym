@@ -19,6 +19,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
 
     public PrincipalEntrenadores() {
         initComponents();
+        this.setSize(800, 900);
 //        // --- FILTRO PARA PERMITIR SOLO NÚMEROS EN EL DNI ---
 //        ((javax.swing.text.AbstractDocument) txtDni.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
 //            @Override
@@ -178,7 +179,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         btn_volver = new javax.swing.JButton();
 
         setTitle("Gestion Entrenadores");
-        setPreferredSize(new java.awt.Dimension(703, 694));
+        setPreferredSize(new java.awt.Dimension(750, 700));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel5.setText("Gestion de Entrenadores");
@@ -186,6 +187,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(707, 690));
 
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(707, 690));
 
         PanelBuscar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -515,22 +517,15 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 695, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btn_volver)
-                        .addGap(14, 14, 14)))
-                .addContainerGap(27, Short.MAX_VALUE))
+            .addComponent(btn_volver, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 635, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 564, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_volver, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 19, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_volver, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -542,7 +537,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
                 .addComponent(jLabel5)
                 .addGap(179, 179, 179))
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 728, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 635, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -550,7 +545,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 563, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
