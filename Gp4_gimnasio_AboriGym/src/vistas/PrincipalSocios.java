@@ -103,22 +103,24 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
 //            
 //        });
 //
-//        btnGuardar.setEnabled(false); // Arranca apagado
+       btnGuardar.setEnabled(false); // Arranca apagado
+//como es una interfaz debo decirle con q va  funcionar
+        javax.swing.event.DocumentListener validadorListener = new javax.swing.event.DocumentListener() {
+            @Override
+           public void insertUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+       };
 //
-//        javax.swing.event.DocumentListener validadorListener = new javax.swing.event.DocumentListener() {
-//            @Override
-//            public void insertUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
-//            @Override
-//            public void removeUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
-//            @Override
-////            public void changedUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
-//       };
-//
-//        txtDni.getDocument().addDocumentListener(validadorListener);
-//        txtApellido.getDocument().addDocumentListener(validadorListener);
-//        txtNombre.getDocument().addDocumentListener(validadorListener);
-//        txtTelefono.getDocument().addDocumentListener(validadorListener);
-//        txtEdad.getDocument().addDocumentListener(validadorListener); // Incluimos la edad obligatoria
+       txtDni.getDocument().addDocumentListener(validadorListener);
+       txtApellido.getDocument().addDocumentListener(validadorListener);
+       txtNombre.getDocument().addDocumentListener(validadorListener);
+       txtTelefono.getDocument().addDocumentListener(validadorListener);
+       txtEdad.getDocument().addDocumentListener(validadorListener); 
+       txtCorreo.getDocument().addDocumentListener(validadorListener);
+       
 
         panelFormulario.setVisible(false);
         
@@ -162,9 +164,12 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         boolean apellidoLleno = !txtApellido.getText().trim().isEmpty();
         boolean nombreLleno = !txtNombre.getText().trim().isEmpty();
         boolean edadLlena = !txtEdad.getText().trim().isEmpty();
+        boolean correoLleno= !txtCorreo.getText().trim().isEmpty();
+        boolean telLleno=!txtTelefono.getText().trim().isEmpty();
+        
         
         // El botón se activa solo si los campos obligatorios principales tienen texto
-        btnGuardar.setEnabled(dniLleno && apellidoLleno && nombreLleno && edadLlena);
+        btnGuardar.setEnabled(dniLleno && apellidoLleno && nombreLleno && edadLlena && correoLleno && telLleno);
     }
 
     private void cargarSocios() {
@@ -176,7 +181,9 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                 s.getNombre(),
                 s.getApellido(),
                 s.getEdad(),
-                s.isEstado() ? "Activo" : "Inactivo"
+                s.isEstado() ? "Activo" : "Inactivo",
+                s.getTelefono(),
+                s.getCorreo()
             });
         }
     }
@@ -323,17 +330,17 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
 
         tablaSocios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "id", "DNI", "Nombre", "Apellido", "Edad", "Estado"
+                "id", "DNI", "Nombre", "Apellido", "Edad", "Estado", "telefono", "correo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -341,42 +348,36 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
             }
         });
         jScrollPane1.setViewportView(tablaSocios);
-        if (tablaSocios.getColumnModel().getColumnCount() > 0) {
-            tablaSocios.getColumnModel().getColumn(0).setPreferredWidth(1);
-        }
 
         javax.swing.GroupLayout panelListaLayout = new javax.swing.GroupLayout(panelLista);
         panelLista.setLayout(panelListaLayout);
         panelListaLayout.setHorizontalGroup(
             panelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelListaLayout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(jbModificar)
+                .addGap(18, 18, 18)
+                .addComponent(jBBaja, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jBAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jbEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(panelListaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(panelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jbEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jBBaja, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jBAlta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbModificar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(14, 14, 14))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 555, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 13, Short.MAX_VALUE))
         );
         panelListaLayout.setVerticalGroup(
             panelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelListaLayout.createSequentialGroup()
-                .addGroup(panelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelListaLayout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addGroup(panelListaLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jbModificar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBBaja)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBAlta)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbEliminar)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(31, 31, 31)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                .addGap(9, 9, 9)
+                .addGroup(panelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jbModificar)
+                    .addComponent(jBBaja)
+                    .addComponent(jBAlta)
+                    .addComponent(jbEliminar))
                 .addContainerGap())
         );
 
@@ -531,17 +532,17 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jBLimpiar))
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jbNuevo)
                         .addGap(58, 58, 58))
                     .addGroup(PanelBuscarLayout.createSequentialGroup()
-                        .addComponent(panelLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel9)
+                        .addGap(0, 372, Short.MAX_VALUE))
                     .addGroup(PanelBuscarLayout.createSequentialGroup()
-                        .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9)
-                            .addComponent(panelFormulario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGroup(PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(panelFormulario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelLista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         PanelBuscarLayout.setVerticalGroup(
             PanelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -566,7 +567,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelFormulario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(19, 19, 19))
         );
@@ -578,13 +579,16 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(215, 215, 215)
-                .addComponent(jLabel5))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btn_volver)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 615, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(215, 215, 215)
+                            .addComponent(jLabel5))
+                        .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -618,14 +622,16 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
             List<Socio> lista = socioData.listarSociosPorNombre(nombreBuscado);
 
             if (!lista.isEmpty()) {
-                for (Socio s : lista) {
+                for (Socio soc : lista) {
                     modeloTabla.addRow(new Object[]{
-                        s.getIdSocio(),
-                        s.getDni(),
-                        s.getNombre(),
-                        s.getApellido(),
-                        s.getEdad(),
-                        s.isEstado() ? "Activo" : "Inactivo"
+                        soc.getIdSocio(),
+                        soc.getDni(),
+                        soc.getNombre(),
+                        soc.getApellido(),
+                        soc.getEdad(),
+                        soc.isEstado() ? "Activo" : "Inactivo",
+                        soc.getTelefono(),
+                        soc.getCorreo()
                     });
                 }
             } else {
@@ -647,7 +653,9 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                         s.getNombre(),
                         s.getApellido(),
                         s.getEdad(),
-                        s.isEstado() ? "Activo" : "Inactivo"
+                        s.isEstado() ? "Activo" : "Inactivo",
+                        s.getTelefono(),
+                        s.getCorreo()
                     });
                 } else {
                     JOptionPane.showMessageDialog(this, "No existe un socio con ese ID.");
@@ -666,9 +674,9 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jbBuscarActionPerformed
 
     private void jbNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbNuevoActionPerformed
-        idSocioActual = -1; // Seteamos en -1 para indicar que es un socio nuevo
+        idSocioActual = -1; // seteamos en -1 para indicar que es un socio nuevo eso despues servira para la modificacion
 
-        // Limpiamos todos los campos del formulario de socios
+        // limpio todo
         txtDni.setText("");
         txtNombre.setText("");
         txtApellido.setText("");
@@ -706,7 +714,9 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
                     s.getNombre(),
                     s.getApellido(),
                     s.getEdad(),
-                    s.isEstado() ? "Activo" : "Inactivo"
+                    s.isEstado() ? "Activo" : "Inactivo",
+                    s.getTelefono(),
+                    s.getCorreo()
                 });
             }
         }
@@ -721,7 +731,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jBLimpiarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-String documento = txtDni.getText().trim();
+        String documento = txtDni.getText().trim();
         String apellido = txtApellido.getText().trim();
         String nombre = txtNombre.getText().trim();
         String edadStr = txtEdad.getText().trim();
@@ -730,18 +740,62 @@ String documento = txtDni.getText().trim();
 
         // Validación de longitud del DNI
         if (documento.length() < 7 || documento.length() > 8) {
-            JOptionPane.showMessageDialog(this, "El DNI ingresado no es válido (debe tener entre 7 y 8 dígitos).", "Error en DNI", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "el DNI ingresado debe ser solo numerico entre 7 y 8 numeros", "Error  DNI", JOptionPane.WARNING_MESSAGE);
+            txtDni.requestFocus();
             return;
         }
 
-        // Validamos que los campos obligatorios principales no estén vacíos
-        if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty() || edadStr.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Completá todos los campos obligatorios.");
+        // aca valido q no esten vacios los campos antes de guardaar despues de activarse el boton con el listener
+        if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty() || edadStr.isEmpty()|| telefono.isEmpty() || correo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Comple todos los campos");
             return;
         }
+        
+        if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+        JOptionPane.showMessageDialog(this, "el campo nombre solo debe tener letras", "Error nombre", JOptionPane.WARNING_MESSAGE);
+        txtNombre.requestFocus();
+        return;
+        }
+
+        
+        if (!apellido.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+        JOptionPane.showMessageDialog(this, "el apellido solo debe tener letras", "Error apellido", JOptionPane.WARNING_MESSAGE);
+        txtApellido.requestFocus();
+        return;
+        }    
+        
+        //el telefono no entra en el try a pesar de ser numerico porque el 0 se o los - harian un error
+        if (!telefono.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this, "el campo telefono debe ser numerico", "Error telefono", JOptionPane.WARNING_MESSAGE);
+            txtTelefono.requestFocus();
+        return;
+        }
+        if (!correo.contains("@") || !correo.contains(".")) {//si no contiene
+            JOptionPane.showMessageDialog(this, "igrese correo valido ej: socio@gmail.com", "Error mail", JOptionPane.WARNING_MESSAGE);
+            txtCorreo.requestFocus();
+        return;
+        }
+        //como le pusimos a la base de datos q el dni sea unique no va a dejar guardar un dni q ya exista asi q agregamos esa validacion
+        Socio socioConMismoDni = socioData.buscarSocioPorDni(documento);
+    
+        if (socioConMismoDni != null) { //si lo de arriba da nulo
+            
+
+            JOptionPane.showMessageDialog(this, "ya existe socio con ese dni", "duplicado", JOptionPane.WARNING_MESSAGE);
+            txtDni.requestFocus();
+            return;
+        
+    }
+        
 
         try {
             int edad = Integer.parseInt(edadStr);
+            
+            if (edad <= 12 || edad >= 75) {//le doy una edad logica
+                JOptionPane.showMessageDialog(this, "el socio debe tener entre 12 y 75 años", "Edad erronea", JOptionPane.WARNING_MESSAGE);
+                txtEdad.requestFocus();
+                return; 
+            }
             boolean estado = comboBoxEstado.getSelectedItem().toString().equals("Activo");
 
             if (idSocioActual == -1) {
@@ -776,8 +830,6 @@ String documento = txtDni.getText().trim();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "La edad debe ser un número válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
             txtEdad.requestFocus();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
