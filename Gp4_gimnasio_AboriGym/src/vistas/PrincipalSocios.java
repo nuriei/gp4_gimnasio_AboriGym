@@ -779,28 +779,39 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         Socio socioConMismoDni = socioData.buscarSocioPorDni(documento);
     
         if (socioConMismoDni != null) { //si lo de arriba da nulo
-            
-
+            if (idSocioActual == -1) {//y si entra al bloque de nuevo
             JOptionPane.showMessageDialog(this, "ya existe socio con ese dni", "duplicado", JOptionPane.WARNING_MESSAGE);
             txtDni.requestFocus();
             return;
-        
+            }else{
+                    if (socioConMismoDni.getIdSocio() != idSocioActual){
+                    JOptionPane.showMessageDialog(this, "el dni a modificar ya existe", "duplicado", JOptionPane.WARNING_MESSAGE);
+                    txtDni.requestFocus();
+                    return;
+                    }
+                    }
         }
         //con correo igual
         Socio socioConMismoCorreo = socioData.buscarSocioPorCorreo(correo);
         if (socioConMismoCorreo != null) {
-        
-            JOptionPane.showMessageDialog(this, "el correo ya existe", "error correo", JOptionPane.WARNING_MESSAGE);
+            if (idSocioActual == -1) {
+            JOptionPane.showMessageDialog(this, "el correo ya existe", "duplicado", JOptionPane.WARNING_MESSAGE);
             txtCorreo.requestFocus();
             return;
-           }
+           }else{//aca valida la modificacion
+                if (socioConMismoCorreo.getIdSocio() != idSocioActual) {
+                JOptionPane.showMessageDialog(this, "el correo a modificar ya existe", "duplicado", JOptionPane.WARNING_MESSAGE);
+                txtCorreo.requestFocus();
+                return;
+            }
         
-        
+            }
+        }
 
         try {
             int edad = Integer.parseInt(edadStr);
             
-            if (edad < 12 || edad >= 75) {//le doy una edad logica si es menor q 11 o mayor q 75
+            if (edad < 12 || edad > 75) {//le doy una edad logica si es menor q 11 o mayor q 75
                 JOptionPane.showMessageDialog(this, "el socio debe tener entre 12 y 75 años", "Edad erronea", JOptionPane.WARNING_MESSAGE);
                 txtEdad.requestFocus();
                 return; 
