@@ -112,6 +112,30 @@ public class SocioData {
         }
         return socio;
     }
+        public Socio buscarSocioPorCorreo(String correo) {
+    String sql = "SELECT * FROM socios WHERE correo = ?";
+    Socio socio = null;
+    try {
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, correo);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            socio = new Socio();
+            socio.setIdSocio(rs.getInt("id_Socio"));
+            socio.setDni(rs.getString("dni"));
+            socio.setNombre(rs.getString("nombre"));
+            socio.setApellido(rs.getString("apellido"));
+            socio.setEdad(rs.getInt("edad"));
+            socio.setCorreo(rs.getString("correo"));
+            socio.setTelefono(rs.getString("telefono"));
+            socio.setEstado(rs.getBoolean("estado"));
+        }
+        ps.close();
+    } catch (SQLException ex) {
+        System.out.println("Error al buscar el socio por correo: " + ex.getMessage());
+    }
+    return socio;
+}
         public List<Socio> listarSocios() {
         String sql = "SELECT * FROM socios";
         List<Socio> socios = new ArrayList<>();

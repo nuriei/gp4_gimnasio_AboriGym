@@ -785,13 +785,22 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
             txtDni.requestFocus();
             return;
         
-    }
+        }
+        //con correo igual
+        Socio socioConMismoCorreo = socioData.buscarSocioPorCorreo(correo);
+        if (socioConMismoCorreo != null) {
+        
+            JOptionPane.showMessageDialog(this, "el correo ya existe", "error correo", JOptionPane.WARNING_MESSAGE);
+            txtCorreo.requestFocus();
+            return;
+           }
+        
         
 
         try {
             int edad = Integer.parseInt(edadStr);
             
-            if (edad <= 12 || edad >= 75) {//le doy una edad logica
+            if (edad < 12 || edad >= 75) {//le doy una edad logica si es menor q 11 o mayor q 75
                 JOptionPane.showMessageDialog(this, "el socio debe tener entre 12 y 75 años", "Edad erronea", JOptionPane.WARNING_MESSAGE);
                 txtEdad.requestFocus();
                 return; 
