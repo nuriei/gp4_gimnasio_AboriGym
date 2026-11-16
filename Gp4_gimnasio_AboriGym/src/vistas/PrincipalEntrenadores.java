@@ -19,7 +19,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
 
     public PrincipalEntrenadores() {
         initComponents();
-        this.setSize(800, 900);
+        this.setSize(647, 643);
 //        // --- FILTRO PARA PERMITIR SOLO NÚMEROS EN EL DNI ---
 //        ((javax.swing.text.AbstractDocument) txtDni.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
 //            @Override
@@ -179,15 +179,15 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         btn_volver = new javax.swing.JButton();
 
         setTitle("Gestion Entrenadores");
-        setPreferredSize(new java.awt.Dimension(750, 700));
+        setPreferredSize(new java.awt.Dimension(647, 643));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel5.setText("Gestion de Entrenadores");
 
-        jPanel1.setPreferredSize(new java.awt.Dimension(707, 690));
+        jPanel1.setPreferredSize(new java.awt.Dimension(647, 643));
 
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane2.setPreferredSize(new java.awt.Dimension(707, 690));
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(647, 643));
 
         PanelBuscar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -546,7 +546,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 563, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
