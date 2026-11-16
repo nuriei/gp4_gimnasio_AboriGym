@@ -5,6 +5,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import entidades.Clases;
 import entidades.Entrenadores;
+import java.time.Instant;
 import persistencia.ClaseData;
 import persistencia.EntrenadorData;
 import persistencia.MiConexion;
@@ -74,7 +75,6 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jLabel5 = new javax.swing.JLabel();
         btn_volver = new javax.swing.JButton();
-        jBSalir = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         PanelBuscar = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -121,17 +121,6 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         btn_volver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_volverActionPerformed(evt);
-            }
-        });
-
-        jBSalir.setBackground(new java.awt.Color(153, 153, 153));
-        jBSalir.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        jBSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/exit.png"))); // NOI18N
-        jBSalir.setText("Salir");
-        jBSalir.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jBSalir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBSalirActionPerformed(evt);
             }
         });
 
@@ -371,6 +360,12 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
 
         jLabel7.setText("Por Nombre:");
 
+        txtBuscarPorNombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscarPorNombreActionPerformed(evt);
+            }
+        });
+
         jLabel8.setText("Por ID:");
 
         jbBuscar.setBackground(new java.awt.Color(153, 153, 153));
@@ -477,19 +472,15 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btn_volver)
-                        .addGap(27, 27, 27)
-                        .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(244, 244, 244)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 696, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 1, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(244, 244, 244)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 696, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(7, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btn_volver)
+                .addGap(65, 65, 65))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -498,18 +489,12 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_volver, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btn_volver, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jBSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBSalirActionPerformed
-        this.dispose(); // TODO add your handling code here:
-    }//GEN-LAST:event_jBSalirActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         String nombre = txtNombre.getText().trim();
@@ -589,7 +574,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
                         javax.swing.JOptionPane.showMessageDialog(this,
                                 "El entrenador " + entrenadorSeleccionado.getNombre() + " " + entrenadorSeleccionado.getApellido()
                                 + "ya dicta " + c.getNombre() + " de: " + horaExistente + " a " + horaExistente.plusHours(1) + " hs.\n"
-                                + "Se superponen los horarios","Horario ocupado", JOptionPane.WARNING_MESSAGE);
+                                + "Se superponen los horarios", "Horario ocupado", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
                 }
@@ -639,8 +624,41 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void jbBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBuscarActionPerformed
-
+        String nombreBuscado = txtBuscarPorNombre.getText().trim();
         String idBuscado = txtBuscarPorNombre1.getText().trim();//extraigo id
+        //validacion por nombre
+        if (!nombreBuscado.isEmpty()) {
+            try {
+                modeloTabla.setRowCount(0);
+                boolean encontro = false;
+
+                for (Clases c : claseData.listarClasesActivas()) {
+                    if (c.getNombre().toLowerCase().contains(nombreBuscado.toLowerCase())) {
+                        String nombreEntrenador = (c.getEntrenador() != null)
+                                ? c.getEntrenador().getNombre() + " " + c.getEntrenador().getApellido()
+                                : "No asignado";
+
+                        modeloTabla.addRow(new Object[]{
+                            c.getIdClase(),
+                            c.getNombre(),
+                            c.getHorario(),
+                            c.getCapacidad() + " Alumnos",
+                            nombreEntrenador,
+                            c.isEstado() ? "Activo" : "Inactivo"
+                        });
+                        encontro = true;
+                    }
+                }//fin for
+                if (!encontro) {
+                    JOptionPane.showMessageDialog(this, "No se encontraron clases con el nombre" + nombreBuscado, "Busqueda", JOptionPane.INFORMATION_MESSAGE);
+                    cargarClases();
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al procesar la búsqueda por nombre.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            return;
+        }
+        // validacion po ID
         if (!validarSoloNumeros(idBuscado, "ID de Búsqueda")) {
             return;
         }
@@ -674,8 +692,10 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
 
     private void jbNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbNuevoActionPerformed
         editando = false;
+        LlenarComboEntrenadores();
         panelFormulario.setVisible(true);   // muestra el formulario
         txtNombre.setText("");
+        JTxtCapacidad.setText("");
         jRadioButton1.setSelected(true);    // Activo por defecto
         txtNombre.requestFocus();
         // TODO add your handling code here:
@@ -720,7 +740,25 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         Clases c = claseData.buscarClasePorId(idClaseActual);
 
         if (c != null) {
+            LlenarComboEntrenadores();
             txtNombre.setText(c.getNombre());
+            JTxtCapacidad.setText(String.valueOf(c.getCapacidad()));
+
+            java.util.Date horaDate = java.util.Date.from(c.getHorario()
+                    .atDate(java.time.LocalDate.now())
+                    .atZone(java.time.ZoneId.systemDefault()).toInstant());
+            JSHorario.setValue(horaDate);
+
+            if (c.getEntrenador() != null) {
+                for (int i = 0; i < JCBEntrenador.getItemCount(); i++) {
+                    Entrenadores e = (Entrenadores) JCBEntrenador.getItemAt(i);
+                    if (e.getIdEntrenador() == c.getEntrenador().getIdEntrenador()) {
+                        JCBEntrenador.setSelectedIndex(i);
+                        break;
+                    }
+                }
+            }
+
             if (c.isEstado()) {
                 jRadioButton1.setSelected(true);
             } else {
@@ -784,6 +822,10 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         this.dispose();
     }//GEN-LAST:event_btn_volverActionPerformed
 
+    private void txtBuscarPorNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarPorNombreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBuscarPorNombreActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<Object> JCBEntrenador;
@@ -797,7 +839,6 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
     private javax.swing.JButton jBAlta;
     private javax.swing.JButton jBBaja;
     private javax.swing.JButton jBLimpiar;
-    private javax.swing.JButton jBSalir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
@@ -851,7 +892,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
                 c.getIdClase(),
                 c.getNombre(),
                 c.getHorario(),
-                c.getCapacidad() + "Alumnos",
+                c.getCapacidad() + " Alumnos",
                 nombreEntrenador,
                 c.isEstado() ? "Activo" : "Inactivo"
             });

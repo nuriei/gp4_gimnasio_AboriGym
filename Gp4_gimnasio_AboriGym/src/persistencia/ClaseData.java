@@ -38,7 +38,8 @@ public class ClaseData {
                 }
             }
         } catch (SQLException ex) {
-            System.out.println("Error al guradar la clase: ");
+            javax.swing.JOptionPane.showMessageDialog(null, "Error SQL al guardar clase" +ex.getMessage());
+            System.out.println("Error al guardar la clase: "+ex.getMessage());
         }
     }
 
@@ -50,6 +51,7 @@ public class ClaseData {
             ps.setTime(3, Time.valueOf(clase.getHorario())); // Convierte LocalTime a java.sql.Time
             ps.setInt(4, clase.getCapacidad());
             ps.setBoolean(5, clase.isEstado());
+            ps.setInt(6, clase.getIdClase());
 
             if (ps.executeUpdate() == 1) {
                 System.out.println("[SQL] Los datos de la clase fueron actualizados ");
@@ -95,7 +97,8 @@ public class ClaseData {
                 lista.add(mapearClase(rs));
             }
         } catch (SQLException ex) {
-            System.out.println("Error al listar clases activas: " + ex.getMessage());
+            javax.swing.JOptionPane.showMessageDialog(null, "Error SQL al listar Clases"+ex.getMessage());
+            System.out.println("Error al listar clases activas: " + ex.getMessage());    
         }
         return lista;
     }
