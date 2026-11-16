@@ -31,6 +31,7 @@ import persistencia.SocioData;
  
     public PrincipalPases(MiConexion conexion) {
         initComponents();
+        this.setSize(670,685);
         btnGuardar.addActionListener(e -> btnGuardarActionPerformed(e));
         btnBuscarSocio.addActionListener(e -> btnBuscarSocioActionPerformed(e));
         jBLimpiar.addActionListener(e -> jBLimpiarActionPerformed(e));
@@ -131,6 +132,7 @@ import persistencia.SocioData;
         btn_volver = new javax.swing.JButton();
 
         setTitle("Gestion de Pases");
+        setPreferredSize(new java.awt.Dimension(670, 685));
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel11.setText("Gestion de Pases");
@@ -497,9 +499,7 @@ import persistencia.SocioData;
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
