@@ -20,11 +20,8 @@ public class AsistenciaData {
     private SocioData socioData;
     private ClaseData claseData;
     
-        public AsistenciaData() {
-
-          MiConexion conexion = new MiConexion("jdbc:mysql://localhost/gp4_gimnasio_aborigym","root", "");
-          
-          //guardamos el objeto MiConexion en una variable para poder compartirlo con SocioData y ClaseData.
+        public AsistenciaData(MiConexion conexion) {
+         
         connection = conexion.buscarConexion();
 
         socioData = new SocioData(conexion);

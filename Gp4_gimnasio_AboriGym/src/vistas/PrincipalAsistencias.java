@@ -9,6 +9,11 @@ import java.util.List;
 import persistencia.ClaseData;
 import entidades.Clases;
 import entidades.Pases;
+import persistencia.AsistenciaData;
+import entidades.Asistencias;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,6 +25,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     private PaseData paseData;
     
     private ClaseData claseData;
+    private AsistenciaData asistenciaData;
 
           
     public PrincipalAsistencias()
@@ -28,12 +34,15 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
       
         this.setSize(800, 900);
         
+// Compartimos una única conexión para ahorrar recursos 
+//y evitar abrir varias conexiones independientes a la base de datos.        
         MiConexion conexion = new MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym","root","");
     
     
         socioData = new SocioData(conexion);
         paseData = new PaseData(conexion);
         claseData =new ClaseData(conexion);
+        asistenciaData = new AsistenciaData(conexion);
         cargarSocios();
         cargarClases();
        
@@ -479,7 +488,65 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistrarAsistenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarAsistenciaActionPerformed
-        // TODO add your handling code here:
+    
+
+        Socio socio = buscarSocioSeleccionado();
+
+        if (socio == null || cbClase.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione un socio y una clase.");
+            return;
+        }
+
+        Clases clase = null;
+        String seleccion = cbClase.getSelectedItem().toString();
+
+        for (Clases c : claseData.listarClasesActivas()) {
+            if (c.toString().equals(seleccion)) {
+                clase = c;
+                break;
+            }
+        }
+
+        if (clase == null) {
+            JOptionPane.showMessageDialog(this, "No se encontró la clase seleccionada.");
+            return;
+        }
+
+        java.util.Date fecha = dcFecha.getDate();
+
+        if (fecha == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione una fecha.");
+            return;
+        }
+
+        Asistencias asistencia = new Asistencias();
+        asistencia.setSocio(socio);
+        asistencia.setClase(clase);
+        asistencia.setFechaAsistencia(
+            fecha.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+        );
+
+        asistenciaData.registrarAsistencia(asistencia);
+        // Actualizamos el historial del socio seleccionado
+List<Asistencias> asistencias =
+        asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
+
+DefaultTableModel modelo =
+        (DefaultTableModel) tablaAsistencias.getModel();
+
+modelo.setRowCount(0);
+
+for (Asistencias a : asistencias) {
+    modelo.addRow(new Object[]{
+        a.getIdAsistencia(),
+        a.getSocio().getApellido() + ", " + a.getSocio().getNombre(),
+        a.getClase().getNombre(),
+        a.getFechaAsistencia(),
+        a.getClase().getHorario()
+    });
+}
+        JOptionPane.showMessageDialog(this, "Asistencia registrada correctamente.");
+
     }//GEN-LAST:event_btnRegistrarAsistenciaActionPerformed
 
     private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
@@ -503,24 +570,50 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void cbSocioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbSocioItemStateChanged
-         if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+         if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) 
+         {
+            Socio socio = buscarSocioSeleccionado();
 
-        Socio socio = buscarSocioSeleccionado();
+            if (socio != null) 
+            {
+                Pases pase = buscarPaseActivo(socio);
 
-        if (socio != null) {
-            Pases pase = buscarPaseActivo(socio);
+                if (pase != null) 
+                {
+                    lblTipoPase.setText("Membresía #" + pase.getIdMembresia());
+                    lblCantidadClases.setText(
+                        pase.getCantidadPases() + " restantes"
+                    );
+                } else 
+                {
+                    lblTipoPase.setText("Sin pase vigente");
+                    lblCantidadClases.setText("0");
+                }
+                // Cargamos las asistencias del socio seleccionado
+List<Asistencias> asistencias =
+        asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
 
-            if (pase != null) {
-                lblTipoPase.setText("Membresía #" + pase.getIdMembresia());
-                lblCantidadClases.setText(
-                    pase.getCantidadPases() + " restantes"
-                );
-            } else {
-                lblTipoPase.setText("Sin pase vigente");
-                lblCantidadClases.setText("0");
+// Obtenemos el modelo de la tabla
+DefaultTableModel modelo =
+        (DefaultTableModel) tablaAsistencias.getModel();
+
+// Limpiamos los registros anteriores
+modelo.setRowCount(0);
+
+// Agregamos las asistencias del socio
+for (Asistencias asistencia : asistencias) {
+
+    modelo.addRow(new Object[]{
+        asistencia.getIdAsistencia(),
+        asistencia.getSocio().getApellido() + ", "
+            + asistencia.getSocio().getNombre(),
+        asistencia.getClase().getNombre(),
+        asistencia.getFechaAsistencia(),
+        asistencia.getClase().getHorario()
+    });
+}
             }
         }
-    }
 
     }//GEN-LAST:event_cbSocioItemStateChanged
     
