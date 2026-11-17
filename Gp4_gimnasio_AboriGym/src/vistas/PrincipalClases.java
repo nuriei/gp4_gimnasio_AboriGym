@@ -365,6 +365,11 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
                 txtBuscarPorNombreActionPerformed(evt);
             }
         });
+        txtBuscarPorNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarPorNombreKeyReleased(evt);
+            }
+        });
 
         jLabel8.setText("Por ID:");
 
@@ -511,8 +516,8 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             txtNombre.requestFocus();
             return;
         }
-        if (nombre.matches("\\d+")) {
-            JOptionPane.showMessageDialog(this, "El nombre de la clase no puede ser un número.", "Validación", JOptionPane.WARNING_MESSAGE);
+        if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+            JOptionPane.showMessageDialog(this, "El nombre de la clase solo debe contener letras y espacios(Sin numeros ni simbolos)", "Validación", JOptionPane.WARNING_MESSAGE);
             txtNombre.requestFocus();
             return;
         }
@@ -523,8 +528,8 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             JTxtCapacidad.requestFocus();
             return;
         }
-        if (!capacidadStr.matches("\\d{1,3}")) {
-            JOptionPane.showMessageDialog(this, "La capacidad debe ser un numero entero entre el 1 y el 999.", "Error de tipo de dato", JOptionPane.WARNING_MESSAGE);
+        if (!capacidadStr.matches("\\d{1,2}")) {
+            JOptionPane.showMessageDialog(this, "La capacidad debe ser un numero entero entre el 1 y 30.", "Error de tipo de dato", JOptionPane.WARNING_MESSAGE);
             JTxtCapacidad.setText("");
             JTxtCapacidad.requestFocus();
             return;
@@ -538,8 +543,8 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
 
         try {
             int capacidadReal = Integer.parseInt(capacidadStr);
-            if (capacidadReal <= 0) {
-                javax.swing.JOptionPane.showMessageDialog(this, "La capacidad debe ser mayor a cero", "Validacion de Datos", JOptionPane.WARNING_MESSAGE);
+            if (capacidadReal <= 0 || capacidadReal > 30) {
+                JOptionPane.showMessageDialog(this, "La capacidad debe ser mayor a cero y no puede superar los 30 alumnos", "Validacion de Datos", JOptionPane.WARNING_MESSAGE);
                 JTxtCapacidad.requestFocus();
                 return;
             }
@@ -845,6 +850,34 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
     private void txtBuscarPorNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarPorNombreActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBuscarPorNombreActionPerformed
+
+    private void txtBuscarPorNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarPorNombreKeyReleased
+        
+        String textoBuscado = txtBuscarPorNombre.getText().trim().toLowerCase();
+        modeloTabla.setRowCount(0);
+        for(Clases c :claseData.listarClasesActivas()){
+        //validamos si el texto esta vacio muestra todas, sino filtra las q contenga la letra q se tipee
+        if(textoBuscado.isEmpty()|| c.getNombre().toLowerCase().contains(textoBuscado)){
+         String nombreEntrenador;
+         
+         if(c.getEntrenador() !=null){
+                 nombreEntrenador = c.getEntrenador().getNombre()+" "+c.getEntrenador().getApellido();
+                 }else{
+                 nombreEntrenador = "No Asignado";
+         }
+         
+                modeloTabla.addRow(new Object[]{
+                    c.getIdClase(),
+                    c.getNombre(),
+                    c.getHorario(),
+                    c.getCapacidad() + "Alumnos",nombreEntrenador,
+                    c.isEstado() ?"Activo":"Inactivo"
+                
+                });
+           }
+        }
+        
+    }//GEN-LAST:event_txtBuscarPorNombreKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
