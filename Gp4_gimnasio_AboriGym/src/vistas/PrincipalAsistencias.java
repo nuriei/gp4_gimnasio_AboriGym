@@ -143,21 +143,23 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         dcFecha = new com.toedter.calendar.JDateChooser();
         jPanel3 = new javax.swing.JPanel();
         lblCupos = new javax.swing.JLabel();
-        lblHorarioTitulo = new javax.swing.JLabel();
+        lblSocioTitulo = new javax.swing.JLabel();
         lblHorario = new javax.swing.JLabel();
         lblCuposTitulo = new javax.swing.JLabel();
         lblPase = new javax.swing.JLabel();
         lblTipoPase = new javax.swing.JLabel();
         lblClasesRestantes = new javax.swing.JLabel();
         lblCantidadClases = new javax.swing.JLabel();
-        jpInfo = new javax.swing.JPanel();
-        labelInfo = new javax.swing.JLabel();
+        lblClaseTitulo1 = new javax.swing.JLabel();
         btnRegistrarAsistencia = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
-        lblBuscarSocio = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         txtBuscarSocio = new javax.swing.JTextField();
-        btnBuscarSocio = new javax.swing.JButton();
+        btnBuscarSocio = new javax.swing.JToggleButton();
+        rbNombre = new javax.swing.JRadioButton();
+        rbDni = new javax.swing.JRadioButton();
+        rbID = new javax.swing.JRadioButton();
         panelListado = new javax.swing.JPanel();
         lblBuscar = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
@@ -186,21 +188,18 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         lblFecha.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblFecha.setText("Fecha");
 
-        cbClase.addItemListener(this::cbClaseItemStateChanged);
-
-        cbSocio.addItemListener(this::cbSocioItemStateChanged);
-
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lblCupos.setText("-");
 
-        lblHorarioTitulo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblHorarioTitulo.setText("Horario:");
+        lblSocioTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblSocioTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSocioTitulo.setText("Socio");
 
         lblHorario.setText("-");
 
         lblCuposTitulo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblCuposTitulo.setText("Cupos disponibles:");
+        lblCuposTitulo.setText("Cupos disponibles");
 
         lblPase.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblPase.setText("Pase:");
@@ -212,73 +211,67 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
 
         lblCantidadClases.setText("-");
 
-        jpInfo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        labelInfo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        labelInfo.setText("Informacion de la clase y del socio");
-
-        javax.swing.GroupLayout jpInfoLayout = new javax.swing.GroupLayout(jpInfo);
-        jpInfo.setLayout(jpInfoLayout);
-        jpInfoLayout.setHorizontalGroup(
-            jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpInfoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(labelInfo)
-                .addContainerGap(145, Short.MAX_VALUE))
-        );
-        jpInfoLayout.setVerticalGroup(
-            jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpInfoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(labelInfo)
-                .addContainerGap(9, Short.MAX_VALUE))
-        );
+        lblClaseTitulo1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblClaseTitulo1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblClaseTitulo1.setText("Clase ");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jpInfo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblPase)
-                    .addComponent(lblTipoPase, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
-                    .addComponent(lblCuposTitulo)
-                    .addComponent(lblCupos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblClasesRestantes)
-                    .addComponent(lblCantidadClases, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
-                    .addComponent(lblHorarioTitulo)
-                    .addComponent(lblHorario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(19, 19, 19))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblSocioTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(lblPase)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lblTipoPase, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblCantidadClases, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lblClasesRestantes))
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGap(15, 15, 15)
+                            .addComponent(lblHorario, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(68, 68, 68)
+                            .addComponent(lblCupos, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lblCuposTitulo))))
+                .addContainerGap(75, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGap(29, 29, 29)
+                    .addComponent(lblClaseTitulo1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(216, Short.MAX_VALUE)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(jpInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(58, 58, 58)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblHorario)
                     .addComponent(lblCuposTitulo)
-                    .addComponent(lblHorarioTitulo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(lblCupos))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblSocioTitulo)
+                .addGap(29, 29, 29)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCupos)
-                    .addComponent(lblHorario))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblClasesRestantes)
-                    .addComponent(lblPase))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPase)
                     .addComponent(lblTipoPase)
-                    .addComponent(lblCantidadClases))
-                .addGap(33, 33, 33))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblClasesRestantes)
+                        .addComponent(lblCantidadClases)))
+                .addGap(48, 48, 48))
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGap(16, 16, 16)
+                    .addComponent(lblClaseTitulo1)
+                    .addContainerGap(189, Short.MAX_VALUE)))
         );
 
         btnRegistrarAsistencia.setBackground(new java.awt.Color(153, 153, 153));
-        btnRegistrarAsistencia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/asistncia.png"))); // NOI18N
         btnRegistrarAsistencia.setText("Registrar Asistencia");
         btnRegistrarAsistencia.addActionListener(this::btnRegistrarAsistenciaActionPerformed);
 
@@ -291,10 +284,16 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         btnLimpiar.setText("Limpiar");
         btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
 
-        lblBuscarSocio.setText("Buscar");
+        jLabel1.setText("Buscar");
 
         btnBuscarSocio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/listar_usuario.png"))); // NOI18N
         btnBuscarSocio.addActionListener(this::btnBuscarSocioActionPerformed);
+
+        rbNombre.setText("Nombre");
+
+        rbDni.setText("DNI");
+
+        rbID.setText("ID");
 
         javax.swing.GroupLayout panelFormularioLayout = new javax.swing.GroupLayout(panelFormulario);
         panelFormulario.setLayout(panelFormularioLayout);
@@ -303,70 +302,75 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
             .addGroup(panelFormularioLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbSocio, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelFormularioLayout.createSequentialGroup()
                         .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblClase)
+                            .addComponent(lblSocio)
+                            .addComponent(lblFecha)
+                            .addComponent(cbClase, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnRegistrarAsistencia)
+                            .addComponent(jLabel1)
+                            .addComponent(txtBuscarSocio, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelFormularioLayout.createSequentialGroup()
-                                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblSocio)
-                                    .addComponent(lblFecha)
-                                    .addComponent(lblClase)
-                                    .addComponent(cbClase, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(panelFormularioLayout.createSequentialGroup()
-                                        .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(cbSocio, javax.swing.GroupLayout.Alignment.LEADING, 0, 225, Short.MAX_VALUE)
-                                            .addComponent(lblBuscarSocio, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtBuscarSocio, javax.swing.GroupLayout.Alignment.LEADING))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnBuscarSocio)))
-                                .addGap(26, 26, 26)
-                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(rbNombre)
+                                .addGap(18, 18, 18)
+                                .addComponent(rbDni)
+                                .addGap(18, 18, 18)
+                                .addComponent(rbID)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)))
+                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelFormularioLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(btnEliminar)
+                        .addGap(69, 69, 69)
+                        .addComponent(btnLimpiar)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addComponent(btnRegistrarAsistencia)
-                        .addGap(136, 136, 136)
-                        .addComponent(btnEliminar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 163, Short.MAX_VALUE)
-                        .addComponent(btnLimpiar)
-                        .addGap(17, 17, 17))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnBuscarSocio, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12))))
         );
         panelFormularioLayout.setVerticalGroup(
             panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFormularioLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel1)
+                        .addGap(9, 9, 9)
+                        .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(panelFormularioLayout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addComponent(lblBuscarSocio)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtBuscarSocio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormularioLayout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnBuscarSocio)
-                                .addGap(14, 14, 14)))
+                                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(rbNombre)
+                                    .addComponent(rbDni)
+                                    .addComponent(rbID))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtBuscarSocio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnBuscarSocio, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblSocio)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbSocio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblClase)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbClase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblFecha)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(dcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegistrarAsistencia, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEliminar)
                     .addComponent(btnLimpiar))
-                .addGap(46, 46, 46))
+                .addGap(20, 20, 20))
         );
 
         panelFormularioLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cbClase, cbSocio});
@@ -442,29 +446,31 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jpAsistenciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpAsistenciasLayout.createSequentialGroup()
-                        .addGap(0, 213, Short.MAX_VALUE)
-                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(125, 125, 125))
-                    .addGroup(jpAsistenciasLayout.createSequentialGroup()
-                        .addGroup(jpAsistenciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnVolver)
-                            .addGroup(jpAsistenciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(panelFormulario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(panelListado, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addContainerGap(153, Short.MAX_VALUE))))
+                        .addGroup(jpAsistenciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(panelListado, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelFormulario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(12, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpAsistenciasLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnVolver)
+                        .addGap(305, 305, 305))))
+            .addGroup(jpAsistenciasLayout.createSequentialGroup()
+                .addGap(114, 114, 114)
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jpAsistenciasLayout.setVerticalGroup(
             jpAsistenciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpAsistenciasLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addContainerGap()
                 .addComponent(lblTitulo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelFormulario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelListado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(panelFormulario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(panelListado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btnVolver)
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addContainerGap(162, Short.MAX_VALUE))
         );
 
         sPanelAsistencia.setViewportView(jpAsistencias);
@@ -474,13 +480,15 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(sPanelAsistencia, javax.swing.GroupLayout.PREFERRED_SIZE, 747, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 145, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(sPanelAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, 740, Short.MAX_VALUE)
+                .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(sPanelAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)
+                .addGap(19, 19, 19)
+                .addComponent(sPanelAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, 675, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -590,29 +598,29 @@ for (Asistencias a : asistencias) {
                     lblCantidadClases.setText("0");
                 }
                 // Cargamos las asistencias del socio seleccionado
-List<Asistencias> asistencias =
-        asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
+                List<Asistencias> asistencias =
+                        asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
 
-// Obtenemos el modelo de la tabla
-DefaultTableModel modelo =
-        (DefaultTableModel) tablaAsistencias.getModel();
+                // Obtenemos el modelo de la tabla
+                DefaultTableModel modelo =
+                        (DefaultTableModel) tablaAsistencias.getModel();
 
-// Limpiamos los registros anteriores
-modelo.setRowCount(0);
+                // Limpiamos los registros anteriores
+                modelo.setRowCount(0);
 
-// Agregamos las asistencias del socio
-for (Asistencias asistencia : asistencias) {
+                // Agregamos las asistencias del socio
+                for (Asistencias asistencia : asistencias) {
 
-    modelo.addRow(new Object[]{
-        asistencia.getIdAsistencia(),
-        asistencia.getSocio().getApellido() + ", "
-            + asistencia.getSocio().getNombre(),
-        asistencia.getClase().getNombre(),
-        asistencia.getFechaAsistencia(),
-        asistencia.getClase().getHorario()
-    });
-}
-            }
+                    modelo.addRow(new Object[]{
+                        asistencia.getIdAsistencia(),
+                        asistencia.getSocio().getApellido() + ", "
+                            + asistencia.getSocio().getNombre(),
+                        asistencia.getClase().getNombre(),
+                        asistencia.getFechaAsistencia(),
+                        asistencia.getClase().getHorario()
+                    });
+                }
+                            }
         }
 
     }//GEN-LAST:event_cbSocioItemStateChanged
@@ -675,7 +683,7 @@ for (Asistencias asistencia : asistencias) {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
-    private javax.swing.JButton btnBuscarSocio;
+    private javax.swing.JToggleButton btnBuscarSocio;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnRegistrarAsistencia;
@@ -683,27 +691,29 @@ for (Asistencias asistencia : asistencias) {
     private javax.swing.JComboBox<String> cbClase;
     private javax.swing.JComboBox<String> cbSocio;
     private com.toedter.calendar.JDateChooser dcFecha;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jpAsistencias;
-    private javax.swing.JPanel jpInfo;
-    private javax.swing.JLabel labelInfo;
     private javax.swing.JLabel lblBuscar;
-    private javax.swing.JLabel lblBuscarSocio;
     private javax.swing.JLabel lblCantidadClases;
     private javax.swing.JLabel lblClase;
+    private javax.swing.JLabel lblClaseTitulo1;
     private javax.swing.JLabel lblClasesRestantes;
     private javax.swing.JLabel lblCupos;
     private javax.swing.JLabel lblCuposTitulo;
     private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblHorario;
-    private javax.swing.JLabel lblHorarioTitulo;
     private javax.swing.JLabel lblPase;
     private javax.swing.JLabel lblSocio;
+    private javax.swing.JLabel lblSocioTitulo;
     private javax.swing.JLabel lblTipoPase;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JPanel panelFormulario;
     private javax.swing.JPanel panelListado;
+    private javax.swing.JRadioButton rbDni;
+    private javax.swing.JRadioButton rbID;
+    private javax.swing.JRadioButton rbNombre;
     private javax.swing.JScrollPane sPanelAsistencia;
     private javax.swing.JTable tablaAsistencias;
     private javax.swing.JTextField txtBuscar;
