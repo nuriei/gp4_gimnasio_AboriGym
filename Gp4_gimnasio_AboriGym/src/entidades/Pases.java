@@ -11,6 +11,7 @@ import java.time.LocalDate;
     private int idMembresia;
     private Socio socio;             // FK ID_Socio
     private int cantidadPases;       // 8, 12 o 20
+    private int cantidadInicial; //cant inicial de pase
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     private double costo;
@@ -24,6 +25,7 @@ import java.time.LocalDate;
                      double costo, boolean estado) {
         this.socio = socio;
         this.cantidadPases = cantidadPases;
+        this.cantidadInicial= cantidadPases;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaInicio.plusDays(DIAS_VALIDEZ);
         this.costo = costo;
@@ -56,6 +58,14 @@ import java.time.LocalDate;
  
     public LocalDate getFechaFin() { return fechaFin; }
     public void setFechaFin(LocalDate fechaFin) { this.fechaFin = fechaFin; }
+    
+    public int getCantidadInicial() {
+    return cantidadInicial;
+}
+
+    public void setCantidadInicial(int cantidadInicial) {
+    this.cantidadInicial = cantidadInicial;
+}
  
     public double getCosto() { return costo; }
     public void setCosto(double costo) { this.costo = costo; }
