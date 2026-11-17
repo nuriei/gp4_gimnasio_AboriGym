@@ -17,42 +17,42 @@ import entidades.Asistencias;
 public class AsistenciaData {
     
     private Connection connection = null;
+    private SocioData socioData;
+    private ClaseData claseData;
     
         public AsistenciaData() {
 
-            connection = new MiConexion("jdbc:mysql://localhost/gp4_gimnasio_aborigym", "root", "").buscarConexion();
+          MiConexion conexion = new MiConexion("jdbc:mysql://localhost/gp4_gimnasio_aborigym","root", "");
+          
+          //guardamos el objeto MiConexion en una variable para poder compartirlo con SocioData y ClaseData.
+        connection = conexion.buscarConexion();
 
-        }
+        socioData = new SocioData(conexion);
+        claseData = new ClaseData(conexion);
+                }
     
-        public void registrarAsistencia(Asistencias asistencia) {
-            
-        String sql = "INSERT INTO asistencia (idSocio, fechaAsistencia) VALUES (?, ?)";
-        
-        try {
-            
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            
-            ps.setInt(1, asistencia.getSocio().getIdSocio());
-            ps.setDate(2, Date.valueOf(asistencia.getFechaAsistencia()));
-            
-            ps.executeUpdate();
+        public void registrarAsistencia(Asistencias asistencia) 
+        {
+            String sql = "INSERT INTO asistencias "+ "(id_socio, id_clase, fecha_asistencia) "+ "VALUES (?, ?, ?)";
 
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                asistencia.setIdAsistencia(rs.getInt(1));
-                JOptionPane.showMessageDialog(null, "Asistencia registrada");
-            }
-            
+            try
+            {
+                PreparedStatement ps = connection.prepareStatement(sql);
+
+                ps.setInt(1, asistencia.getSocio().getIdSocio());
+                ps.setInt(2, asistencia.getClase().getIdClase());
+                ps.setDate(3, java.sql.Date.valueOf(asistencia.getFechaAsistencia()));
+                ps.executeUpdate();
                 ps.close();
-                
-                    } catch (SQLException ex) {
-                        JOptionPane.showMessageDialog(null, "Error al acceder a la tabla asistencia: " + ex.getMessage());
-                    }
+            } catch (SQLException ex) 
+            {
+                System.out.println("Error al registrar asistencia: " + ex.getMessage());
+            }
         }
         
         public List<Asistencias> listarAsistencias() {
         List<Asistencias> asistencias = new ArrayList<>();
-        String sql = "SELECT idAsistencia, idSocio, fechaAsistencia FROM asistencia";
+        String sql = "SELECT * FROM asistencias";
         
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -61,9 +61,12 @@ public class AsistenciaData {
             while (rs.next()) {
                 Asistencias asistencia = new Asistencias();
                 
-                asistencia.setIdAsistencia(rs.getInt("idAsistencia"));
+                asistencia.setIdAsistencia(rs.getInt("id_Asistencia"));
 
-                asistencia.setFechaAsistencia(rs.getDate("fechaAsistencia").toLocalDate());
+                asistencia.setFechaAsistencia(rs.getDate("fecha_Asistencia").toLocalDate());
+                asistencia.setSocio(socioData.buscarSocioPorId(rs.getInt("id_socio")));
+
+                asistencia.setClase(claseData.buscarClasePorId(rs.getInt("id_clase")));
                 
                 asistencias.add(asistencia);
             }
@@ -78,7 +81,7 @@ public class AsistenciaData {
         
         public List<Asistencias> obtenerAsistenciasPorSocio(int idSocio) {
         List<Asistencias> asistencias = new ArrayList<>();
-        String sql = "SELECT idAsistencia, idSocio, fechaAsistencia FROM asistencia WHERE idSocio = ?";
+        String sql = "SELECT * FROM asistencias WHERE id_socio = ?";
         
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -87,8 +90,12 @@ public class AsistenciaData {
             
             while (rs.next()) {
                 Asistencias asistencia = new Asistencias();
-                asistencia.setIdAsistencia(rs.getInt("idAsistencia"));
-                asistencia.setFechaAsistencia(rs.getDate("fechaAsistencia").toLocalDate());
+                asistencia.setIdAsistencia(rs.getInt("id_asistencia"));
+                asistencia.setFechaAsistencia(rs.getDate("fecha_asistencia").toLocalDate());
+                
+                asistencia.setSocio(socioData.buscarSocioPorId(rs.getInt("id_socio")));
+
+                asistencia.setClase(claseData.buscarClasePorId(rs.getInt("id_clase")));
                 
                 asistencias.add(asistencia);
             }
