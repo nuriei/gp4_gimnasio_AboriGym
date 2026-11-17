@@ -3,7 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package persistencia;
+
 import entidades.Pases;
+import entidades.Socio;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,8 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 public class PaseData {
 
@@ -24,7 +24,11 @@ public class PaseData {
         this.socioData = new SocioData(conexion);
     }
 
-    // ALTA: INSERT (la fechaFin ya viene calculada por la entidad: inicio + 30 días)
+    // ==========================================
+    // 1. MÉTODOS DE ABM (Alta, Modificación, Baja)
+    // ==========================================
+
+    // ALTA: INSERT
     public void guardarPase(Pases pase) {
         String sql = "INSERT INTO pases (id_Socio, cantidadEntradas, fecha_Inicio, fecha_Fin, costo, estado) "
                    + "VALUES (?, ?, ?, ?, ?, ?)";
@@ -106,6 +110,11 @@ public class PaseData {
         }
     }
 
+
+    // ==========================================
+    // 2. MÉTODOS DE BÚSQUEDA Y LISTADOS
+    // ==========================================
+
     // BÚSQUEDA POR ID
     public Pases buscarPasePorId(int idPase) {
         String sql = "SELECT * FROM pases WHERE id_Pase = ?";
@@ -123,7 +132,7 @@ public class PaseData {
         return pase;
     }
 
-    // LISTADO COMPLETO
+    // LISTADO COMPLETO (TODOS LOS PASES)
     public List<Pases> listarPases() {
         String sql = "SELECT * FROM pases";
         List<Pases> lista = new ArrayList<>();
@@ -138,7 +147,7 @@ public class PaseData {
         return lista;
     }
 
-    // LISTADO POR DNI DEL SOCIO (usa JOIN con socios)
+    // LISTADO GENERAL POR DNI (Trae activos e inactivos de ese socio)
     public List<Pases> listarPasesPorDni(String dni) {
         String sql = "SELECT p.* FROM pases p JOIN socios s ON p.id_Socio = s.id_Socio WHERE s.dni = ?";
         List<Pases> lista = new ArrayList<>();
@@ -155,7 +164,90 @@ public class PaseData {
         return lista;
     }
 
-    // Convierte una fila en un objeto Pases (reconstruye también el Socio)
+    
+    // LISTADO DE SOCIOS ACTIVOS QUE NO TIENEN NINGÚN PASE ASIGNADO
+public List<Socio> listarSociosSinPase() {
+    String sql = "SELECT s.* FROM socios s LEFT JOIN pases p ON s.id_Socio = p.id_Socio WHERE p.id_Pase IS NULL AND s.estado = 1";
+    List<Socio> lista = new ArrayList<>();
+    try (PreparedStatement ps = con.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+            lista.add(socioData.buscarSocioPorId(rs.getInt("id_Socio")));
+        }
+    } catch (SQLException ex) {
+        System.out.println("Error al listar socios sin pase: " + ex.getMessage());
+    }
+    return lista;
+}
+
+
+    // LISTADO DE PASES ACTIVOS (GENERAL)
+    public List<Pases> listarPasesActivos() {
+        String sql = "SELECT * FROM pases WHERE estado = 1";
+        List<Pases> lista = new ArrayList<>();
+        try (PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(mapearPase(rs));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al listar pases activos: " + ex.getMessage());
+        }
+        return lista;
+    }
+
+    // LISTADO DE PASES INACTIVOS (GENERAL)
+    public List<Pases> listarPasesInactivos() {
+        String sql = "SELECT * FROM pases WHERE estado = 0";
+        List<Pases> lista = new ArrayList<>();
+        try (PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(mapearPase(rs));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al listar pases inactivos: " + ex.getMessage());
+        }
+        return lista;
+    }
+
+    // LISTADO DE PASES ACTIVOS POR DNI DEL SOCIO
+    public List<Pases> listarPasesActivosPorDni(String dni) {
+        String sql = "SELECT p.* FROM pases p JOIN socios s ON p.id_Socio = s.id_Socio WHERE s.dni = ? AND p.estado = 1";
+        List<Pases> lista = new ArrayList<>();
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, dni);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapearPase(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al listar pases activos por DNI: " + ex.getMessage());
+        }
+        return lista;
+    }
+
+    // LISTADO DE PASES INACTIVOS POR DNI DEL SOCIO
+    public List<Pases> listarPasesInactivosPorDni(String dni) {
+        String sql = "SELECT p.* FROM pases p JOIN socios s ON p.id_Socio = s.id_Socio WHERE s.dni = ? AND p.estado = 0";
+        List<Pases> lista = new ArrayList<>();
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, dni);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapearPase(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al listar pases inactivos por DNI: " + ex.getMessage());
+        }
+        return lista;
+    }
+
+
+    
+
     private Pases mapearPase(ResultSet rs) throws SQLException {
         Pases p = new Pases();
         p.setIdMembresia(rs.getInt("id_Pase"));
