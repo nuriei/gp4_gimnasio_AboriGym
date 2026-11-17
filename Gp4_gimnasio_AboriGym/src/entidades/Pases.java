@@ -33,11 +33,12 @@ import java.time.LocalDate;
     }
  
     // Constructor completo (para cargar desde la BD)
-    public Pases(int idMembresia, Socio socio, int cantidadPases, LocalDate fechaInicio,
+    public Pases(int idMembresia, Socio socio, int cantidadPases, int cantidadInicial, LocalDate fechaInicio,
                      LocalDate fechaFin, double costo, boolean estado) {
         this.idMembresia = idMembresia;
         this.socio = socio;
         this.cantidadPases = cantidadPases;
+        this.cantidadInicial = cantidadInicial;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.costo = costo;

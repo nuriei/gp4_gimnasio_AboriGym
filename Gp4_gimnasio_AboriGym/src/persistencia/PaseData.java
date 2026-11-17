@@ -30,15 +30,16 @@ public class PaseData {
 
     // ALTA: INSERT
     public void guardarPase(Pases pase) {
-        String sql = "INSERT INTO pases (id_Socio, cantidadEntradas, fecha_Inicio, fecha_Fin, costo, estado) "
-                   + "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO pases (id_Socio, cantidadEntradas, cantidad_inicial, fecha_Inicio, fecha_Fin, costo, estado) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, pase.getSocio().getIdSocio());
             ps.setInt(2, pase.getCantidadPases());
-            ps.setDate(3, java.sql.Date.valueOf(pase.getFechaInicio()));
-            ps.setDate(4, java.sql.Date.valueOf(pase.getFechaFin()));
-            ps.setDouble(5, pase.getCosto());
-            ps.setBoolean(6, pase.isEstado());
+            ps.setInt(3, pase.getCantidadInicial());
+            ps.setDate(4, java.sql.Date.valueOf(pase.getFechaInicio()));
+            ps.setDate(5, java.sql.Date.valueOf(pase.getFechaFin()));
+            ps.setDouble(6, pase.getCosto());
+            ps.setBoolean(7, pase.isEstado());
 
             ps.executeUpdate();
             try (ResultSet rs = ps.getGeneratedKeys()) {
@@ -54,16 +55,17 @@ public class PaseData {
 
     // MODIFICACIÓN: UPDATE
     public void modificarPase(Pases pase) {
-        String sql = "UPDATE pases SET id_Socio = ?, cantidadEntradas = ?, fecha_Inicio = ?, fecha_Fin = ?, "
+        String sql = "UPDATE pases SET id_Socio = ?, cantidadEntradas = ?, cantidad_Inicial =?, fecha_Inicio = ?, fecha_Fin = ?, "
                    + "costo = ?, estado = ? WHERE id_Pase = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, pase.getSocio().getIdSocio());
             ps.setInt(2, pase.getCantidadPases());
-            ps.setDate(3, java.sql.Date.valueOf(pase.getFechaInicio()));
-            ps.setDate(4, java.sql.Date.valueOf(pase.getFechaFin()));
-            ps.setDouble(5, pase.getCosto());
-            ps.setBoolean(6, pase.isEstado());
-            ps.setInt(7, pase.getIdMembresia());
+            ps.setInt(3, pase.getCantidadInicial());
+            ps.setDate(4, java.sql.Date.valueOf(pase.getFechaInicio()));
+            ps.setDate(5, java.sql.Date.valueOf(pase.getFechaFin()));
+            ps.setDouble(6, pase.getCosto());
+            ps.setBoolean(7, pase.isEstado());
+            ps.setInt(8, pase.getIdMembresia());
 
             if (ps.executeUpdate() == 1) {
                 System.out.println("[SQL] Pase actualizado correctamente.");
@@ -253,6 +255,7 @@ public List<Socio> listarSociosSinPase() {
         p.setIdMembresia(rs.getInt("id_Pase"));
         p.setSocio(socioData.buscarSocioPorId(rs.getInt("id_Socio")));
         p.setCantidadPases(rs.getInt("cantidadEntradas"));
+        p.setCantidadInicial(rs.getInt("cantidad_inicial"));
         p.setFechaInicio(rs.getDate("fecha_Inicio").toLocalDate());
         p.setFechaFin(rs.getDate("fecha_Fin").toLocalDate());
         p.setCosto(rs.getDouble("costo"));
