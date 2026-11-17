@@ -19,70 +19,22 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
 
     public PrincipalEntrenadores() {
         initComponents();
-        this.setSize(647, 643);
-//        // --- FILTRO PARA PERMITIR SOLO NÚMEROS EN EL DNI ---
-//        ((javax.swing.text.AbstractDocument) txtDni.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
-//            @Override
-//            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
-//                if (string != null && string.matches("\\d*")) {
-//                    super.insertString(fb, offset, string, attr);
-//                }
-//            }
-//
-//            @Override
-//            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
-//                if (text != null && text.matches("\\d*")) {
-//                    super.replace(fb, offset, length, text, attrs);
-//                }
-//            }
-//        });
-//        // --- FILTRO SOLO LETRAS Y ESPACIOS PARA EL NOMBRE ---
-//        ((javax.swing.text.AbstractDocument) txtNombre.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
-//            @Override
-//            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
-//                if (string != null && string.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
-//                    super.insertString(fb, offset, string, attr);
-//                }
-//            }
-//
-//            @Override
-//            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
-//                if (text != null && text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
-//                    super.replace(fb, offset, length, text, attrs);
-//                }
-//            }
-//        });
-//
-//        // --- FILTRO SOLO LETRAS Y ESPACIOS PARA EL APELLIDO ---
-//        ((javax.swing.text.AbstractDocument) txtApellido.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
-//            @Override
-//            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
-//                if (string != null && string.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
-//                    super.insertString(fb, offset, string, attr);
-//                }
-//            }
-//
-//            @Override
-//            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
-//                if (text != null && text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
-//                    super.replace(fb, offset, length, text, attrs);
-//                }
-//            }
-//        });
-//        btnGuardar.setEnabled(false); // Arranca apagado
-//
-//        javax.swing.event.DocumentListener validadorListener = new javax.swing.event.DocumentListener() {
-//            @Override
-//            public void insertUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
-//            @Override
-//            public void removeUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
-//            @Override
-//            public void changedUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
-//        };
-//
-//        txtDni.getDocument().addDocumentListener(validadorListener);
-//        txtApellido.getDocument().addDocumentListener(validadorListener);
-//        txtNombre.getDocument().addDocumentListener(validadorListener);
+        
+
+        btnGuardar.setEnabled(false); // Arranca apagado
+
+        javax.swing.event.DocumentListener validadorListener = new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+        };
+
+        txtDni.getDocument().addDocumentListener(validadorListener);
+        txtApellido.getDocument().addDocumentListener(validadorListener);
+        txtNombre.getDocument().addDocumentListener(validadorListener);
 
         panelFormulario.setVisible(false);
         modeloTabla = (DefaultTableModel) tablaEntrenadores.getModel();
@@ -118,19 +70,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
                 }
             }
         });
-//        try {
-//    java.net.URL rutaImagen = getClass().getClassLoader().getResource("imagenes/fondo.jpg");
-//    if (rutaImagen != null) {
-//        ImageIcon iconoOriginal = new ImageIcon(rutaImagen);
-//        Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(490, 402, Image.SCALE_SMOOTH);
-//        labelFondo.setIcon(new ImageIcon(imagenEscalada));
-//        labelFondo.setBounds(0, 0, 490, 402);
-//        this.getContentPane().setComponentZOrder(labelFondo, this.getContentPane().getComponentCount() - 1);
-//        labelFondo.setEnabled(false);
-//        
-//    }
-//} catch (Exception e) {
-//    }
+
     }
 
     /**

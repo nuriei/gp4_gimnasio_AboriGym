@@ -18,7 +18,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
 
     public PrincipalSocios() {
         initComponents();
-        this.setSize(620,749);
+       
         
 
        btnGuardar.setEnabled(false); // Arranca apagado
