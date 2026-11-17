@@ -522,8 +522,8 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             JTxtCapacidad.requestFocus();
             return;
         }
-        if (!capacidadStr.matches("\\d+")) {
-            JOptionPane.showMessageDialog(this, "La capacidad debe ser un numero entero", "Error de tipo de dato", JOptionPane.WARNING_MESSAGE);
+        if (!capacidadStr.matches("\\d{1,3}")) {
+            JOptionPane.showMessageDialog(this, "La capacidad debe ser un numero entero entre el 1 y el 999.", "Error de tipo de dato", JOptionPane.WARNING_MESSAGE);
             JTxtCapacidad.setText("");
             JTxtCapacidad.requestFocus();
             return;
@@ -721,9 +721,11 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
 
         if (respuesta == JOptionPane.YES_OPTION) {
             // Suponiendo que usás el método bajaLogicaClase como borrado o si tu data tiene borrar, lo llamás acá
-            claseData.bajaLogicaClase(id);
-            cargarClases();
-            JOptionPane.showMessageDialog(this, "Clase eliminada correctamente.");
+            //claseData.bajaLogicaClase(id);
+            if(claseData.borrarClase(id)){
+                cargarClases();
+                JOptionPane.showMessageDialog(this, "Clase eliminada permanentemente.");
+            }
         }
     }//GEN-LAST:event_jbEliminarActionPerformed
 
@@ -802,6 +804,23 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             try {
                 Clases claseAlta = claseData.buscarClasePorId(id);
                 if (claseAlta != null) {
+                    //agregamos verificacion de que el entrenador no tenga otra clase activa a esa hora
+                    java.time.LocalTime horaReactivar = claseAlta.getHorario().withSecond(0).withNano(0);
+                    for(Clases c :claseData.listarClasesActivas()){
+                    if(c.getIdClase()!= claseAlta.getIdClase() && c.getEntrenador() != null
+                            && claseAlta.getEntrenador() != null
+                            && c.getEntrenador().getIdEntrenador() == claseAlta.getEntrenador().getIdEntrenador()){
+                    
+                        long diff = Math.abs(java.time.Duration.between(c.getHorario().withSecond(0).withNano(0), horaReactivar).toMinutes());
+                        if(diff <60){
+                            JOptionPane.showMessageDialog(this, 
+                                    "No se puede reactivar: el entrenador ya tiene activa la clase: "+c.getNombre()+" a las"+c.getHorario()+".",
+                                    "Conflicto de Horario", JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
+                    }
+                    }
+                    
                     claseAlta.setEstado(true);
                     claseData.modificarClase(claseAlta);
                     cargarClases();
