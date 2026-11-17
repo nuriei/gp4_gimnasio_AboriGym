@@ -45,8 +45,25 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         asistenciaData = new AsistenciaData(conexion);
         cargarSocios();
         cargarClases();
+        cbSocio.setSelectedIndex(-1);
+        cbClase.setSelectedIndex(-1);
+        btnLimpiarActionPerformed(null);
        
         
+       
+        
+    }
+    
+    //Esto mantiene limpio el panel de informacion hasta q no elija opciones en eel jpanel de informacion
+        private void limpiarPanelInfo()
+    {
+        lblClaseTitulo.setText("");
+        lblHorario.setText("");
+        lblCupos.setText("");
+
+        lblTipoPase.setText("");
+        lblCantidadClases.setText("");
+        lblClaseTitulo.setText("Clase");
     }
     
     //cargamos las clases Activas
@@ -54,11 +71,17 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     private void cargarClases()
     {
         cbClase.removeAllItems();
-        List<Clases> clase = claseData.listarClasesActivas();
+        List<Clases> clases = claseData.listarClasesActivas();
         
-        for(Clases i : clase )
+        for(Clases clase : clases )
         {
-            cbClase.addItem(i.toString());
+           String profesor = clase.getEntrenador().getApellido()
+                + ", " + clase.getEntrenador().getNombre();
+
+        String opcion = clase.getNombre() + " - "
+                + profesor + " - " + clase.getHorario();
+
+        cbClase.addItem(opcion);
         }
     }
     
@@ -76,6 +99,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
                 }
             }
     }
+    
     //Busca el socio cargado en el cbSocio y lo compara con los datos reales en la base 
     private Socio buscarSocioSeleccionado() 
     {
@@ -141,7 +165,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         cbClase = new javax.swing.JComboBox<>();
         cbSocio = new javax.swing.JComboBox<>();
         dcFecha = new com.toedter.calendar.JDateChooser();
-        jPanel3 = new javax.swing.JPanel();
+        jpInfo = new javax.swing.JPanel();
         lblCupos = new javax.swing.JLabel();
         lblSocioTitulo = new javax.swing.JLabel();
         lblHorario = new javax.swing.JLabel();
@@ -150,7 +174,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         lblTipoPase = new javax.swing.JLabel();
         lblClasesRestantes = new javax.swing.JLabel();
         lblCantidadClases = new javax.swing.JLabel();
-        lblClaseTitulo1 = new javax.swing.JLabel();
+        lblClaseTitulo = new javax.swing.JLabel();
         btnRegistrarAsistencia = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
@@ -188,7 +212,11 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         lblFecha.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblFecha.setText("Fecha");
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        cbClase.addItemListener(this::cbClaseItemStateChanged);
+
+        cbSocio.addItemListener(this::cbSocioItemStateChanged);
+
+        jpInfo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lblCupos.setText("-");
 
@@ -211,63 +239,62 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
 
         lblCantidadClases.setText("-");
 
-        lblClaseTitulo1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lblClaseTitulo1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblClaseTitulo1.setText("Clase ");
+        lblClaseTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblClaseTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblClaseTitulo.setText("Clase ");
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        javax.swing.GroupLayout jpInfoLayout = new javax.swing.GroupLayout(jpInfo);
+        jpInfo.setLayout(jpInfoLayout);
+        jpInfoLayout.setHorizontalGroup(
+            jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpInfoLayout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblSocioTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jpInfoLayout.createSequentialGroup()
                             .addComponent(lblPase)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(lblTipoPase, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblTipoPase, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(lblCantidadClases, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(lblClasesRestantes))
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addGap(15, 15, 15)
-                            .addComponent(lblHorario, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(68, 68, 68)
+                        .addGroup(jpInfoLayout.createSequentialGroup()
+                            .addComponent(lblHorario, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(lblCupos, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(lblCuposTitulo))))
                 .addContainerGap(75, Short.MAX_VALUE))
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel3Layout.createSequentialGroup()
+            .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jpInfoLayout.createSequentialGroup()
                     .addGap(29, 29, 29)
-                    .addComponent(lblClaseTitulo1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblClaseTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(216, Short.MAX_VALUE)))
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        jpInfoLayout.setVerticalGroup(
+            jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpInfoLayout.createSequentialGroup()
                 .addGap(58, 58, 58)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblHorario)
                     .addComponent(lblCuposTitulo)
                     .addComponent(lblCupos))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblSocioTitulo)
                 .addGap(29, 29, 29)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPase)
                     .addComponent(lblTipoPase)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(lblClasesRestantes)
                         .addComponent(lblCantidadClases)))
                 .addGap(48, 48, 48))
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel3Layout.createSequentialGroup()
+            .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jpInfoLayout.createSequentialGroup()
                     .addGap(16, 16, 16)
-                    .addComponent(lblClaseTitulo1)
+                    .addComponent(lblClaseTitulo)
                     .addContainerGap(189, Short.MAX_VALUE)))
         );
 
@@ -331,7 +358,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnBuscarSocio, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jpInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12))))
         );
         panelFormularioLayout.setVerticalGroup(
@@ -364,7 +391,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jpInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegistrarAsistencia, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -498,62 +525,80 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     private void btnRegistrarAsistenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarAsistenciaActionPerformed
     
 
-        Socio socio = buscarSocioSeleccionado();
+    // 1. Obtener el socio seleccionado
+    Socio socio = buscarSocioSeleccionado();
 
-        if (socio == null || cbClase.getSelectedItem() == null) {
-            JOptionPane.showMessageDialog(this, "Seleccione un socio y una clase.");
-            return;
+    if (socio == null || cbClase.getSelectedItem() == null) {
+        JOptionPane.showMessageDialog(this, "Seleccione un socio y una clase.");
+        return;
+    }
+
+    // 2. Buscar la clase seleccionada
+    Clases clase = null;
+    String seleccion = cbClase.getSelectedItem().toString();
+
+    List<Clases> clases = claseData.listarClasesActivas();
+
+    for (Clases c : clases) {
+
+        String profesor = c.getEntrenador().getApellido()
+                + ", " + c.getEntrenador().getNombre();
+
+        String opcion = c.getNombre() + " - "
+                + profesor + " - " + c.getHorario();
+
+        if (opcion.equals(seleccion)) {
+            clase = c;
+            break;
         }
+    }
 
-        Clases clase = null;
-        String seleccion = cbClase.getSelectedItem().toString();
+    if (clase == null) {
+        JOptionPane.showMessageDialog(this, "No se encontró la clase seleccionada.");
+        return;
+    }
 
-        for (Clases c : claseData.listarClasesActivas()) {
-            if (c.toString().equals(seleccion)) {
-                clase = c;
-                break;
-            }
-        }
+    // 3. Validar fecha
+    java.util.Date fecha = dcFecha.getDate();
 
-        if (clase == null) {
-            JOptionPane.showMessageDialog(this, "No se encontró la clase seleccionada.");
-            return;
-        }
+    if (fecha == null) {
+        JOptionPane.showMessageDialog(this, "Seleccione una fecha.");
+        return;
+    }
 
-        java.util.Date fecha = dcFecha.getDate();
+    // 4. Crear la asistencia
+    Asistencias asistencia = new Asistencias();
+    asistencia.setSocio(socio);
+    asistencia.setClase(clase);
+    asistencia.setFechaAsistencia(
+            fecha.toInstant()
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .toLocalDate()
+    );
 
-        if (fecha == null) {
-            JOptionPane.showMessageDialog(this, "Seleccione una fecha.");
-            return;
-        }
+    // 5. Registrar asistencia
+    asistenciaData.registrarAsistencia(asistencia);
 
-        Asistencias asistencia = new Asistencias();
-        asistencia.setSocio(socio);
-        asistencia.setClase(clase);
-        asistencia.setFechaAsistencia(
-            fecha.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()
-        );
+    // 6. Actualizar historial del socio
+    List<Asistencias> asistencias =
+            asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
 
-        asistenciaData.registrarAsistencia(asistencia);
-        // Actualizamos el historial del socio seleccionado
-List<Asistencias> asistencias =
-        asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
+    DefaultTableModel modelo =
+            (DefaultTableModel) tablaAsistencias.getModel();
 
-DefaultTableModel modelo =
-        (DefaultTableModel) tablaAsistencias.getModel();
+    modelo.setRowCount(0);
 
-modelo.setRowCount(0);
+    for (Asistencias a : asistencias) {
+        modelo.addRow(new Object[]{
+            a.getIdAsistencia(),
+            a.getSocio().getApellido() + ", " + a.getSocio().getNombre(),
+            a.getClase().getNombre(),
+            a.getFechaAsistencia(),
+            a.getClase().getHorario()
+        });
+    }
 
-for (Asistencias a : asistencias) {
-    modelo.addRow(new Object[]{
-        a.getIdAsistencia(),
-        a.getSocio().getApellido() + ", " + a.getSocio().getNombre(),
-        a.getClase().getNombre(),
-        a.getFechaAsistencia(),
-        a.getClase().getHorario()
-    });
-}
-        JOptionPane.showMessageDialog(this, "Asistencia registrada correctamente.");
+    JOptionPane.showMessageDialog(this, "Asistencia registrada correctamente.");
 
     }//GEN-LAST:event_btnRegistrarAsistenciaActionPerformed
 
@@ -562,15 +607,21 @@ for (Asistencias a : asistencias) {
     }//GEN-LAST:event_txtBuscarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-    cbSocio.setSelectedIndex(-1);
-    cbClase.setSelectedIndex(-1);
-    dcFecha.setDate(null);
-
-    lblTipoPase.setText("-");
-    lblCantidadClases.setText("-");
-    lblHorario.setText("-");
-    lblCupos.setText("-");
     
+        cbSocio.setSelectedIndex(-1);
+        cbClase.setSelectedIndex(-1);
+        dcFecha.setDate(new java.util.Date());
+        txtBuscarSocio.setText("");
+        lblClaseTitulo.setText("Clase");
+        lblHorario.setText("Horario");
+        lblCupos.setText("-");
+        lblTipoPase.setText("-");
+        lblCantidadClases.setText("-");
+
+        DefaultTableModel modelo =(DefaultTableModel) tablaAsistencias.getModel();
+
+        modelo.setRowCount(0);
+
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
@@ -578,50 +629,47 @@ for (Asistencias a : asistencias) {
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void cbSocioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbSocioItemStateChanged
-         if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) 
-         {
-            Socio socio = buscarSocioSeleccionado();
+       
 
-            if (socio != null) 
+    if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+
+        Socio socio = buscarSocioSeleccionado();
+
+        if (socio != null) {
+
+            Pases pase = buscarPaseActivo(socio);
+
+            if (pase != null) {
+                lblTipoPase.setText(pase.getCantidadInicial()+"clases");
+
+                lblCantidadClases.setText( pase.getCantidadPases() + " restantes");
+
+            } else {
+                lblTipoPase.setText("Sin pase vigente");
+                lblCantidadClases.setText("0");
+            }
+
+            // Cargar historial de asistencias del socio
+            List<Asistencias> asistencias = asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
+
+            DefaultTableModel modelo =(DefaultTableModel) tablaAsistencias.getModel();
+
+            modelo.setRowCount(0);
+
+            for (Asistencias asistencia : asistencias) 
             {
-                Pases pase = buscarPaseActivo(socio);
 
-                if (pase != null) 
-                {
-                    lblTipoPase.setText("Membresía #" + pase.getIdMembresia());
-                    lblCantidadClases.setText(
-                        pase.getCantidadPases() + " restantes"
-                    );
-                } else 
-                {
-                    lblTipoPase.setText("Sin pase vigente");
-                    lblCantidadClases.setText("0");
-                }
-                // Cargamos las asistencias del socio seleccionado
-                List<Asistencias> asistencias =
-                        asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
-
-                // Obtenemos el modelo de la tabla
-                DefaultTableModel modelo =
-                        (DefaultTableModel) tablaAsistencias.getModel();
-
-                // Limpiamos los registros anteriores
-                modelo.setRowCount(0);
-
-                // Agregamos las asistencias del socio
-                for (Asistencias asistencia : asistencias) {
-
-                    modelo.addRow(new Object[]{
-                        asistencia.getIdAsistencia(),
-                        asistencia.getSocio().getApellido() + ", "
-                            + asistencia.getSocio().getNombre(),
-                        asistencia.getClase().getNombre(),
-                        asistencia.getFechaAsistencia(),
-                        asistencia.getClase().getHorario()
-                    });
-                }
-                            }
+                modelo.addRow(new Object[]{
+                    asistencia.getIdAsistencia(),
+                    asistencia.getSocio().getApellido() + ", " + asistencia.getSocio().getNombre(),
+                    asistencia.getClase().getNombre(),
+                    asistencia.getFechaAsistencia(),
+                    asistencia.getClase().getHorario()
+                });
+            }
         }
+    }
+
 
     }//GEN-LAST:event_cbSocioItemStateChanged
     
@@ -654,31 +702,37 @@ for (Asistencias a : asistencias) {
 
     private void cbClaseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbClaseItemStateChanged
    
-        if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) 
-        {
+         if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
 
-            if (cbClase.getSelectedItem() == null) 
-            {
-                return;
-            }
+        if (cbClase.getSelectedItem() == null) {
+            return;
+        }
 
-            String seleccion = cbClase.getSelectedItem().toString();
+        String seleccion = cbClase.getSelectedItem().toString();
 
-            List<Clases> clases = claseData.listarClasesActivas();
+        List<Clases> clases = claseData.listarClasesActivas();
 
-            for (Clases clase : clases) 
-            {
-                if (clase.toString().equals(seleccion)) 
-                {
+        for (Clases clase : clases) {
 
-                    lblHorario.setText(clase.getHorario().toString());
+            String profesor = clase.getEntrenador().getApellido()
+                    + ", " + clase.getEntrenador().getNombre();
 
-                    lblCupos.setText(String.valueOf(clase.getCapacidad()));
+            String opcion = clase.getNombre() + " - "
+                    + profesor + " - " + clase.getHorario();
 
-                    break;
-                }
+            if (opcion.equals(seleccion)) {
+
+                lblClaseTitulo.setText(clase.getNombre());
+
+                lblHorario.setText(clase.getHorario().toString());
+
+                lblCupos.setText(String.valueOf(clase.getCapacidad()));
+
+                break;
             }
         }
+    }
+
     }//GEN-LAST:event_cbClaseItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -692,13 +746,13 @@ for (Asistencias a : asistencias) {
     private javax.swing.JComboBox<String> cbSocio;
     private com.toedter.calendar.JDateChooser dcFecha;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jpAsistencias;
+    private javax.swing.JPanel jpInfo;
     private javax.swing.JLabel lblBuscar;
     private javax.swing.JLabel lblCantidadClases;
     private javax.swing.JLabel lblClase;
-    private javax.swing.JLabel lblClaseTitulo1;
+    private javax.swing.JLabel lblClaseTitulo;
     private javax.swing.JLabel lblClasesRestantes;
     private javax.swing.JLabel lblCupos;
     private javax.swing.JLabel lblCuposTitulo;
