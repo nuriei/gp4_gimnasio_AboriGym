@@ -19,70 +19,22 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
 
     public PrincipalEntrenadores() {
         initComponents();
-        this.setSize(647, 643);
-//        // --- FILTRO PARA PERMITIR SOLO NÚMEROS EN EL DNI ---
-//        ((javax.swing.text.AbstractDocument) txtDni.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
-//            @Override
-//            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
-//                if (string != null && string.matches("\\d*")) {
-//                    super.insertString(fb, offset, string, attr);
-//                }
-//            }
-//
-//            @Override
-//            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
-//                if (text != null && text.matches("\\d*")) {
-//                    super.replace(fb, offset, length, text, attrs);
-//                }
-//            }
-//        });
-//        // --- FILTRO SOLO LETRAS Y ESPACIOS PARA EL NOMBRE ---
-//        ((javax.swing.text.AbstractDocument) txtNombre.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
-//            @Override
-//            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
-//                if (string != null && string.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
-//                    super.insertString(fb, offset, string, attr);
-//                }
-//            }
-//
-//            @Override
-//            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
-//                if (text != null && text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
-//                    super.replace(fb, offset, length, text, attrs);
-//                }
-//            }
-//        });
-//
-//        // --- FILTRO SOLO LETRAS Y ESPACIOS PARA EL APELLIDO ---
-//        ((javax.swing.text.AbstractDocument) txtApellido.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
-//            @Override
-//            public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
-//                if (string != null && string.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
-//                    super.insertString(fb, offset, string, attr);
-//                }
-//            }
-//
-//            @Override
-//            public void replace(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
-//                if (text != null && text.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*")) {
-//                    super.replace(fb, offset, length, text, attrs);
-//                }
-//            }
-//        });
-//        btnGuardar.setEnabled(false); // Arranca apagado
-//
-//        javax.swing.event.DocumentListener validadorListener = new javax.swing.event.DocumentListener() {
-//            @Override
-//            public void insertUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
-//            @Override
-//            public void removeUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
-//            @Override
-//            public void changedUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
-//        };
-//
-//        txtDni.getDocument().addDocumentListener(validadorListener);
-//        txtApellido.getDocument().addDocumentListener(validadorListener);
-//        txtNombre.getDocument().addDocumentListener(validadorListener);
+        
+
+        btnGuardar.setEnabled(false); // Arranca apagado
+
+        javax.swing.event.DocumentListener validadorListener = new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+        };
+
+        txtDni.getDocument().addDocumentListener(validadorListener);
+        txtApellido.getDocument().addDocumentListener(validadorListener);
+        txtNombre.getDocument().addDocumentListener(validadorListener);
 
         panelFormulario.setVisible(false);
         modeloTabla = (DefaultTableModel) tablaEntrenadores.getModel();
@@ -118,19 +70,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
                 }
             }
         });
-//        try {
-//    java.net.URL rutaImagen = getClass().getClassLoader().getResource("imagenes/fondo.jpg");
-//    if (rutaImagen != null) {
-//        ImageIcon iconoOriginal = new ImageIcon(rutaImagen);
-//        Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(490, 402, Image.SCALE_SMOOTH);
-//        labelFondo.setIcon(new ImageIcon(imagenEscalada));
-//        labelFondo.setBounds(0, 0, 490, 402);
-//        this.getContentPane().setComponentZOrder(labelFondo, this.getContentPane().getComponentCount() - 1);
-//        labelFondo.setEnabled(false);
-//        
-//    }
-//} catch (Exception e) {
-//    }
+
     }
 
     /**
@@ -283,7 +223,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, true
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -303,37 +243,43 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jbEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jBBaja, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jBAlta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jbModificar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(14, 14, 14))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addGap(260, 363, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jbModificar)
+                        .addGap(18, 18, 18)
+                        .addComponent(jBBaja, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(jBAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(jbEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(23, 23, 23))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jbEliminar))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jbModificar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBBaja)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBAlta)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbEliminar)))
-                .addContainerGap(12, Short.MAX_VALUE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jBAlta)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jBBaja)
+                                .addComponent(jbModificar)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         panelFormulario.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -599,18 +545,18 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         editando = true; // Activamos el modo edición
         idEntrenadorActual = Integer.parseInt(tablaEntrenadores.getValueAt(fila, 0).toString());
 
-        // 💡 BUENAS PRÁCTICAS: Buscamos el objeto completo desde la base de datos usando el ID
+        
         Entrenadores e = entrenadorData.buscarEntrenadorPorId(idEntrenadorActual);
 
         if (e != null) {
             txtDni.setText(e.getDni());
-            txtApellido.setText(e.getApellido()); // Ojo acá: en tu código anterior tenías invertidos nombre y apellido según el orden de la tabla, asegurate que coincidan con tu objeto
+            txtApellido.setText(e.getApellido()); 
             txtNombre.setText(e.getNombre());
 
-            // SELECCIONAMOS LA ESPECIALIDAD
+           
             comboBoxEspecialidad.setSelectedItem(e.getEspecialidad().toString());
 
-            // Estado
+           
             comboBoxEstado.setSelectedItem(e.isEstado() ? "Activo" : "Inactivo");
 
         }
@@ -644,7 +590,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         );
 
         if (respuesta == 0) {
-            // Usamos el objeto de entrenador y su método de baja lógica
+           
             entrenadorData.bajaLogicaEntrenador(id);
             cargarEntrenadores(); // Recarga la tabla de entrenadores
 
@@ -677,7 +623,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         );
 
         if (respuesta == 0) {
-            // Llamamos al método de alta lógica en EntrenadorData
+           
             entrenadorData.altaLogicaEntrenador(id);
             cargarEntrenadores(); // Recarga la tabla
 
@@ -821,13 +767,13 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
     String apellido = txtApellido.getText().trim();
     String nombre = txtNombre.getText().trim();
     
-    // 1. Validamos que los campos obligatorios no estén vacíos primero
+    // nos fijamos si estan vacios
     if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Completá todos los campos.");
         return;
     }
 
-    // 2. Validamos la longitud del DNI
+    // compruebo longitud de dni
     if (documento.length() < 7 || documento.length() > 8) {
         JOptionPane.showMessageDialog(this, "El DNI ingresado no es válido (debe tener entre 7 y 8 dígitos).", "Error en DNI", JOptionPane.WARNING_MESSAGE);
         return;
@@ -853,20 +799,20 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         boolean estado = comboBoxEstado.getSelectedItem().toString().equals("Activo");
 
         if (idEntrenadorActual == -1) {
-            // Guardar nuevo entrenador (pasándole el String de la especialidad)
+            
             Entrenadores entrenador = new Entrenadores(documento, nombre, apellido, especialidadSeleccionada, estado);
             entrenadorData.guardarEntrenador(entrenador);
 
             JOptionPane.showMessageDialog(this, "Entrenador guardado.");
         } else {
-            // Modificar entrenador existente (pasándole el ID y el String de la especialidad)
+            
             Entrenadores entrenador = new Entrenadores(idEntrenadorActual, documento, nombre, apellido, especialidadSeleccionada, estado);
             entrenadorData.modificarEntrenador(entrenador);
 
             JOptionPane.showMessageDialog(this, "Entrenador modificado.");
         }
 
-        // Recargamos la tabla, ocultamos el formulario y reseteamos las variables
+        // recargamos la tabla, ocultamos el formulario y reseteamos las variables
         cargarEntrenadores();
         panelFormulario.setVisible(false);
         idEntrenadorActual = -1;
@@ -928,7 +874,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
     boolean apellidoLleno = !txtApellido.getText().trim().isEmpty();
     boolean nombreLleno = !txtNombre.getText().trim().isEmpty();
     
-    // El botón se activa solo si los tres tienen contenido
+    //el btn guardar se activa solo si los tres tienen contenido
     btnGuardar.setEnabled(dniLleno && apellidoLleno && nombreLleno);
 }
     private void cargarEntrenadores() {
@@ -960,7 +906,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
     }
 
     private void llenarComboEspecialidad() {
-comboBoxEspecialidad.removeAllItems(); // Limpia por las dudas
+    comboBoxEspecialidad.removeAllItems(); // Limpia por las dudas
     
 
     String[] disciplinas = {"YOGA", "CROSSFIT", "MUSCULACION", "PILATES", "FUNCIONAL"};

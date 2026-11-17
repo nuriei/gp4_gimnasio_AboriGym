@@ -72,6 +72,17 @@ public class ClaseData {
             System.out.println("Error al dar de baja la clase: " + ex.getMessage());
         }
     }
+    
+    public boolean borrarClase(int idClase){
+    String sql = "DELETE FROM clases where id_clase + ?";
+    try(PreparedStatement ps = con.prepareStatement(sql)){
+    ps.setInt(1, idClase);
+    return ps.executeUpdate() == 1;
+    }catch(SQLException ex){
+        javax.swing.JOptionPane.showMessageDialog(null, "No se puede eliminar la clase porque tiene asistencias registradas.Use 'baja' en su lugar.","Accion denegada",javax.swing.JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
+    }
 
     public Clases buscarClasePorId(int idClase) {
         String sql = "SELECT * FROM clases WHERE id_clase = ?";
