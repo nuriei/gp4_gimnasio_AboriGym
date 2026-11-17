@@ -119,7 +119,6 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         btn_volver = new javax.swing.JButton();
 
         setTitle("Gestion Entrenadores");
-        setPreferredSize(new java.awt.Dimension(647, 643));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel5.setText("Gestion de Entrenadores");
@@ -449,6 +448,17 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
 
         jScrollPane2.setViewportView(PanelBuscar);
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 635, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE)
+        );
+
         btn_volver.setBackground(new java.awt.Color(153, 153, 153));
         btn_volver.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btn_volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/volver.png"))); // NOI18N
@@ -459,21 +469,6 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btn_volver, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 635, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_volver, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -483,7 +478,9 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
                 .addComponent(jLabel5)
                 .addGap(179, 179, 179))
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 635, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_volver)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 635, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -492,7 +489,9 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 563, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_volver, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pack();
@@ -775,26 +774,44 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
 
     // compruebo longitud de dni
     if (documento.length() < 7 || documento.length() > 8) {
-        JOptionPane.showMessageDialog(this, "El DNI ingresado no es válido (debe tener entre 7 y 8 dígitos).", "Error en DNI", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(this, "el DNI ingresado debe ser solo numerico entre 7 y 8 numeros", "Error DNI", JOptionPane.WARNING_MESSAGE);
         return;
     }
+    if (!documento.matches("\\d+")) {
+        JOptionPane.showMessageDialog(this, "el DNI debe ser solo numerico", "Error DNI", JOptionPane.WARNING_MESSAGE);
+        txtDni.requestFocus();
+        return;
+   }
 
     
   
     if (!apellido.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*$")) {
-        JOptionPane.showMessageDialog(this, "apellido solo debe tener letras", "Error de formato", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(this, "apellido solo debe tener letras", "Error Apellido", JOptionPane.WARNING_MESSAGE);
         return; // Frena para que no siga guardando
     }
 
    
     if (!nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*$")) {
-        JOptionPane.showMessageDialog(this, "nombre solo debe tener letras", "Error de formato", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(this, "nombre solo debe tener letras", "Error de Nombre", JOptionPane.WARNING_MESSAGE);
         return; // Frena para que no siga guardando
     }
     
     // especialidad capturada
     String especialidadSeleccionada = comboBoxEspecialidad.getSelectedItem().toString();
-
+     Entrenadores entrenadorConMismoDni = entrenadorData.buscarEntrenadorPorDni(documento);
+     if (entrenadorConMismoDni != null) { //si lo de arriba da nulo
+            if (idEntrenadorActual == -1) {//y si entra al bloque de nuevo
+            JOptionPane.showMessageDialog(this, "ya existe socio con ese dni", "duplicado", JOptionPane.WARNING_MESSAGE);
+            txtDni.requestFocus();
+            return;
+            }else{
+                    if (entrenadorConMismoDni.getIdEntrenador()!= idEntrenadorActual){
+                    JOptionPane.showMessageDialog(this, "el dni a modificar ya existe", "duplicado", JOptionPane.WARNING_MESSAGE);
+                    txtDni.requestFocus();
+                    return;
+                    }
+                    }
+        }
     try {
         boolean estado = comboBoxEstado.getSelectedItem().toString().equals("Activo");
 
@@ -825,9 +842,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
         comboBoxEspecialidad.setSelectedIndex(0);
 
     } catch (java.sql.SQLException e) {
-        JOptionPane.showMessageDialog(this, "Error en la Base de Datos: " + e.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "error proveniente de la BD " + e.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_btnGuardarActionPerformed
 

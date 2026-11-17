@@ -516,6 +516,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             txtNombre.requestFocus();
             return;
         }
+        
         //validacion capacidad
         if (capacidadStr.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor ingrese la capacidad maxima de alumnos", "Validacion de Datos", JOptionPane.WARNING_MESSAGE);
