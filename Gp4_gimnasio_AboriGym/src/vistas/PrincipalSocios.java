@@ -22,7 +22,7 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         
 
        btnGuardar.setEnabled(false); // Arranca apagado
-//como es una interfaz debo decirle con q va  funcionar
+        //como es una interfaz debo decirle con q va  funcionar
         javax.swing.event.DocumentListener validadorListener = new javax.swing.event.DocumentListener() {
             @Override
            public void insertUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
@@ -684,10 +684,15 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
             txtDni.requestFocus();
             return;
         }
+        if (!documento.matches("\\d+")) {
+        JOptionPane.showMessageDialog(this, "el DNI debe ser solo numerico", "Error DNI", JOptionPane.WARNING_MESSAGE);
+        txtDni.requestFocus();
+        return;
+        }
 
         // aca valido q no esten vacios los campos antes de guardaar despues de activarse el boton con el listener
         if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty() || edadStr.isEmpty()|| telefono.isEmpty() || correo.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Comple todos los campos");
+            JOptionPane.showMessageDialog(this, "Complete todos los campos");
             return;
         }
         
