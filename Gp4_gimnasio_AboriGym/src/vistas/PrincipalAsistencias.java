@@ -11,6 +11,7 @@ import entidades.Clases;
 import entidades.Pases;
 import persistencia.AsistenciaData;
 import entidades.Asistencias;
+import java.time.LocalDate;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -85,15 +86,21 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     private void cargarSocios()
     {
         cbSocio.removeAllItems();
+
         List<Socio> socios = socioData.listarSocios();
 
-            for (Socio socio : socios) 
-            {
-                if (socio.isEstado()) 
-                {
-                    cbSocio.addItem(socio.getApellido() + ", " + socio.getNombre()+ " - ID: " + socio.getIdSocio()); //No carga objetos, solo carga el nombre, apellido  ee ID
-                }
+        for (Socio socio : socios) {
+
+            if (socio.isEstado() && buscarPaseActivo(socio) != null) {
+
+                cbSocio.addItem(
+                    socio.getApellido() + ", "
+                    + socio.getNombre() + " - ID: "
+                    + socio.getIdSocio()
+                );
             }
+        }
+
     }
     
     //Busca el socio cargado en el cbSocio y lo compara con los datos reales en la base 
@@ -115,7 +122,8 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         for (Socio socio : socios)
         {
 
-            if (socio.getIdSocio() == idSocio) {
+            if (socio.getIdSocio() == idSocio) 
+            {
                 return socio;
             }
         }
@@ -133,7 +141,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
 
         for (Pases pase : pases) 
         {
-            if (pase.estaVigente() && pase.tienePases()) 
+            if (pase.estaVigente()) 
             {
                 return pase;
             }
@@ -530,63 +538,105 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     // 1. Obtener el socio seleccionado
     Socio socio = buscarSocioSeleccionado();
 
-    if (socio == null || cbClase.getSelectedItem() == null) {
-        JOptionPane.showMessageDialog(this, "Seleccione un socio y una clase.");
+    if (socio == null) {
+        JOptionPane.showMessageDialog(this, "Seleccione un socio.");
         return;
     }
 
-    // 2. Buscar la clase seleccionada
-    Clases clase = null;
+    // 2. Verificar que tenga un pase vigente y entradas disponibles
+    Pases pase = buscarPaseActivo(socio);
+
+    if (pase == null || !pase.tienePases()) {
+        JOptionPane.showMessageDialog(this,
+                "El socio no tiene entradas disponibles.");
+        return;
+    }
+
+    // 3. Verificar que se haya seleccionado una clase
+    if (cbClase.getSelectedItem() == null) {
+        JOptionPane.showMessageDialog(this, "Seleccione una clase.");
+        return;
+    }
+
+    // 4. Buscar la clase seleccionada
+    Clases claseSeleccionada = null;
     String seleccion = cbClase.getSelectedItem().toString();
 
     List<Clases> clases = claseData.listarClasesActivas();
 
-    for (Clases c : clases) {
+    for (Clases clase : clases) {
+        String profesor = clase.getEntrenador().getApellido()
+                + ", " + clase.getEntrenador().getNombre();
 
-        String profesor = c.getEntrenador().getApellido()
-                + ", " + c.getEntrenador().getNombre();
-
-        String opcion = c.getNombre() + " - "
-                + profesor + " - " + c.getHorario();
+        String opcion = clase.getNombre() + " - "
+                + profesor + " - " + clase.getHorario();
 
         if (opcion.equals(seleccion)) {
-            clase = c;
+            claseSeleccionada = clase;
             break;
         }
     }
 
-    if (clase == null) {
-        JOptionPane.showMessageDialog(this, "No se encontró la clase seleccionada.");
+    if (claseSeleccionada == null) {
+        JOptionPane.showMessageDialog(this, "No se pudo encontrar la clase.");
         return;
     }
 
-    // 3. Validar fecha
-    java.util.Date fecha = dcFecha.getDate();
-
-    if (fecha == null) {
+    // 5. Verificar que se haya seleccionado una fecha
+    if (dcFecha.getDate() == null) {
         JOptionPane.showMessageDialog(this, "Seleccione una fecha.");
         return;
     }
 
-    // 4. Crear la asistencia
+    // 6. Convertir la fecha seleccionada
+    LocalDate fechaSeleccionada = dcFecha.getDate().toInstant()
+            .atZone(java.time.ZoneId.systemDefault())
+            .toLocalDate();
+
+    // 7. Evitar fechas futuras
+    if (fechaSeleccionada.isAfter(LocalDate.now())) {
+        JOptionPane.showMessageDialog(this,
+                "La fecha de asistencia no puede ser posterior al día de hoy.");
+        return;
+    }
+    // 8. Verificar cupos disponibles
+int asistenciasRegistradas = asistenciaData.contarAsistenciasPorClaseYFecha(
+        claseSeleccionada.getIdClase(), fechaSeleccionada);
+
+if (asistenciasRegistradas >= claseSeleccionada.getCapacidad()) {
+    JOptionPane.showMessageDialog(this,
+            "La clase no tiene cupos disponibles para esta fecha.");
+    return;
+}
+
+    // 9. Crear la asistencia
     Asistencias asistencia = new Asistencias();
     asistencia.setSocio(socio);
-    asistencia.setClase(clase);
-    asistencia.setFechaAsistencia(
-            fecha.toInstant()
-                    .atZone(java.time.ZoneId.systemDefault())
-                    .toLocalDate()
-    );
+    asistencia.setClase(claseSeleccionada);
+    asistencia.setFechaAsistencia(fechaSeleccionada);
 
-    // 5. Registrar asistencia
-    asistenciaData.registrarAsistencia(asistencia);
+    // 10. Registrar la asistencia
+    boolean registrado = asistenciaData.registrarAsistencia(asistencia);
 
-    // 6. Actualizar historial del socio
-    List<Asistencias> asistencias =
-            asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
+    if (!registrado) {
+        JOptionPane.showMessageDialog(this,
+                "No se pudo registrar la asistencia.");
+        return;
+    }
 
-    DefaultTableModel modelo =
-            (DefaultTableModel) tablaAsistencias.getModel();
+    // 10. Descontar una entrada del pase
+    pase.descontarPase();
+    paseData.modificarPase(pase);
+
+    // 11. Actualizar la cantidad de clases disponibles
+    lblCantidadClases.setText(String.valueOf(pase.getCantidadPases()));
+
+    // 12. Actualizar el historial de asistencias
+    List<Asistencias> asistencias
+            = asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
+
+    DefaultTableModel modelo
+            = (DefaultTableModel) tablaAsistencias.getModel();
 
     modelo.setRowCount(0);
 
@@ -600,7 +650,8 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         });
     }
 
-    JOptionPane.showMessageDialog(this, "Asistencia registrada correctamente.");
+    JOptionPane.showMessageDialog(this,
+            "Asistencia registrada correctamente.");
 
     }//GEN-LAST:event_btnRegistrarAsistenciaActionPerformed
 
@@ -680,26 +731,63 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     
     private void btnBuscarSocioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarSocioActionPerformed
       
+    if (!rbNombre.isSelected() && !rbDni.isSelected() && !rbID.isSelected()) 
+    {
+    JOptionPane.showMessageDialog(this, "Seleccionar tipo de búsqueda");
+    return;
+    }
     String texto = txtBuscarSocio.getText().trim().toLowerCase();
 
     cbSocio.removeAllItems();
 
     List<Socio> socios = socioData.listarSocios();
-
-    for (Socio socio : socios)
-    {
-
-        if (socio.isEstado()) 
+    
+     if (rbNombre.isSelected()) 
+     {
+        for (Socio socio : socios)
         {
-            String nombreCompleto = socio.getApellido() + ", " + socio.getNombre();
-
-            if (nombreCompleto.toLowerCase().contains(texto)) 
+            if (socio.isEstado()&&buscarPaseActivo(socio) != null) 
+                
             {
-                cbSocio.addItem(nombreCompleto + " - ID: " + socio.getIdSocio());
+                String nombreCompleto = socio.getApellido() + ", " + socio.getNombre();
+
+                if (nombreCompleto.toLowerCase().contains(texto)) 
+                {
+                    cbSocio.addItem(nombreCompleto + " - ID: " + socio.getIdSocio());
+                }
             }
         }
-    }
+     }
+     else  
+         if (rbDni.isSelected()) 
+        {
+           for (Socio socio : socios)
+           {
+               if (socio.isEstado()&&buscarPaseActivo(socio) != null) 
+               {
+                   if (socio.getDni().contains(texto)) 
+                   {
+                       cbSocio.addItem(socio.getApellido() + ", "+ socio.getNombre() + " - ID: " + socio.getIdSocio());
+                   }
+               }
+           }
+        }
+     else  
+         if (rbID.isSelected())
+            {
+                for (Socio socio : socios) 
+                {
+                   if (socio.isEstado()&&buscarPaseActivo(socio) != null) 
+                   {
+                       if (String.valueOf(socio.getIdSocio()).contains(texto)) 
+                       {
+                           cbSocio.addItem(socio.getApellido() + ", "+ socio.getNombre() + " - ID: " + socio.getIdSocio());
+                       }
+                   }
+               }
+           }
 
+    cbSocio.setSelectedIndex(-1);     
     }//GEN-LAST:event_btnBuscarSocioActionPerformed
 
     private void cbClaseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbClaseItemStateChanged
