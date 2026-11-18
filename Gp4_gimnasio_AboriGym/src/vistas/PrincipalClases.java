@@ -25,10 +25,36 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
     public PrincipalClases() {
         initComponents();
         //agregado de configuracion parajspiner adatespiner
-        javax.swing.SpinnerDateModel modeloHora = new javax.swing.SpinnerDateModel(new java.util.Date(), null, null, java.util.Calendar.MINUTE);
+        //javax.swing.SpinnerDateModel modeloHora = new javax.swing.SpinnerDateModel(new java.util.Date(), null, null, java.util.Calendar.MINUTE);
+        //JSHorario.setModel(modeloHora);
+        //javax.swing.JSpinner.DateEditor editorHora = new javax.swing.JSpinner.DateEditor(JSHorario, "HH:mm");
+        //JSHorario.setEditor(editorHora);
+        java.util.Calendar horaInicial = java.util.Calendar.getInstance();
+        horaInicial.set(java.util.Calendar.HOUR_OF_DAY, 8);
+        horaInicial.set(java.util.Calendar.MINUTE, 0);
+        horaInicial.set(java.util.Calendar.SECOND, 0);
+        
+        javax.swing.SpinnerDateModel modeloHora = new javax.swing.SpinnerDateModel(
+        horaInicial.getTime(),null,null,java.util.Calendar.HOUR_OF_DAY) {
+       @Override
+       public Object getNextValue(){
+       java.util.Calendar cal = java.util.Calendar.getInstance();
+       cal.setTime((java.util.Date)getValue());
+       cal.add(java.util.Calendar.HOUR_OF_DAY,1);
+       return cal.getTime();
+       }
+       @Override
+       public Object getPreviousValue(){
+       java.util.Calendar cal = java.util.Calendar.getInstance();
+       cal.setTime((java.util.Date)getValue());
+       cal.add(java.util.Calendar.HOUR_OF_DAY,-1);
+       return cal.getTime();
+       }
+        };
         JSHorario.setModel(modeloHora);
         javax.swing.JSpinner.DateEditor editorHora = new javax.swing.JSpinner.DateEditor(JSHorario, "HH:mm");
         JSHorario.setEditor(editorHora);
+        editorHora.getTextField().setEditable(false);    
         //conexion
         persistencia.MiConexion conexion = new persistencia.MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym", "root", "");
         claseData = new persistencia.ClaseData(conexion);
@@ -634,11 +660,18 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         String idBuscado = txtBuscarPorNombre1.getText().trim();//extraigo id
         //validacion por nombre
         if (!nombreBuscado.isEmpty()) {
+            //agrego condicion solo letras
+            if(!validarSoloLetras(nombreBuscado,"Buscar por Nombre")){
+            txtBuscarPorNombre.setText("");
+            txtBuscarPorNombre.requestFocus();
+            cargarClases();
+            return;
+            }
             try {
                 modeloTabla.setRowCount(0);
                 boolean encontro = false;
 
-                for (Clases c : claseData.listarClasesActivas()) {
+                for (Clases c : claseData.listartodaslasclases()) {
                     if (c.getNombre().toLowerCase().contains(nombreBuscado.toLowerCase())) {
                         String nombreEntrenador = (c.getEntrenador() != null)
                                 ? c.getEntrenador().getNombre() + " " + c.getEntrenador().getApellido()
@@ -656,7 +689,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
                     }
                 }//fin for
                 if (!encontro) {
-                    JOptionPane.showMessageDialog(this, "No se encontraron clases con el nombre" + nombreBuscado, "Busqueda", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "No se encontraron clases con el nombre: " + nombreBuscado, "Busqueda", JOptionPane.INFORMATION_MESSAGE);
                     cargarClases();
                 }
             } catch (Exception e) {
@@ -666,6 +699,9 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         }
         // validacion po ID
         if (!validarSoloNumeros(idBuscado, "ID de Búsqueda")) {
+            txtBuscarPorNombre1.setText("");
+            txtBuscarPorNombre1.requestFocus();
+            cargarClases();
             return;
         }
 
@@ -786,14 +822,20 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una clase de la lista para darle la baja.", "Atención", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
+      // agregamos condicion de clase activa o inactiva
+      String estadoActual = tablaClases.getValueAt(fila, 5).toString();
+      if(estadoActual.equals("Inactivo")){
+          JOptionPane.showMessageDialog(this, "La clase ya se encuentra Inactiva, no puede darla de baja","Accion no permitida",JOptionPane.WARNING_MESSAGE);
+          return;
+      }
+      
         int id = Integer.parseInt(tablaClases.getValueAt(fila, 0).toString());
         int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea aplicar la baja lógica a esta clase?", "Confirmar Acción", JOptionPane.YES_NO_OPTION);
 
         if (confirmacion == JOptionPane.YES_OPTION) {
             claseData.bajaLogicaClase(id);
             cargarClases();
-            JOptionPane.showMessageDialog(null, "La clase fue desactivada (Estado = Inactivo) con éxito.", "Baja Lógica", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "La clase fue desactivada (Estado = Inactivo) con éxito.", "Baja Lógica", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jBBajaActionPerformed
     }
     private void jBAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAltaActionPerformed
@@ -803,6 +845,13 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una clase de la lista para darle el alta.", "Atención", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        //agrego if para validar si esta activa la clase 
+        String estadoActual = tablaClases.getValueAt(fila, 5).toString();
+        if(estadoActual.equals("Activo")){
+            JOptionPane.showMessageDialog(this, "La clase ya esta activa, no puede darse de alta","Acion no permitida",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         int id = Integer.parseInt(tablaClases.getValueAt(fila, 0).toString());
         int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea aplicar el alta lógica a esta clase?", "Confirmar Alta", JOptionPane.YES_NO_OPTION);
 
@@ -853,9 +902,18 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
 
     private void txtBuscarPorNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarPorNombreKeyReleased
         
-        String textoBuscado = txtBuscarPorNombre.getText().trim().toLowerCase();
+        String textoOriginal = txtBuscarPorNombre.getText().trim();
+        if(!textoOriginal.isEmpty() && !textoOriginal.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")){
+            JOptionPane.showMessageDialog(this, "La búsqueda por nombre solo permite letras.", "Error de Validación", JOptionPane.WARNING_MESSAGE);
+            txtBuscarPorNombre.setText("");
+            cargarClases();
+            return;
+        }
+        
+        String textoBuscado = textoOriginal.toLowerCase();
         modeloTabla.setRowCount(0);
-        for(Clases c :claseData.listarClasesActivas()){
+        
+        for(Clases c :claseData.listartodaslasclases()){
         //validamos si el texto esta vacio muestra todas, sino filtra las q contenga la letra q se tipee
         if(textoBuscado.isEmpty()|| c.getNombre().toLowerCase().contains(textoBuscado)){
          String nombreEntrenador;
@@ -870,7 +928,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
                     c.getIdClase(),
                     c.getNombre(),
                     c.getHorario(),
-                    c.getCapacidad() + "Alumnos",nombreEntrenador,
+                    c.getCapacidad() + " Alumnos",nombreEntrenador,
                     c.isEstado() ?"Activo":"Inactivo"
                 
                 });
@@ -937,7 +995,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
 
     private void cargarClases() {
         modeloTabla.setRowCount(0);
-        for (Clases c : claseData.listarClasesActivas()) {
+        for (Clases c : claseData.listartodaslasclases()) {
             String nombreEntrenador = (c.getEntrenador() != null)
                     ? c.getEntrenador().getNombre() + " " + c.getEntrenador().getApellido()
                     : "No Asignado ";

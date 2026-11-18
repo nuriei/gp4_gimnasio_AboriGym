@@ -74,7 +74,7 @@ public class ClaseData {
     }
     
     public boolean borrarClase(int idClase){
-    String sql = "DELETE FROM clases where id_clase + ?";
+    String sql = "DELETE FROM clases where id_clase = ?";
     try(PreparedStatement ps = con.prepareStatement(sql)){
     ps.setInt(1, idClase);
     return ps.executeUpdate() == 1;
@@ -110,6 +110,19 @@ public class ClaseData {
         } catch (SQLException ex) {
             javax.swing.JOptionPane.showMessageDialog(null, "Error SQL al listar Clases"+ex.getMessage());
             System.out.println("Error al listar clases activas: " + ex.getMessage());    
+        }
+        return lista;
+    }
+    
+    public List<Clases> listartodaslasclases(){
+        String sql = "SELECT * FROM clases";
+        List<Clases> lista = new ArrayList<>();
+        try(PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()){
+            while (rs.next()){
+            lista.add(mapearClase(rs));
+            }
+        }catch(SQLException ex){
+            javax.swing.JOptionPane.showMessageDialog(null, "Error SQL al listar todas las clases"+ex.getMessage());
         }
         return lista;
     }
