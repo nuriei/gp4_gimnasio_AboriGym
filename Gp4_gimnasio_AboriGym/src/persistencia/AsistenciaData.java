@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import entidades.Asistencias;
+import java.time.LocalDate;
 
 /**
  *
@@ -50,6 +51,34 @@ public class AsistenciaData {
             System.out.println("Error al registrar asistencia: " + ex.getMessage());
             return false;
         }
+}
+        //Recibe el ID de una clase y una fecha
+        //consulta la tabla asistencias y devuelve cuantas personas ya estan registradas en esa clase ese día
+        public int contarAsistenciasPorClaseYFecha(int idClase, LocalDate fecha) {
+
+    String sql = "SELECT COUNT(*) FROM asistencias "
+            + "WHERE id_clase = ? AND fecha_asistencia = ?";
+
+    try {
+        PreparedStatement ps = connection.prepareStatement(sql);
+
+        ps.setInt(1, idClase);
+        ps.setDate(2, java.sql.Date.valueOf(fecha));
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+
+        ps.close();
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(null,
+                "Error al contar las asistencias: " + ex.getMessage());
+    }
+
+    return 0;
 }
         
         public List<Asistencias> listarAsistencias() {
@@ -110,5 +139,6 @@ public class AsistenciaData {
         
         return asistencias;
     }
+        
     
 }

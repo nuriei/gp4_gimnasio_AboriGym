@@ -599,14 +599,23 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
                 "La fecha de asistencia no puede ser posterior al día de hoy.");
         return;
     }
+    // 8. Verificar cupos disponibles
+int asistenciasRegistradas = asistenciaData.contarAsistenciasPorClaseYFecha(
+        claseSeleccionada.getIdClase(), fechaSeleccionada);
 
-    // 8. Crear la asistencia
+if (asistenciasRegistradas >= claseSeleccionada.getCapacidad()) {
+    JOptionPane.showMessageDialog(this,
+            "La clase no tiene cupos disponibles para esta fecha.");
+    return;
+}
+
+    // 9. Crear la asistencia
     Asistencias asistencia = new Asistencias();
     asistencia.setSocio(socio);
     asistencia.setClase(claseSeleccionada);
     asistencia.setFechaAsistencia(fechaSeleccionada);
 
-    // 9. Registrar la asistencia
+    // 10. Registrar la asistencia
     boolean registrado = asistenciaData.registrarAsistencia(asistencia);
 
     if (!registrado) {
