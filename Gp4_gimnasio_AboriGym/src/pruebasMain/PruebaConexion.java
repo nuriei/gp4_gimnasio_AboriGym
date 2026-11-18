@@ -8,60 +8,99 @@ import persistencia.SocioData;
 import entidades.Socio;
 import persistencia.EntrenadorData;
 import entidades.Entrenadores;
-
-
+import entidades.Pases;
+import java.time.LocalDate;
+import persistencia.PaseData;
+import persistencia.ClaseData;
+import entidades.Clases;
+import java.time.LocalTime;
 
 public class PruebaConexion {
 
-    public static void main(String[] args)  throws SQLException  {
-        
+    public static void main(String[] args) throws SQLException {
+
         String url = "jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym";
         String usuario = "root";
         String password = "";
 
-
         MiConexion con = new MiConexion(url, usuario, password);
         Connection c = con.buscarConexion();
-        
-                if (c != null) {
+
+        if (c != null) {
             System.out.println("\n--- INICIANDO PRUEBAS DE PERSISTENCIA ---");
-            
+
             SocioData socioData = new SocioData(con);
-            
+
             // prueba uno, creamos un socio nuevo en memoria para la prueba
             Socio nuevoSocio = new Socio("33089694", "Nurita", "Ibaniez", 39, "nuryibaniez39@email.com", "2664295549", true); // la edad duele. ;)
             System.out.println("Intentando guardar socio: " + nuevoSocio.getNombre());
-            
+
             // prueba dos, se inserta en la base de datos (INSERT)
             socioData.guardarSocio(nuevoSocio);
-            
+
             // prueba tres: Buscamos en la BD para comprobar que se grabo (SELECT)
             System.out.println("\nVerificando inserción en la Base de Datos...");
             Socio socioBuscado = socioData.buscarSocioPorDni("33089694");
-            
+
             if (socioBuscado != null) {
                 System.out.println("¡Socio recuperado de la BD!: " + socioBuscado.getApellido() + ", " + socioBuscado.getNombre());
-                
+
                 System.out.println("\n--- Ejecutando Prueba: Modificar datos ---");
                 socioBuscado.setTelefono("2664295549"); // Cambiamos el teléfono por iphone
                 socioBuscado.setEdad(28);              // juventud
                 socioData.modificarSocio(socioBuscado);
-                
+
                 //pruebacuatro: verificamos s se seteo los datos otra vez
                 System.out.println("Verificando cambio en BD...");
                 Socio socioModificado = socioData.buscarSocioPorDni("33089694");
                 System.out.println("Datos actuales en BD: Telefono: " + socioModificado.getTelefono() + " - Edad: " + socioModificado.getEdad());
-                
+
             } else {
                 System.out.println("Error: No se pudo encontrar al socio ingresado.");
             }
             
             
-            
+                System.out.println("\n- INICIANDO PRUEBAS DE PASES");
+        
+        // Creamos un PaseData.
+        
+        PaseData paseData = new PaseData(con);
+        
+        // Buscamos un socio existente por su DNI.
+        
+        Socio socioParaPase = socioData.buscarSocioPorDni(nuevoSocio.getDni());
+        
+        // Creamos un pase para ese socio.
+        
+        Pases nuevoPase = new Pases(socioParaPase, 8, LocalDate.now(), 12000, true);
+        
+        //Guardamos el pase
+        
+        paseData.guardarPase(nuevoPase);
+        
+        // Buscamos el pase que acabamos de guardar.
+        
+        Pases paseBuscado = paseData.buscarPasePorId(nuevoPase.getIdMembresia());
+        
+        if (paseBuscado != null){
+            System.out.println("Pase encontrado. ");
+            System.out.println("ID: " + paseBuscado.getIdMembresia());
+            System.out.println("Cantidad de pases: " + paseBuscado.getCantidadPases());
+            System.out.println("Socio: " + paseBuscado.getSocio().getNombre());
+        } else {
+            System.out.println("No se pudo recuperar el pase. ");
+        }
+        
+        if (nuevoPase.getIdMembresia() != 0){
+            System.out.println("El pase se guardó correctamente. ");
+            System.out.println("ID del pase: " + nuevoPase.getIdMembresia());
+        } else {
+            System.out.println("No se pudo guardar el pase. ");
+        }
+
             System.out.println("\n--- INICIANDO PRUEBAS DE ENTRENADORES ---");
 
             // Creamos un entrenador
-
             EntrenadorData entrenadorData = new EntrenadorData(con);
 
             // Busca entrenador por dni
@@ -69,7 +108,7 @@ public class PruebaConexion {
 
             if (encontrado == null) {
 
-                Entrenadores nuevoEntrenador = new Entrenadores("30123456","Carlos","Perez","musculacion",true);
+                Entrenadores nuevoEntrenador = new Entrenadores("30123456", "Carlos", "Perez", "musculacion", true);
 
                 // Damos de alta al entrenador en la bdd
                 entrenadorData.guardarEntrenador(nuevoEntrenador);
@@ -80,7 +119,7 @@ public class PruebaConexion {
 
             if (encontrado != null) {
 
-                System.out.println("Entrenador encontrado: "+ encontrado.getNombre() + " " + encontrado.getApellido());
+                System.out.println("Entrenador encontrado: " + encontrado.getNombre() + " " + encontrado.getApellido());
 
                 // Si lo encuentra
                 //Podemos modificarlo
@@ -96,16 +135,39 @@ public class PruebaConexion {
                 System.out.println("Estado después de la baja: " + verificado.isEstado());
 
                 //Podemos darlo de alta, cambiando el estado a false
-                entrenadorData.altaLogicaEntrenador(
-                    encontrado.getIdEntrenadores()
-                );
+                entrenadorData.altaLogicaEntrenador(encontrado.getIdEntrenadores());
+
+                System.out.println("\n--- INICIANDO PRUEBAS DE CLASES");
+
+                // Creamos una ClaseData.
+                ClaseData claseData = new ClaseData(con);
+
+                // Creamos una Clase.
+                Clases nuevaClase = new Clases("Musculacion", encontrado, LocalTime.of(18, 0), 15, true);
+
+                // Guardamos la Clase.
+                claseData.guardarClase(nuevaClase);
+
+                // Recuperar la Clase guardada
+                Clases claseBuscada = claseData.buscarClasePorId(nuevaClase.getIdClase());
+
+                // Comprobamos si se guardo correctamente.
+                if (claseBuscada != null) {
+                    System.out.println("Clase encontrada: " + claseBuscada.getNombre());
+                    System.out.println("ID de la clase: " + claseBuscada.getIdClase());
+                } else {
+                    System.out.println("No se pudo recuperar la clase. ");
+                }
 
             } else {
                 System.out.println("No se encontró el entrenador.");
             }
-            
+
             System.out.println("\n--- FIN DE LAS PRUEBAS ---");
         }
+        
+        
+
     }
 
 }
