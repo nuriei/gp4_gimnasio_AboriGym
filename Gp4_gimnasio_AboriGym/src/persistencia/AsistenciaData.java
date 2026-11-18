@@ -28,24 +28,29 @@ public class AsistenciaData {
         claseData = new ClaseData(conexion);
                 }
     
-        public void registrarAsistencia(Asistencias asistencia) 
-        {
-            String sql = "INSERT INTO asistencias "+ "(id_socio, id_clase, fecha_asistencia) "+ "VALUES (?, ?, ?)";
+        public boolean registrarAsistencia(Asistencias asistencia) {
 
-            try
-            {
-                PreparedStatement ps = connection.prepareStatement(sql);
+        String sql = "INSERT INTO asistencias "
+                + "(id_socio, id_clase, fecha_asistencia) "
+                + "VALUES (?, ?, ?)";
 
-                ps.setInt(1, asistencia.getSocio().getIdSocio());
-                ps.setInt(2, asistencia.getClase().getIdClase());
-                ps.setDate(3, java.sql.Date.valueOf(asistencia.getFechaAsistencia()));
-                ps.executeUpdate();
-                ps.close();
-            } catch (SQLException ex) 
-            {
-                System.out.println("Error al registrar asistencia: " + ex.getMessage());
-            }
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            ps.setInt(1, asistencia.getSocio().getIdSocio());
+            ps.setInt(2, asistencia.getClase().getIdClase());
+            ps.setDate(3, java.sql.Date.valueOf(asistencia.getFechaAsistencia()));
+
+            ps.executeUpdate();
+            ps.close();
+
+            return true;
+
+        } catch (SQLException ex) {
+            System.out.println("Error al registrar asistencia: " + ex.getMessage());
+            return false;
         }
+}
         
         public List<Asistencias> listarAsistencias() {
         List<Asistencias> asistencias = new ArrayList<>();
