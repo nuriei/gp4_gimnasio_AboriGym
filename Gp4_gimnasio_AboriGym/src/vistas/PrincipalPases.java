@@ -535,7 +535,10 @@ import persistencia.SocioData;
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 712, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -923,21 +926,36 @@ import persistencia.SocioData;
         }
     }
  
-    // Modificar, Baja y Alta solo se habilitan con una fila elegida
+    // Modificar, Baja, Alta y Nuevo solo se habilitan con una fila elegida
     private void actualizarBotones() {
-        int fila = tablaPases.getSelectedRow();
-        boolean seleccionado = fila != -1;
+    int fila = tablaPases.getSelectedRow();
+    boolean seleccionado = fila != -1;
  
-        btnModificar.setEnabled(seleccionado);
-        if (seleccionado) {
-            String estado = tablaPases.getValueAt(fila, 7).toString();
-            btnBaja.setEnabled(estado.equals("Activo"));
-            btnAlta.setEnabled(estado.equals("Inactivo"));
-        } else {
+   
+    btnNuevo.setEnabled(seleccionado);
+    btnModificar.setEnabled(seleccionado);
+    
+    if (seleccionado) {
+        String estadoColumna = tablaPases.getValueAt(fila, 7).toString();
+        
+        // Si es un socio "Sin Asignar", solo permitimos usar "Nuevo" para asignarle su pase
+        if (estadoColumna.equals("Sin Asignar")) {
             btnBaja.setEnabled(false);
             btnAlta.setEnabled(false);
+            btnModificar.setEnabled(false); // Opcional: si prefieres que modificar no aplique aquí
+            btnNuevo.setEnabled(true);     // Habilitado para crearle su primer pase
+        } else {
+            // Comportamiento normal para pases existentes
+            btnBaja.setEnabled(estadoColumna.equals("Activo"));
+            btnAlta.setEnabled(estadoColumna.equals("Inactivo"));
         }
+    } else {
+        btnNuevo.setEnabled(false);
+        btnBaja.setEnabled(false);
+        btnAlta.setEnabled(false);
+        btnModificar.setEnabled(false);
     }
+}
  
     private int idFilaSeleccionada() {
         int fila = tablaPases.getSelectedRow();
