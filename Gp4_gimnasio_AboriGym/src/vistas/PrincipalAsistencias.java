@@ -190,9 +190,6 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         rbDni = new javax.swing.JRadioButton();
         rbID = new javax.swing.JRadioButton();
         panelListado = new javax.swing.JPanel();
-        lblBuscar = new javax.swing.JLabel();
-        txtBuscar = new javax.swing.JTextField();
-        btnBuscar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaAsistencias = new javax.swing.JTable();
         btnVolver = new javax.swing.JButton();
@@ -417,12 +414,6 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
 
         panelListado.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        lblBuscar.setText("Buscar");
-
-        txtBuscar.addActionListener(this::txtBuscarActionPerformed);
-
-        btnBuscar.setText("Buscar");
-
         tablaAsistencias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -449,26 +440,13 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         panelListadoLayout.setHorizontalGroup(
             panelListadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelListadoLayout.createSequentialGroup()
-                .addGroup(panelListadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelListadoLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblBuscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1))
+                .addComponent(jScrollPane1)
                 .addGap(13, 13, 13))
         );
         panelListadoLayout.setVerticalGroup(
             panelListadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelListadoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelListadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblBuscar)
-                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(35, 35, 35)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(19, Short.MAX_VALUE))
         );
@@ -494,7 +472,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
                                 .addGap(114, 114, 114)
                                 .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(panelFormulario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 123, Short.MAX_VALUE))
+                .addGap(0, 189, Short.MAX_VALUE))
         );
         jpAsistenciasLayout.setVerticalGroup(
             jpAsistenciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -518,7 +496,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(sPanelAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, 758, Short.MAX_VALUE)
+                .addComponent(sPanelAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, 934, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -654,10 +632,6 @@ if (asistenciasRegistradas >= claseSeleccionada.getCapacidad()) {
             "Asistencia registrada correctamente.");
 
     }//GEN-LAST:event_btnRegistrarAsistenciaActionPerformed
-
-    private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtBuscarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
     
@@ -826,7 +800,6 @@ if (asistenciasRegistradas >= claseSeleccionada.getCapacidad()) {
     }//GEN-LAST:event_cbClaseItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBuscar;
     private javax.swing.JToggleButton btnBuscarSocio;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnLimpiar;
@@ -840,7 +813,6 @@ if (asistenciasRegistradas >= claseSeleccionada.getCapacidad()) {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jpAsistencias;
     private javax.swing.JPanel jpInfo;
-    private javax.swing.JLabel lblBuscar;
     private javax.swing.JLabel lblCantidadClases;
     private javax.swing.JLabel lblClase;
     private javax.swing.JLabel lblClaseTitulo;
@@ -861,7 +833,6 @@ if (asistenciasRegistradas >= claseSeleccionada.getCapacidad()) {
     private javax.swing.JRadioButton rbNombre;
     private javax.swing.JScrollPane sPanelAsistencia;
     private javax.swing.JTable tablaAsistencias;
-    private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtBuscarSocio;
     // End of variables declaration//GEN-END:variables
 }
