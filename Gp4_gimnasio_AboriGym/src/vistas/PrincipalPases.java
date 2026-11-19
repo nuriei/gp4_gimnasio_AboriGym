@@ -78,7 +78,7 @@ import persistencia.SocioData;
     }
  
  
-   
+ 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -630,22 +630,42 @@ import persistencia.SocioData;
     }//GEN-LAST:event_txtSocioActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        
+       int fila = tablaPases.getSelectedRow(); // Si no hay ninguna fila seleccionada, devuelve -1.
+        Socio socioSeleccionado = null;
+
+        
+        //  se comprueba si pertenece a un socio que todavia no tiene un pase asignado
+        if (fila != -1) {
+            Object valorId = tablaPases.getValueAt(fila, 0);
+            Object valorDni = tablaPases.getValueAt(fila, 1);
+            if (valorId != null && "Sin ID".equals(valorId.toString().trim()) && valorDni != null) { //si es sin id se conecta con la bd , buscando el dni
+                socioSeleccionado = socioData.buscarSocioPorDni(valorDni.toString().trim());
+            }
+        }
         panelFormulario.setVisible(true);
-    boolean veniaEditando = editando;
+
+        // Guardamos en una variable si antes estábamos en modo edición,
+        // ya que limpiarCamposPase() va a resetear el estado a "nuevo pase".
+        boolean veniaEditando = editando;
+
+        // Quitamos la selección de la tabla para evitar confusiones con la fila anterior
+        // y limpiamos fecha, costo, entradas y estado del pase.
         tablaPases.clearSelection();
         limpiarCamposPase();
-        if (veniaEditando) {
-            limpiarSocio();   
+
+        if (socioSeleccionado != null) { // Si encontramos un socio sin pase seleccionado en la tabla, cargamos automáticamente id, nombre , apellido
+            mostrarSocio(socioSeleccionado);
+        } else if (veniaEditando) {
+            limpiarSocio();
         }
-        
-        // Liberar la búsqueda por DNI
+
         txtDniSocio.setEnabled(true);
-        txtDniSocio.setText("");
+        txtDniSocio.setText(""); // Dejamos habilitado y limpio el campo de DNI, por si quiere buscar otro usuario
         txtDniSocio.requestFocus();
-        
-        // Asignar la fecha de hoy y calcular inmediatamente los 30 días
-        jdcFechaIniciou.setDate(aDate(LocalDate.now())); 
-        actualizarFechaFin();  
+
+        jdcFechaIniciou.setDate(aDate(LocalDate.now()));
+        actualizarFechaFin(); 
     } 
 
    
