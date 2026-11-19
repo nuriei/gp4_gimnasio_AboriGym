@@ -314,6 +314,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         btnEliminar.setBackground(new java.awt.Color(153, 153, 153));
         btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(this::btnEliminarActionPerformed);
 
         btnLimpiar.setBackground(new java.awt.Color(153, 153, 153));
         btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/editar.png"))); // NOI18N
@@ -498,7 +499,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(sPanelAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, 934, Short.MAX_VALUE)
+                .addComponent(sPanelAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, 786, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -514,143 +515,135 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
 
     private void btnRegistrarAsistenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarAsistenciaActionPerformed
     
+        // Asignamos a una variable el socio seleccionado en el cbSocio
+        Socio socio = buscarSocioSeleccionado();
 
-    // 1. Obtener el socio seleccionado
-    Socio socio = buscarSocioSeleccionado();
-
-    if (socio == null) {
-        JOptionPane.showMessageDialog(this, "Seleccione un socio.");
-        return;
-    }
-
-    // 2. Verificar que tenga un pase vigente y entradas disponibles
-    Pases pase = buscarPaseActivo(socio);
-
-    if (pase == null || !pase.tienePases()) {
-        JOptionPane.showMessageDialog(this,
-                "El socio no tiene entradas disponibles.");
-        return;
-    }
-
-    // 3. Verificar que se haya seleccionado una clase
-    if (cbClase.getSelectedItem() == null) {
-        JOptionPane.showMessageDialog(this, "Seleccione una clase.");
-        return;
-    }
-
-    // 4. Buscar la clase seleccionada
-    Clases claseSeleccionada = null;
-    String seleccion = cbClase.getSelectedItem().toString();
-
-    List<Clases> clases = claseData.listarClasesActivas();
-
-    for (Clases clase : clases) {
-        String profesor = clase.getEntrenador().getApellido()
-                + ", " + clase.getEntrenador().getNombre();
-
-        String opcion = clase.getNombre() + " - "
-                + profesor + " - " + clase.getHorario();
-
-        if (opcion.equals(seleccion)) {
-            claseSeleccionada = clase;
-            break;
+        if (socio == null) 
+        {
+            JOptionPane.showMessageDialog(this, "Seleccione un socio.");
+            return;
         }
-    }
 
-    if (claseSeleccionada == null) {
-        JOptionPane.showMessageDialog(this, "No se pudo encontrar la clase.");
-        return;
-    }
+    // Verificar que tenga pasee activo  y entradas disponibles
+        Pases pase = buscarPaseActivo(socio);
 
-    // 5. Verificar que se haya seleccionado una fecha
-    if (dcFecha.getDate() == null) {
-        JOptionPane.showMessageDialog(this, "Seleccione una fecha.");
-        return;
-    }
+        if (pase == null || !pase.tienePases())
+        {
+            JOptionPane.showMessageDialog(this,
+                    "El socio no tiene entradas disponibles.");
+            return;
+        }
 
-    // 6. Convertir la fecha seleccionada
-    LocalDate fechaSeleccionada = dcFecha.getDate().toInstant()
-            .atZone(java.time.ZoneId.systemDefault())
-            .toLocalDate();
+    // Verificar que haya una clase seleccionada en cbClase
+        if (cbClase.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione una clase.");
+            return;
+        }
 
-    // 7. Evitar fechas futuras
-    if (fechaSeleccionada.isAfter(LocalDate.now())) {
-        JOptionPane.showMessageDialog(this,
-                "La fecha de asistencia no puede ser posterior al día de hoy.");
-        return;
-    }
+    // Buscamos clase seleccionada
+        Clases claseSeleccionada = null;
+        String seleccion = cbClase.getSelectedItem().toString();
+
+        List<Clases> clases = claseData.listarClasesActivas();
+
+        for (Clases clase : clases) 
+        {
+            String profesor = clase.getEntrenador().getApellido()+ ", " + clase.getEntrenador().getNombre();
+            String opcion = clase.getNombre() + " - "+ profesor + " - " + clase.getHorario();
+
+            if (opcion.equals(seleccion)) 
+            {
+                claseSeleccionada = clase;
+                break;
+            }
+        }
+
+        if (claseSeleccionada == null) {
+            JOptionPane.showMessageDialog(this, "No se pudo encontrar la clase.");
+            return;
+        }
+
+        // vemos que exista una clase seleccionada en el jcalendar
+        if (dcFecha.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione una fecha.");
+            return;
+        }
+        // Convertir la fecha seleccionada
+        LocalDate fechaSeleccionada = dcFecha.getDate().toInstant()
+                .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+
+        // No se pueden registrar asisstencias con fechas futuras
+        if (fechaSeleccionada.isAfter(LocalDate.now())) 
+        {
+            JOptionPane.showMessageDialog(this,"La fecha de asistencia no puede ser posterior al dia de hoy.");
+            return;
+        }
     
-    // 8. Verificar cupos disponibles y evitar asistencias duplicadas
+        //Verificamos que existan cupos disponibles y evitamos asistencias duplicadas
 
-List<Asistencias> asistenciasDelDia =
-        asistenciaData.listarAsistenciasPorDia(fechaSeleccionada);
+        List<Asistencias> asistenciasDelDia =asistenciaData.listarAsistenciasPorDia(fechaSeleccionada);
 
-int asistenciasRegistradas = 0;
+        int asistenciasRegistradas = 0;
 
-for (Asistencias a : asistenciasDelDia) {
+        for (Asistencias a : asistenciasDelDia) {
 
-    if (a.getClase().getIdClase() == claseSeleccionada.getIdClase()) {
-        asistenciasRegistradas++;
-    }
+            if (a.getClase().getIdClase() == claseSeleccionada.getIdClase()) 
+            {    
+                asistenciasRegistradas++;
+            }
 
-    if (a.getSocio().getIdSocio() == socio.getIdSocio()
-            && a.getClase().getIdClase() == claseSeleccionada.getIdClase()) {
-
-        JOptionPane.showMessageDialog(this,
-                "El socio ya tiene una asistencia registrada para esta clase y fecha.");
-        return;
-    }
+            if (a.getSocio().getIdSocio() == socio.getIdSocio()&& a.getClase().getIdClase() == claseSeleccionada.getIdClase())
+            {
+                JOptionPane.showMessageDialog(this,"El socio ya tiene una asistencia registrada para esta clase y fecha.");
+                return;
+            }
 }
 
-// Verificar capacidad
-if (asistenciasRegistradas >= claseSeleccionada.getCapacidad()) {
-    JOptionPane.showMessageDialog(this,
-            "La clase no tiene cupos disponibles para esta fecha.");
-    return;
-}
-    // 9. Crear la asistencia
-    Asistencias asistencia = new Asistencias();
-    asistencia.setSocio(socio);
-    asistencia.setClase(claseSeleccionada);
-    asistencia.setFechaAsistencia(fechaSeleccionada);
-
-    // 10. Registrar la asistencia
-    boolean registrado = asistenciaData.registrarAsistencia(asistencia);
-
-    if (!registrado) {
-        JOptionPane.showMessageDialog(this,
-                "No se pudo registrar la asistencia.");
+    // Verificar capacidad
+    if (asistenciasRegistradas >= claseSeleccionada.getCapacidad()) {
+        JOptionPane.showMessageDialog(this,"La clase no tiene cupos disponibles para esta fecha.");
         return;
     }
+        // Creamos asistencia
+        Asistencias asistencia = new Asistencias();
+        asistencia.setSocio(socio);
+        asistencia.setClase(claseSeleccionada);
+        asistencia.setFechaAsistencia(fechaSeleccionada);
 
-    // 10. Descontar una entrada del pase
-    pase.descontarPase();
-    paseData.modificarPase(pase);
+        // verificamos que se registro ok 
+        boolean registrado = asistenciaData.registrarAsistencia(asistencia);
 
-    // 11. Actualizar la cantidad de clases disponibles
-    lblCantidadClases.setText(String.valueOf(pase.getCantidadPases()));
+        if (!registrado) 
+        {
+            JOptionPane.showMessageDialog(this,"No se pudo registrar la asistencia.");
+            return;
+        }
 
-    // 12. Actualizar el historial de asistencias
-    List<Asistencias> asistencias
-            = asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
+        //se descuenta un pase al socio se actualiza en bd y se muestra en el panel de informacion
+        pase.descontarPase();
+        paseData.modificarPase(pase);  
+        lblCantidadClases.setText(String.valueOf(pase.getCantidadPases()));
 
-    DefaultTableModel modelo
-            = (DefaultTableModel) tablaAsistencias.getModel();
+        // actualiza el historial de asistencias
+        List<Asistencias> asistencias= asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
 
-    modelo.setRowCount(0);
+        DefaultTableModel modelo= (DefaultTableModel) tablaAsistencias.getModel();
 
-    for (Asistencias a : asistencias) {
-        modelo.addRow(new Object[]{
-            a.getIdAsistencia(),
-            a.getSocio().getApellido() + ", " + a.getSocio().getNombre(),
-            a.getClase().getNombre(),
-            a.getFechaAsistencia(),
-            a.getClase().getHorario()
-        });
-    }
+        modelo.setRowCount(0);
 
-    JOptionPane.showMessageDialog(this,
-            "Asistencia registrada correctamente.");
+        for (Asistencias a : asistencias) 
+        {
+            modelo.addRow(new Object[]
+            {
+                a.getIdAsistencia(),
+                a.getSocio().getApellido() + ", " + a.getSocio().getNombre(),
+                a.getClase().getNombre(),
+                a.getFechaAsistencia(),
+                a.getClase().getHorario()
+            });
+        }
+        JOptionPane.showMessageDialog(this,
+                "Asistencia registrada correctamente.");
 
     }//GEN-LAST:event_btnRegistrarAsistenciaActionPerformed
 
@@ -721,9 +714,7 @@ if (asistenciasRegistradas >= claseSeleccionada.getCapacidad()) {
 
     }//GEN-LAST:event_cbSocioItemStateChanged
     
-           
-    
-    
+      
     private void btnBuscarSocioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarSocioActionPerformed
       
     if (!rbNombre.isSelected() && !rbDni.isSelected() && !rbID.isSelected()) 
@@ -834,6 +825,37 @@ if (asistenciasRegistradas >= claseSeleccionada.getCapacidad()) {
         }
 
     }//GEN-LAST:event_cbClaseItemStateChanged
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+   
+        // Verifica que se haya seleccionado una fila
+        int fila = tablaAsistencias.getSelectedRow();
+
+        if (fila == -1) //si no, arroja error
+        {
+            JOptionPane.showMessageDialog(this,"Seleccione una asistencia para eliminar.");
+            return;
+        }
+        // Elegimos el ID de la primer fila
+        int idAsistencia = Integer.parseInt(tablaAsistencias.getValueAt(fila, 0).toString());
+        
+        int respuesta = JOptionPane.showConfirmDialog(this,"¿Está seguro de que desea eliminar esta asistencia?",
+                "Confirmar eliminación",JOptionPane.YES_NO_OPTION);
+
+        if (respuesta != JOptionPane.YES_OPTION) 
+        {
+            return;
+        }
+        // Eliminamos de la bd
+        boolean eliminado = asistenciaData.eliminarAsistencia(idAsistencia);
+
+        if (eliminado) 
+        {
+            JOptionPane.showMessageDialog(this,"Asistencia eliminada correctamente.");
+        }
+        
+
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnBuscarSocio;
