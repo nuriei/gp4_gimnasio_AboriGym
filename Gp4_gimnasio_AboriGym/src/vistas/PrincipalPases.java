@@ -798,7 +798,10 @@ import persistencia.SocioData;
                 return;
             }
             
-            p.setCantidadPases(Integer.parseInt(seleccion.toString()));
+           int entradasActuales = p.getCantidadPases();
+        int entradasAAgregar = Integer.parseInt(seleccion.toString());
+
+         p.setCantidadPases(entradasActuales + entradasAAgregar);
             p.setFechaInicio(inicio);
             p.setFechaFin(inicio.plusDays(Pases.DIAS_VALIDEZ));
             p.setCosto(costo);
@@ -959,33 +962,40 @@ import persistencia.SocioData;
  
     // va a controlar que botones estan habilitados segun que se selecciona en la tabla
     private void actualizarBotones() {
-    int fila = tablaPases.getSelectedRow();
-    boolean seleccionado = fila != -1;
- 
-   
-    btnNuevo.setEnabled(seleccionado);
-    btnModificar.setEnabled(seleccionado);
-    
-    if (seleccionado) {
-        String estadoColumna = tablaPases.getValueAt(fila, 7).toString();
-        
-        // Si es un socio "Sin Asignar", solo permitimos usar "Nuevo" para asignarle su pase
-        if (estadoColumna.equals("Sin Asignar")) {
+    // Obtenemos el índice de la fila seleccionada en la tabla (-1 si no hay selección).
+        int fila = tablaPases.getSelectedRow();
+        boolean seleccionado = fila != -1;
+
+        if (seleccionado) {
+            // Leemos el texto de la columna 7 ("pases"), donde se muestra el estado de la fila.
+            String estadoColumna = tablaPases.getValueAt(fila, 7).toString();
+
+            if ("Sin Asignar".equals(estadoColumna)) {
+                // Si es un socio sin pase, se habilita "Nuevo" para asignarle su pase
+                btnNuevo.setEnabled(true);
+                btnBaja.setEnabled(false);
+                btnAlta.setEnabled(false);
+                btnModificar.setEnabled(false);
+            } else if ("Activo".equals(estadoColumna)) {
+                // Si el pase está activo, se bloquea nuevo y alta , y habilitamos solo baja y modificar
+                btnNuevo.setEnabled(false);
+                btnBaja.setEnabled(true);
+                btnAlta.setEnabled(false);
+                btnModificar.setEnabled(true);
+            } else {
+                // Si el pase está inactivo, se habilita  "Alta" y "Modificar" (y dejamos Nuevo y Baja apagados).
+                btnNuevo.setEnabled(false);
+                btnBaja.setEnabled(false);
+                btnAlta.setEnabled(true);
+                btnModificar.setEnabled(true);
+            }
+        } else {
+            // Si no hay ninguna fila seleccionada en la tabla, deshabilitamos todos los botones.
+            btnNuevo.setEnabled(false);
             btnBaja.setEnabled(false);
             btnAlta.setEnabled(false);
-            btnModificar.setEnabled(false); // Opcional: si prefieres que modificar no aplique aquí
-            btnNuevo.setEnabled(true);     // Habilitado para crearle su primer pase
-        } else {
-            // Comportamiento normal para pases existentes
-            btnBaja.setEnabled(estadoColumna.equals("Activo"));
-            btnAlta.setEnabled(estadoColumna.equals("Inactivo"));
+            btnModificar.setEnabled(false);
         }
-    } else {
-        btnNuevo.setEnabled(false);
-        btnBaja.setEnabled(false);
-        btnAlta.setEnabled(false);
-        btnModificar.setEnabled(false);
-    }
 }
   //obtiene el num de la fila seleccionada y si no hay seleccion devuelve -1
     private int idFilaSeleccionada() {
