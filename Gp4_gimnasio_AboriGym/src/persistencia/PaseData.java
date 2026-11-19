@@ -24,9 +24,9 @@ public class PaseData {
         this.socioData = new SocioData(conexion);
     }
 
-    // ==========================================
+   
     // 1. MÉTODOS DE ABM (Alta, Modificación, Baja)
-    // ==========================================
+   
 
     // ALTA: INSERT
     public void guardarPase(Pases pase) {
@@ -113,9 +113,9 @@ public class PaseData {
     }
 
 
-    // ==========================================
+    
     // 2. MÉTODOS DE BÚSQUEDA Y LISTADOS
-    // ==========================================
+   
 
     // BÚSQUEDA POR ID
     public Pases buscarPasePorId(int idPase) {
