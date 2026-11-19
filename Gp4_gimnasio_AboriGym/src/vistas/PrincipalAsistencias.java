@@ -16,7 +16,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;//para poder usar super.replace() 
+                                       //q nos permite escribir si se cumple la expresion regular
 /**
  *
  * @author Jess Moran
@@ -34,6 +38,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     {
         initComponents();
         
+        configurarValidacionBusqueda();
         dcFecha.getDateEditor().addPropertyChangeListener
         ("date", evt ->
         {cbClaseItemStateChanged(new java.awt.event.ItemEvent(cbClase,
@@ -137,7 +142,68 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
 
     return null;
     }
-      
+      private void configurarValidacionBusqueda() {
+
+        AbstractDocument documento =(AbstractDocument) txtBuscarSocio.getDocument();
+
+        documento.setDocumentFilter(new DocumentFilter() {
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length,
+                    String texto, AttributeSet attrs)
+                    throws BadLocationException {
+
+                String actual = fb.getDocument().getText(0,
+                        fb.getDocument().getLength());
+
+                String nuevoTexto = actual.substring(0, offset)
+                        + texto
+                        + actual.substring(offset + length);
+
+                // Validamos según el RadioButton seleccionado
+                 //super.replace() permite que se pueda escribir cuando el texto es valido
+                if (rbDni.isSelected())
+                {
+                    if (nuevoTexto.matches("[0-9]{0,8}"))
+                    {
+                        super.replace(fb, offset, length, texto, attrs);
+                   }
+
+                } else if (rbID.isSelected()) 
+                        {
+                           if (nuevoTexto.matches("[0-9]{0,4}")) 
+                           {
+                            super.replace(fb, offset, length, texto, attrs);
+                            }
+
+                } else if (rbNombre.isSelected()) 
+                        {
+
+                    if (nuevoTexto.matches("[\\p{L} ]*")) 
+                        {
+                            super.replace(fb, offset, length, texto, attrs);
+                        }
+
+                } else 
+                {
+                    super.replace(fb, offset, length, texto, attrs);
+                }
+            }
+
+            @Override
+            public void insertString(FilterBypass fb, int offset,
+                    String texto, AttributeSet attrs)
+                    throws BadLocationException {
+
+                replace(fb, offset, 0, texto, attrs);
+            }
+        });
+
+        // Limpiamos el campo cuando cambia el tipo de búsqueda
+        rbDni.addActionListener(e -> txtBuscarSocio.setText(""));
+        rbID.addActionListener(e -> txtBuscarSocio.setText(""));
+        rbNombre.addActionListener(e -> txtBuscarSocio.setText(""));
+}
     private Pases buscarPaseActivo(Socio socio) 
         {
         if (socio == null) {
@@ -156,6 +222,30 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
 
         return null;
     }
+    
+    // Verifica si el socio tenía un pase vigente en la fecha indicada
+private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
+
+    if (socio == null || fecha == null) {
+        return false;
+    }
+
+    // Buscamos todos los pases del socio
+    List<Pases> pases = paseData.listarPasesPorDni(socio.getDni());
+
+    for (Pases pase : pases) {
+
+        // Comprobamos si la fecha estaba dentro del período de vigencia
+        if (pase.isEstado()
+                && !fecha.isBefore(pase.getFechaInicio())
+                && !fecha.isAfter(pase.getFechaFin())) {
+
+            return true;
+        }
+    }
+
+    return false;
+}
     private void actualizarInfoClase() {
 
     if (cbClase.getSelectedItem() == null || dcFecha.getDate() == null) {
@@ -219,16 +309,11 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         dcFecha = new com.toedter.calendar.JDateChooser();
         jpInfo = new javax.swing.JPanel();
         lblCupos = new javax.swing.JLabel();
-        lblSocioTitulo = new javax.swing.JLabel();
         lblHorario = new javax.swing.JLabel();
         lblCuposTitulo = new javax.swing.JLabel();
-        lblPase = new javax.swing.JLabel();
-        lblTipoPase = new javax.swing.JLabel();
-        lblClasesRestantes = new javax.swing.JLabel();
-        lblCantidadClases = new javax.swing.JLabel();
         lblClaseTitulo = new javax.swing.JLabel();
+        lblCuposTitulo1 = new javax.swing.JLabel();
         btnRegistrarAsistencia = new javax.swing.JButton();
-        btnEliminar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         txtBuscarSocio = new javax.swing.JTextField();
@@ -236,10 +321,18 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         rbNombre = new javax.swing.JRadioButton();
         rbDni = new javax.swing.JRadioButton();
         rbID = new javax.swing.JRadioButton();
+        jPanel1 = new javax.swing.JPanel();
+        lblSocioTitulo = new javax.swing.JLabel();
+        lblPase = new javax.swing.JLabel();
+        lblCantidadClases = new javax.swing.JLabel();
+        lblClasesRestantes = new javax.swing.JLabel();
+        lblTipoPase = new javax.swing.JLabel();
         panelListado = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaAsistencias = new javax.swing.JTable();
+        lblClaseTitulo1 = new javax.swing.JLabel();
         btnVolver = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
 
         setTitle("Gestion de Asistencias");
         setPreferredSize(new java.awt.Dimension(632, 736));
@@ -265,108 +358,73 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
 
         cbSocio.addItemListener(this::cbSocioItemStateChanged);
 
-        jpInfo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jpInfo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        lblCupos.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
+        lblCupos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCupos.setText("-");
 
-        lblSocioTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lblSocioTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSocioTitulo.setText("Socio");
-
+        lblHorario.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
+        lblHorario.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblHorario.setText("-");
 
-        lblCuposTitulo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblCuposTitulo.setText("Cupos disponibles");
-
-        lblPase.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblPase.setText("Pase:");
-
-        lblTipoPase.setText("-");
-
-        lblClasesRestantes.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblClasesRestantes.setText("Clases restantes:");
-
-        lblCantidadClases.setText("-");
+        lblCuposTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblCuposTitulo.setText("Horario");
 
         lblClaseTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblClaseTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblClaseTitulo.setText("Clase ");
+
+        lblCuposTitulo1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblCuposTitulo1.setText("Cupos disponibles");
 
         javax.swing.GroupLayout jpInfoLayout = new javax.swing.GroupLayout(jpInfo);
         jpInfo.setLayout(jpInfoLayout);
         jpInfoLayout.setHorizontalGroup(
             jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpInfoLayout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblSocioTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(jpInfoLayout.createSequentialGroup()
-                            .addComponent(lblPase)
-                            .addGap(222, 222, 222))
-                        .addGroup(jpInfoLayout.createSequentialGroup()
-                            .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(jpInfoLayout.createSequentialGroup()
-                                    .addComponent(lblHorario, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(lblCupos, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                .addGroup(jpInfoLayout.createSequentialGroup()
-                                    .addComponent(lblTipoPase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGap(41, 41, 41)))
-                            .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblCuposTitulo)
-                                .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(lblCantidadClases, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblClasesRestantes, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                .addContainerGap(75, Short.MAX_VALUE))
-            .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jpInfoLayout.createSequentialGroup()
-                    .addGap(29, 29, 29)
-                    .addComponent(lblClaseTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(216, Short.MAX_VALUE)))
+                .addGap(112, 112, 112)
+                .addComponent(lblClaseTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jpInfoLayout.createSequentialGroup()
+                .addGap(78, 78, 78)
+                .addComponent(lblCuposTitulo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
+                .addComponent(lblCuposTitulo1)
+                .addGap(36, 36, 36))
+            .addGroup(jpInfoLayout.createSequentialGroup()
+                .addGap(58, 58, 58)
+                .addComponent(lblHorario, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblCupos, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(65, 65, 65))
         );
         jpInfoLayout.setVerticalGroup(
             jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpInfoLayout.createSequentialGroup()
-                .addGap(58, 58, 58)
+                .addComponent(lblClaseTitulo)
+                .addGap(18, 18, 18)
                 .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblHorario)
                     .addComponent(lblCuposTitulo)
-                    .addComponent(lblCupos))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                .addComponent(lblSocioTitulo)
-                .addGap(29, 29, 29)
+                    .addComponent(lblCuposTitulo1))
+                .addGap(21, 21, 21)
                 .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPase)
-                    .addComponent(lblClasesRestantes))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTipoPase)
-                    .addComponent(lblCantidadClases))
-                .addGap(26, 26, 26))
-            .addGroup(jpInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jpInfoLayout.createSequentialGroup()
-                    .addGap(16, 16, 16)
-                    .addComponent(lblClaseTitulo)
-                    .addContainerGap(189, Short.MAX_VALUE)))
+                    .addComponent(lblCupos)
+                    .addComponent(lblHorario))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         btnRegistrarAsistencia.setBackground(new java.awt.Color(153, 153, 153));
         btnRegistrarAsistencia.setText("Registrar Asistencia");
         btnRegistrarAsistencia.addActionListener(this::btnRegistrarAsistenciaActionPerformed);
 
-        btnEliminar.setBackground(new java.awt.Color(153, 153, 153));
-        btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
-        btnEliminar.setText("Eliminar");
-        btnEliminar.addActionListener(this::btnEliminarActionPerformed);
-
         btnLimpiar.setBackground(new java.awt.Color(153, 153, 153));
         btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/editar.png"))); // NOI18N
         btnLimpiar.setText("Limpiar");
         btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
 
-        jLabel1.setText("Buscar");
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel1.setText("Filtro de busqeda");
 
         btnBuscarSocio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/listar_usuario.png"))); // NOI18N
         btnBuscarSocio.addActionListener(this::btnBuscarSocioActionPerformed);
@@ -380,6 +438,62 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         buttonGroup1.add(rbID);
         rbID.setText("ID");
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        lblSocioTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblSocioTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSocioTitulo.setText("Socio");
+
+        lblPase.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblPase.setText("Pase:");
+
+        lblCantidadClases.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
+        lblCantidadClases.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCantidadClases.setText("-");
+
+        lblClasesRestantes.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblClasesRestantes.setText("Clases restantes:");
+
+        lblTipoPase.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
+        lblTipoPase.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTipoPase.setText("-");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(119, 119, 119)
+                .addComponent(lblSocioTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(62, 62, 62)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(lblPase))
+                    .addComponent(lblTipoPase, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblCantidadClases, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblClasesRestantes))
+                .addGap(42, 42, 42))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(lblSocioTitulo)
+                .addGap(15, 15, 15)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPase, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblClasesRestantes))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCantidadClases)
+                    .addComponent(lblTipoPase))
+                .addContainerGap(22, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout panelFormularioLayout = new javax.swing.GroupLayout(panelFormulario);
         panelFormulario.setLayout(panelFormularioLayout);
         panelFormularioLayout.setHorizontalGroup(
@@ -387,45 +501,50 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
             .addGroup(panelFormularioLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbSocio, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormularioLayout.createSequentialGroup()
+                        .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(panelFormularioLayout.createSequentialGroup()
+                                .addComponent(lblFecha)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(panelFormularioLayout.createSequentialGroup()
+                                .addComponent(cbSocio, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnBuscarSocio, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelFormularioLayout.createSequentialGroup()
+                                .addComponent(dcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(34, 34, 34)
+                                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnLimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnRegistrarAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jpInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(58, 58, 58))
                     .addGroup(panelFormularioLayout.createSequentialGroup()
                         .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblClase)
                             .addComponent(lblSocio)
-                            .addComponent(lblFecha)
                             .addComponent(cbClase, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnRegistrarAsistencia)
-                            .addComponent(jLabel1)
                             .addComponent(txtBuscarSocio, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelFormularioLayout.createSequentialGroup()
                                 .addComponent(rbNombre)
                                 .addGap(18, 18, 18)
                                 .addComponent(rbDni)
                                 .addGap(18, 18, 18)
-                                .addComponent(rbID)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)))
-                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(btnEliminar)
-                        .addGap(69, 69, 69)
-                        .addComponent(btnLimpiar)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnBuscarSocio, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(jpInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12))))
+                                .addComponent(rbID))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18))))
         );
         panelFormularioLayout.setVerticalGroup(
             panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFormularioLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addContainerGap()
+                        .addComponent(jpInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelFormularioLayout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(panelFormularioLayout.createSequentialGroup()
@@ -437,7 +556,12 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
                                 .addComponent(txtBuscarSocio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btnBuscarSocio, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblSocio)
+                        .addComponent(lblSocio)))
+                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFormularioLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelFormularioLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbSocio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -447,15 +571,12 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblFecha)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jpInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnRegistrarAsistencia, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
-                .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRegistrarAsistencia, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEliminar)
-                    .addComponent(btnLimpiar))
-                .addGap(20, 20, 20))
+                .addComponent(btnLimpiar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelFormularioLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cbClase, cbSocio});
@@ -483,6 +604,10 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tablaAsistencias);
 
+        lblClaseTitulo1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblClaseTitulo1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblClaseTitulo1.setText("Registro de asistencias por socio");
+
         javax.swing.GroupLayout panelListadoLayout = new javax.swing.GroupLayout(panelListado);
         panelListado.setLayout(panelListadoLayout);
         panelListadoLayout.setHorizontalGroup(
@@ -490,13 +615,18 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelListadoLayout.createSequentialGroup()
                 .addComponent(jScrollPane1)
                 .addGap(13, 13, 13))
+            .addGroup(panelListadoLayout.createSequentialGroup()
+                .addGap(210, 210, 210)
+                .addComponent(lblClaseTitulo1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(217, Short.MAX_VALUE))
         );
         panelListadoLayout.setVerticalGroup(
             panelListadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelListadoLayout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(lblClaseTitulo1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE))
         );
 
         btnVolver.setBackground(new java.awt.Color(153, 153, 153));
@@ -504,23 +634,31 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         btnVolver.setText("Volver");
         btnVolver.addActionListener(this::btnVolverActionPerformed);
 
+        btnEliminar.setBackground(new java.awt.Color(153, 153, 153));
+        btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(this::btnEliminarActionPerformed);
+
         javax.swing.GroupLayout jpAsistenciasLayout = new javax.swing.GroupLayout(jpAsistencias);
         jpAsistencias.setLayout(jpAsistenciasLayout);
         jpAsistenciasLayout.setHorizontalGroup(
             jpAsistenciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpAsistenciasLayout.createSequentialGroup()
-                .addGroup(jpAsistenciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnVolver)
-                    .addGroup(jpAsistenciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpAsistenciasLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(panelListado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jpAsistenciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpAsistenciasLayout.createSequentialGroup()
+                        .addGap(114, 114, 114)
+                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelFormulario, javax.swing.GroupLayout.PREFERRED_SIZE, 720, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jpAsistenciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(btnVolver)
                         .addGroup(jpAsistenciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jpAsistenciasLayout.createSequentialGroup()
-                                .addGap(114, 114, 114)
-                                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(panelFormulario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 189, Short.MAX_VALUE))
+                                .addGap(33, 33, 33)
+                                .addComponent(btnEliminar))
+                            .addGroup(jpAsistenciasLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(panelListado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(19, 19, Short.MAX_VALUE))
         );
         jpAsistenciasLayout.setVerticalGroup(
             jpAsistenciasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -529,11 +667,13 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
                 .addComponent(lblTitulo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panelFormulario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24)
+                .addComponent(btnEliminar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelListado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnVolver)
-                .addContainerGap(168, Short.MAX_VALUE))
+                .addContainerGap(150, Short.MAX_VALUE))
         );
 
         sPanelAsistencia.setViewportView(jpAsistencias);
@@ -544,15 +684,15 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(sPanelAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, 786, Short.MAX_VALUE)
+                .addComponent(sPanelAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, 868, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(sPanelAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, 675, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap()
+                .addComponent(sPanelAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE)
+                .addGap(35, 35, 35))
         );
 
         pack();
@@ -560,136 +700,156 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
 
     private void btnRegistrarAsistenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarAsistenciaActionPerformed
     
-        // Asignamos a una variable el socio seleccionado en el cbSocio
-        Socio socio = buscarSocioSeleccionado();
 
-        if (socio == null) 
-        {
-            JOptionPane.showMessageDialog(this, "Seleccione un socio.");
-            return;
-        }
 
-    // Verificar que tenga pasee activo  y entradas disponibles
-        Pases pase = buscarPaseActivo(socio);
+    // Asignamos a una variable el socio seleccionado en el cbSocio
+    Socio socio = buscarSocioSeleccionado();
 
-        if (pase == null || !pase.tienePases())
-        {
-            JOptionPane.showMessageDialog(this,
-                    "El socio no tiene entradas disponibles.");
-            return;
-        }
-
-    // Verificar que haya una clase seleccionada en cbClase
-        if (cbClase.getSelectedItem() == null) {
-            JOptionPane.showMessageDialog(this, "Seleccione una clase.");
-            return;
-        }
-
-    // Buscamos clase seleccionada
-        Clases claseSeleccionada = null;
-        String seleccion = cbClase.getSelectedItem().toString();
-
-        List<Clases> clases = claseData.listarClasesActivas();
-
-        for (Clases clase : clases) 
-        {
-            String profesor = clase.getEntrenador().getApellido()+ ", " + clase.getEntrenador().getNombre();
-            String opcion = clase.getNombre() + " - "+ profesor + " - " + clase.getHorario();
-
-            if (opcion.equals(seleccion)) 
-            {
-                claseSeleccionada = clase;
-                break;
-            }
-        }
-
-        if (claseSeleccionada == null) {
-            JOptionPane.showMessageDialog(this, "No se pudo encontrar la clase.");
-            return;
-        }
-
-        // vemos que exista una clase seleccionada en el jcalendar
-        if (dcFecha.getDate() == null) {
-            JOptionPane.showMessageDialog(this, "Seleccione una fecha.");
-            return;
-        }
-        // Convertir la fecha seleccionada
-        LocalDate fechaSeleccionada = dcFecha.getDate().toInstant()
-                .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
-
-        // No se pueden registrar asisstencias con fechas futuras
-        if (fechaSeleccionada.isAfter(LocalDate.now())) 
-        {
-            JOptionPane.showMessageDialog(this,"La fecha de asistencia no puede ser posterior al dia de hoy.");
-            return;
-        }
-    
-        //Verificamos que existan cupos disponibles y evitamos asistencias duplicadas
-
-        List<Asistencias> asistenciasDelDia =asistenciaData.listarAsistenciasPorDia(fechaSeleccionada);
-
-        int asistenciasRegistradas = 0;
-
-        for (Asistencias a : asistenciasDelDia) {
-
-            if (a.getClase().getIdClase() == claseSeleccionada.getIdClase()) 
-            {    
-                asistenciasRegistradas++;
-            }
-
-            if (a.getSocio().getIdSocio() == socio.getIdSocio()&& a.getClase().getIdClase() == claseSeleccionada.getIdClase())
-            {
-                JOptionPane.showMessageDialog(this,"El socio ya tiene una asistencia registrada para esta clase y fecha.");
-                return;
-            }
-}
-
-    // Verificar capacidad
-    if (asistenciasRegistradas >= claseSeleccionada.getCapacidad()) {
-        JOptionPane.showMessageDialog(this,"La clase no tiene cupos disponibles para esta fecha.");
+    if (socio == null) {
+        JOptionPane.showMessageDialog(this, "Seleccione un socio.");
         return;
     }
-        // Creamos asistencia
-        Asistencias asistencia = new Asistencias();
-        asistencia.setSocio(socio);
-        asistencia.setClase(claseSeleccionada);
-        asistencia.setFechaAsistencia(fechaSeleccionada);
 
-        // verificamos que se registro ok 
-        boolean registrado = asistenciaData.registrarAsistencia(asistencia);
+    // Verificamos que haya una fecha seleccionada
+    if (dcFecha.getDate() == null) {
+        JOptionPane.showMessageDialog(this, "Seleccione una fecha.");
+        return;
+    }
 
-        if (!registrado) 
-        {
-            JOptionPane.showMessageDialog(this,"No se pudo registrar la asistencia.");
+    // Convertimos la fecha seleccionada
+    LocalDate fechaSeleccionada = dcFecha.getDate().toInstant()
+            .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+
+    // Verificamos que el socio haya tenido un pase vigente en esa fecha
+    if (!teniaPaseVigente(socio, fechaSeleccionada)) {
+        JOptionPane.showMessageDialog(this,
+                "El socio no tenía un pase vigente en la fecha seleccionada.");
+        return;
+    }
+
+    // Buscamos el pase actual para descontar del saldo acumulado
+    Pases pase = buscarPaseActivo(socio);
+
+    if (pase == null || pase.getCantidadPases() <= 0) {
+        JOptionPane.showMessageDialog(this,
+                "El socio no tiene clases disponibles.");
+        return;
+    }
+
+    // Verificamos que haya una clase seleccionada en cbClase
+    if (cbClase.getSelectedItem() == null) {
+        JOptionPane.showMessageDialog(this, "Seleccione una clase.");
+        return;
+    }
+
+    // Buscamos la clase seleccionada
+    Clases claseSeleccionada = null;
+    String seleccion = cbClase.getSelectedItem().toString();
+
+    List<Clases> clases = claseData.listarClasesActivas();
+
+    for (Clases clase : clases) {
+
+        String profesor = clase.getEntrenador().getApellido()
+                + ", " + clase.getEntrenador().getNombre();
+
+        String opcion = clase.getNombre() + " - "
+                + profesor + " - " + clase.getHorario();
+
+        if (opcion.equals(seleccion)) {
+            claseSeleccionada = clase;
+            break;
+        }
+    }
+
+    if (claseSeleccionada == null) {
+        JOptionPane.showMessageDialog(this,
+                "No se pudo encontrar la clase.");
+        return;
+    }
+
+    // No se pueden registrar asistencias con fechas futuras
+    if (fechaSeleccionada.isAfter(LocalDate.now())) {
+        JOptionPane.showMessageDialog(this,
+                "La fecha de asistencia no puede ser posterior al dia de hoy.");
+        return;
+    }
+
+    // Verificamos los cupos disponibles y evitamos asistencias duplicadas
+    List<Asistencias> asistenciasDelDia =
+            asistenciaData.listarAsistenciasPorDia(fechaSeleccionada);
+
+    int asistenciasRegistradas = 0;
+
+    for (Asistencias a : asistenciasDelDia) {
+
+        if (a.getClase().getIdClase() == claseSeleccionada.getIdClase()) {
+            asistenciasRegistradas++;
+        }
+
+        if (a.getSocio().getIdSocio() == socio.getIdSocio()
+                && a.getClase().getIdClase() == claseSeleccionada.getIdClase()) {
+
+            JOptionPane.showMessageDialog(this,
+                    "El socio ya tiene una asistencia registrada para esta clase y fecha.");
             return;
         }
+    }
 
-        //se descuenta un pase al socio se actualiza en bd y se muestra en el panel de informacion
-        pase.descontarPase();
-        paseData.modificarPase(pase);  
-        lblCantidadClases.setText(String.valueOf(pase.getCantidadPases()));
-
-        // actualiza el historial de asistencias
-        List<Asistencias> asistencias= asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
-
-        DefaultTableModel modelo= (DefaultTableModel) tablaAsistencias.getModel();
-
-        modelo.setRowCount(0);
-
-        for (Asistencias a : asistencias) 
-        {
-            modelo.addRow(new Object[]
-            {
-                a.getIdAsistencia(),
-                a.getSocio().getApellido() + ", " + a.getSocio().getNombre(),
-                a.getClase().getNombre(),
-                a.getFechaAsistencia(),
-                a.getClase().getHorario()
-            });
-        }
+    // Verificamos la capacidad de la clase
+    if (asistenciasRegistradas >= claseSeleccionada.getCapacidad()) {
         JOptionPane.showMessageDialog(this,
-                "Asistencia registrada correctamente.");
-        actualizarInfoClase();
+                "La clase no tiene cupos disponibles para esta fecha.");
+        return;
+    }
+
+    // Creamos la asistencia
+    Asistencias asistencia = new Asistencias();
+    asistencia.setSocio(socio);
+    asistencia.setClase(claseSeleccionada);
+    asistencia.setFechaAsistencia(fechaSeleccionada);
+
+    // Verificamos que se haya registrado correctamente
+    boolean registrado = asistenciaData.registrarAsistencia(asistencia);
+
+    if (!registrado) {
+        JOptionPane.showMessageDialog(this,
+                "No se pudo registrar la asistencia.");
+        return;
+    }
+
+    // Descontamos una entrada del saldo actual del socio
+    pase.descontarPase();
+    paseData.modificarPase(pase);
+
+    // Actualizamos la cantidad de clases disponibles
+    lblCantidadClases.setText(String.valueOf(pase.getCantidadPases()));
+
+    // Actualizamos el historial de asistencias
+    List<Asistencias> asistencias =
+            asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
+
+    DefaultTableModel modelo =
+            (DefaultTableModel) tablaAsistencias.getModel();
+
+    modelo.setRowCount(0);
+
+    for (Asistencias a : asistencias) {
+        modelo.addRow(new Object[]{
+            a.getIdAsistencia(),
+            a.getSocio().getApellido() + ", " + a.getSocio().getNombre(),
+            a.getClase().getNombre(),
+            a.getFechaAsistencia(),
+            a.getClase().getHorario()
+        });
+    }
+
+    // Actualizamos los cupos disponibles
+    actualizarInfoClase();
+
+    JOptionPane.showMessageDialog(this,
+            "Asistencia registrada correctamente.");
+
     }//GEN-LAST:event_btnRegistrarAsistenciaActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
@@ -761,64 +921,96 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     
       
     private void btnBuscarSocioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarSocioActionPerformed
-      
-    if (!rbNombre.isSelected() && !rbDni.isSelected() && !rbID.isSelected()) 
-    {
-    JOptionPane.showMessageDialog(this, "Seleccionar tipo de búsqueda");
-    return;
-    }
-    String texto = txtBuscarSocio.getText().trim().toLowerCase();
 
-    cbSocio.removeAllItems();
-
-    List<Socio> socios = socioData.listarSocios();
-    
-     if (rbNombre.isSelected()) 
-     {
-        for (Socio socio : socios)
+        // Verificamos que se haya seleccionado un tipo de búsqueda
+        if (!rbNombre.isSelected() && !rbDni.isSelected() && !rbID.isSelected()) 
         {
-            if (socio.isEstado()&&buscarPaseActivo(socio) != null) 
-                
-            {
-                String nombreCompleto = socio.getApellido() + ", " + socio.getNombre();
+            JOptionPane.showMessageDialog(this, "Seleccione tipo de búsqueda.");
+            return;
+        }
 
-                if (nombreCompleto.toLowerCase().contains(texto)) 
-                {
-                    cbSocio.addItem(nombreCompleto + " - ID: " + socio.getIdSocio());
+        String texto = txtBuscarSocio.getText().trim().toLowerCase();
+
+        // Verificamos que se haya ingresado un dato
+        if (texto.isEmpty()) 
+        {
+            JOptionPane.showMessageDialog(this, "Ingrese un dato para buscar.");
+            return;
+        }
+
+        // Validamos la longitud del DNI
+        if (rbDni.isSelected() && !texto.matches("[0-9]{7,8}")) 
+        {
+            JOptionPane.showMessageDialog(this,
+                    "El DNI debe tener entre 7 y 8 números.");
+            return;
+        }
+
+        // Validamos la longitud del ID
+        if (rbID.isSelected() && !texto.matches("[0-9]{1,4}")) 
+        {
+            JOptionPane.showMessageDialog(this,
+                    "El ID debe tener entre 1 y 4 números.");
+            return;
+        }
+
+        // Limpiamos el combo antes de realizar una nueva búsqueda
+        cbSocio.removeAllItems();
+
+        List<Socio> socios = socioData.listarSocios();
+
+        // Buscamos por nombre
+        if (rbNombre.isSelected()) {
+
+            for (Socio socio : socios) {
+
+                if (socio.isEstado() && buscarPaseActivo(socio) != null) {
+
+                    String nombreCompleto = socio.getApellido() + ", " + socio.getNombre();
+
+                    if (nombreCompleto.toLowerCase().contains(texto)) {
+                        cbSocio.addItem(nombreCompleto + " - ID: " + socio.getIdSocio());
+                    }
                 }
             }
         }
-     }
-     else  
-         if (rbDni.isSelected()) 
-        {
-           for (Socio socio : socios)
-           {
-               if (socio.isEstado()&&buscarPaseActivo(socio) != null) 
-               {
-                   if (socio.getDni().contains(texto)) 
-                   {
-                       cbSocio.addItem(socio.getApellido() + ", "+ socio.getNombre() + " - ID: " + socio.getIdSocio());
-                   }
-               }
-           }
-        }
-     else  
-         if (rbID.isSelected())
-            {
-                for (Socio socio : socios) 
-                {
-                   if (socio.isEstado()&&buscarPaseActivo(socio) != null) 
-                   {
-                       if (String.valueOf(socio.getIdSocio()).contains(texto)) 
-                       {
-                           cbSocio.addItem(socio.getApellido() + ", "+ socio.getNombre() + " - ID: " + socio.getIdSocio());
-                       }
-                   }
-               }
-           }
 
-    cbSocio.setSelectedIndex(-1);     
+        // Buscamos por DNI
+        else if (rbDni.isSelected()) {
+
+            for (Socio socio : socios) {
+
+                if (socio.isEstado() && buscarPaseActivo(socio) != null) {
+
+                    if (socio.getDni().contains(texto)) {
+                        cbSocio.addItem(socio.getApellido() + ", "
+                                + socio.getNombre() + " - ID: " + socio.getIdSocio());
+                    }
+                }
+            }
+        }
+
+        // Buscamos por ID
+        else if (rbID.isSelected()) {
+
+            for (Socio socio : socios) {
+
+                if (socio.isEstado() && buscarPaseActivo(socio) != null) {
+
+                    if (String.valueOf(socio.getIdSocio()).contains(texto)) {
+                        cbSocio.addItem(socio.getApellido() + ", "
+                                + socio.getNombre() + " - ID: " + socio.getIdSocio());
+                    }
+                }
+            }
+        }
+
+        cbSocio.setSelectedIndex(-1);
+
+        if (cbSocio.getItemCount() == 0) {
+            JOptionPane.showMessageDialog(this, "No se encontraron socios.");
+        }
+
     }//GEN-LAST:event_btnBuscarSocioActionPerformed
 
     private void cbClaseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbClaseItemStateChanged
@@ -964,15 +1156,18 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox<String> cbSocio;
     private com.toedter.calendar.JDateChooser dcFecha;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jpAsistencias;
     private javax.swing.JPanel jpInfo;
     private javax.swing.JLabel lblCantidadClases;
     private javax.swing.JLabel lblClase;
     private javax.swing.JLabel lblClaseTitulo;
+    private javax.swing.JLabel lblClaseTitulo1;
     private javax.swing.JLabel lblClasesRestantes;
     private javax.swing.JLabel lblCupos;
     private javax.swing.JLabel lblCuposTitulo;
+    private javax.swing.JLabel lblCuposTitulo1;
     private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblHorario;
     private javax.swing.JLabel lblPase;
