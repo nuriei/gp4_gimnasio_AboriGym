@@ -63,6 +63,42 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         cargarClases();
         LlenarComboEntrenadores();
         panelFormulario.setVisible(false);
+        
+         // empezamos aca para generar la activacion de los botones baja alta y borrar segun tipo de clase
+         
+        jbModificar.setEnabled(false);
+        jBBaja.setEnabled(false);
+        jBAlta.setEnabled(false);
+        jbEliminar.setEnabled(false);
+         // aca se inicia para escuchar a los botones
+        tablaClases.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            @Override
+            public void valueChanged(javax.swing.event.ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int fila = tablaClases.getSelectedRow();
+
+                    if (fila != -1) {
+                        jbModificar.setEnabled(true);
+                        jbEliminar.setEnabled(true);
+
+                        String estado = tablaClases.getValueAt(fila, 5).toString();
+                        if (estado.equals("Activo")) {
+                            jBBaja.setEnabled(true);
+                            jBAlta.setEnabled(false);
+                        } else {
+                            jBBaja.setEnabled(false);
+                            jBAlta.setEnabled(true);
+                        }
+                    } else {
+                        jbModificar.setEnabled(false);
+                        jbEliminar.setEnabled(false);
+                        jBBaja.setEnabled(false);
+                        jBAlta.setEnabled(false);
+                    }
+                }
+            }
+        });
+        
     }
 
     private boolean validarSoloLetras(String texto, String nombreCampo) {
@@ -759,11 +795,22 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         }
 
         int id = Integer.parseInt(tablaClases.getValueAt(fila, 0).toString());
-        int respuesta = JOptionPane.showConfirmDialog(this, "¿Seguro desea eliminar esta clase de forma permanente de la BD?", "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        
+        // agregamos o anulamos funcion botone y cambiamos por si o no.
+        Object[] opciones = {"Si","No"};
+            int respuesta = JOptionPane.showOptionDialog(
+        this,
+        "¿Seguro desea eliminar esta clase de forma permanente ?",
+        "Confirmacion",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.WARNING_MESSAGE,
+        null,
+        opciones,
+        opciones[1]//po precaucion queda marcado en opcion no
+        );
 
-        if (respuesta == JOptionPane.YES_OPTION) {
-            // Suponiendo que usás el método bajaLogicaClase como borrado o si tu data tiene borrar, lo llamás acá
-            //claseData.bajaLogicaClase(id);
+        if (respuesta == 0) {
+
             if(claseData.borrarClase(id)){
                 cargarClases();
                 JOptionPane.showMessageDialog(this, "Clase eliminada permanentemente.");
@@ -819,18 +866,22 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         int fila = tablaClases.getSelectedRow();
 
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar una clase de la lista para darle la baja.", "Atención", JOptionPane.WARNING_MESSAGE);
             return;
         }
-      // agregamos condicion de clase activa o inactiva
-      String estadoActual = tablaClases.getValueAt(fila, 5).toString();
-      if(estadoActual.equals("Inactivo")){
-          JOptionPane.showMessageDialog(this, "La clase ya se encuentra Inactiva, no puede darla de baja","Accion no permitida",JOptionPane.WARNING_MESSAGE);
-          return;
-      }
-      
+      //
         int id = Integer.parseInt(tablaClases.getValueAt(fila, 0).toString());
-        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea aplicar la baja lógica a esta clase?", "Confirmar Acción", JOptionPane.YES_NO_OPTION);
+        Object[] opciones ={"Si","No"};
+        int confirmacion = JOptionPane.showOptionDialog(
+                this,
+                "¿Está seguro que desea aplicar la baja lógica a esta clase?",
+                "Confirmar Acción",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones
+                );
+        
 
         if (confirmacion == JOptionPane.YES_OPTION) {
             claseData.bajaLogicaClase(id);
@@ -842,18 +893,20 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
         int fila = tablaClases.getSelectedRow();
 
         if (fila == -1) {
-            JOptionPane.showMessageDialog(null, "Debe seleccionar una clase de la lista para darle el alta.", "Atención", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        //agrego if para validar si esta activa la clase 
-        String estadoActual = tablaClases.getValueAt(fila, 5).toString();
-        if(estadoActual.equals("Activo")){
-            JOptionPane.showMessageDialog(this, "La clase ya esta activa, no puede darse de alta","Acion no permitida",JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
         int id = Integer.parseInt(tablaClases.getValueAt(fila, 0).toString());
-        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea aplicar el alta lógica a esta clase?", "Confirmar Alta", JOptionPane.YES_NO_OPTION);
+        Object[] opciones = {"Sí", "No"};
+        int confirmacion = JOptionPane.showOptionDialog(
+                this,
+                "¿Está seguro que desea aplicar el alta lógica a esta clase?",
+                "Confirmar Alta",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones
+        );
 
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
