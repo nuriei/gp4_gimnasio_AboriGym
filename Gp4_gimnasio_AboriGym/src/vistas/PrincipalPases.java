@@ -32,8 +32,8 @@ import persistencia.SocioData;
     public PrincipalPases(MiConexion conexion) {
         initComponents();
         this.setSize(670,685);
-        btnGuardar.addActionListener(e -> btnGuardarActionPerformed(e));
-        btnBuscarSocio.addActionListener(e -> btnBuscarSocioActionPerformed(e));
+        
+        btnBuscarSocio.addActionListener(e -> btnBuscarSocioActionPerformed(e)); //configura accion de btones
         jBLimpiar.addActionListener(e -> jBLimpiarActionPerformed(e));
         btnNuevo.addActionListener(e -> btnNuevoActionPerformed(e));
         //jdcFechaIniciou = new com.toedter.calendar.JDateChooser();
@@ -50,7 +50,7 @@ import persistencia.SocioData;
         jRBSinAsignar.addActionListener(e -> cargarPases());
         cmbEntradas.setModel(new DefaultComboBoxModel<>(new String[]{"8", "12", "20"}));
  
-        // Campos que el usuario NO escribe: los completa el programa
+        // bloquea edicion de socio y fecha fin, se calcula o completa solo
         txtSocio.setEditable(false);
         txtNombreSocio.setEditable(false);
         txtApellidoSocio.setEditable(false);
@@ -59,8 +59,8 @@ import persistencia.SocioData;
         tablaPases.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
  
         // Las únicas 3 conexiones por código (no son botones comunes):
-        txtDniSocio.addActionListener(e -> btnBuscarSocio.doClick());        // Enter en el DNI = apretar Buscar
-        jdcFechaIniciou.addPropertyChangeListener("date", e -> actualizarFechaFin());   // recalcula la fecha fin
+        txtDniSocio.addActionListener(e -> btnBuscarSocio.doClick());        // Enter y busca automaticamente
+        jdcFechaIniciou.addPropertyChangeListener("date", e -> actualizarFechaFin());   // calcula la fecha fin
         tablaPases.getSelectionModel().addListSelectionListener(e -> {       // habilita botones al elegir una fila
             if (!e.getValueIsAdjusting()) {
                 actualizarBotones();
@@ -72,13 +72,13 @@ import persistencia.SocioData;
         actualizarBotones();
     }
  
-    // Constructor sin parámetros: es el que usa VistaPrincipal
+    
     public PrincipalPases() {
         this(new MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym", "root", ""));
     }
  
  
-   
+ 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -535,7 +535,10 @@ import persistencia.SocioData;
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 712, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -562,14 +565,14 @@ import persistencia.SocioData;
 
     private void btn_volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_volverActionPerformed
         // TODO add your handling code here:
-        this.dispose();
+        this.dispose(); //cierra la ventana interna 
     }//GEN-LAST:event_btn_volverActionPerformed
 
     private void btnCancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelar1ActionPerformed
          if (editando) {
             JOptionPane.showMessageDialog(this, "No se hicieron modificaciones en el pase.");
         } else {
-            JOptionPane.showMessageDialog(this, "Se canceló el guardado del pase nuevo.");
+            JOptionPane.showMessageDialog(this, "Se cancelo el guardado del pase nuevo.");
         }
         tablaPases.clearSelection();
         limpiarFormulario();
@@ -601,7 +604,7 @@ import persistencia.SocioData;
         return;
     }
 
-    // --- CÓDIGO  PARA MODIFICAR UN PASE EXISTENTE 
+    // Modifica que ya existe
     int id = Integer.parseInt(idTextoColumna);
     Pases p = paseData.buscarPasePorId(id);
     if (p == null || p.getSocio() == null) {
@@ -627,22 +630,42 @@ import persistencia.SocioData;
     }//GEN-LAST:event_txtSocioActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        
+       int fila = tablaPases.getSelectedRow(); // Si no hay ninguna fila seleccionada, devuelve -1.
+        Socio socioSeleccionado = null;
+
+        
+        //  se comprueba si pertenece a un socio que todavia no tiene un pase asignado
+        if (fila != -1) {
+            Object valorId = tablaPases.getValueAt(fila, 0);
+            Object valorDni = tablaPases.getValueAt(fila, 1);
+            if (valorId != null && "Sin ID".equals(valorId.toString().trim()) && valorDni != null) { //si es sin id se conecta con la bd , buscando el dni
+                socioSeleccionado = socioData.buscarSocioPorDni(valorDni.toString().trim());
+            }
+        }
         panelFormulario.setVisible(true);
-    boolean veniaEditando = editando;
+
+        // Guardamos en una variable si antes estábamos en modo edición,
+        // ya que limpiarCamposPase() va a resetear el estado a "nuevo pase".
+        boolean veniaEditando = editando;
+
+        // Quitamos la selección de la tabla para evitar confusiones con la fila anterior
+        // y limpiamos fecha, costo, entradas y estado del pase.
         tablaPases.clearSelection();
         limpiarCamposPase();
-        if (veniaEditando) {
-            limpiarSocio();   
+
+        if (socioSeleccionado != null) { // Si encontramos un socio sin pase seleccionado en la tabla, cargamos automáticamente id, nombre , apellido
+            mostrarSocio(socioSeleccionado);
+        } else if (veniaEditando) {
+            limpiarSocio();
         }
-        
-        // Liberar la búsqueda por DNI
+
         txtDniSocio.setEnabled(true);
-        txtDniSocio.setText("");
+        txtDniSocio.setText(""); // Dejamos habilitado y limpio el campo de DNI, por si quiere buscar otro usuario
         txtDniSocio.requestFocus();
-        
-        // Asignar la fecha de hoy y calcular inmediatamente los 30 días
-        jdcFechaIniciou.setDate(aDate(LocalDate.now())); 
-        actualizarFechaFin();  
+
+        jdcFechaIniciou.setDate(aDate(LocalDate.now()));
+        actualizarFechaFin(); 
     } 
 
    
@@ -683,7 +706,8 @@ import persistencia.SocioData;
 
     private void btnBuscarSocioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarSocioActionPerformed
   String dni = txtDniSocio.getText().trim();
- 
+        Socio socioBuscado = null;
+
         if (dni.isEmpty()) {
             filtroDni = "";                       // sin DNI: se muestran los pases de todos
         } else {
@@ -692,29 +716,39 @@ import persistencia.SocioData;
                 txtDniSocio.requestFocus();
                 return;
             }
-            Socio socio = socioData.buscarSocioPorDni(dni);
-            if (socio == null) {
+            socioBuscado = socioData.buscarSocioPorDni(dni);
+            if (socioBuscado == null) {
                 JOptionPane.showMessageDialog(this, "No existe un socio con ese DNI.");
                 return;
             }
             filtroDni = dni;
             if (!editando) {
-                mostrarSocio(socio);              // deja cargado el socio para crear un pase nuevo
+                mostrarSocio(socioBuscado);       // deja cargado el socio para crear un pase nuevo
             }
         }
- 
-        cargarPases();
-        if (modeloTabla.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this, "Asignele un pase!.");
-        }
-    
 
-   
+        cargarPases();
+
+        if (modeloTabla.getRowCount() == 0 && socioBuscado != null) {
+            modeloTabla.addRow(new Object[]{
+                "Sin ID",
+                socioBuscado.getDni(),
+                socioBuscado.getApellido() + ", " + socioBuscado.getNombre(),
+                "-",
+                "-",
+                "-",
+                "-",
+                "Sin Asignar"
+            });
+            tablaPases.setRowSelectionInterval(0, 0);
+            actualizarBotones();
+            JOptionPane.showMessageDialog(this, "¡Asigne un pase!");
+        }
     }//GEN-LAST:event_btnBuscarSocioActionPerformed
 
     private void jBLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBLimpiarActionPerformed
          txtDniSocio.setText("");
-        filtroDni = "";
+        filtroDni = ""; 
         grupoFiltro.clearSelection();
         tablaPases.clearSelection();
         limpiarFormulario();
@@ -722,7 +756,7 @@ import persistencia.SocioData;
     }//GEN-LAST:event_jBLimpiarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-            // 1) Fecha de inicio
+            //  Fecha de inicio, y verifica q no este vacia y dentro de un rango logico
         java.util.Date d = jdcFechaIniciou.getDate();
         if (d == null) {
             JOptionPane.showMessageDialog(this, "Seleccione la fecha de inicio.");
@@ -734,7 +768,7 @@ import persistencia.SocioData;
             return;
         }
  
-        // 2) Costo
+        //  Costo, verifica que sea valido, admite punto y comas
         double costo;
         try {
             costo = Double.parseDouble(txtCosto.getText().trim().replace(",", "."));
@@ -750,7 +784,7 @@ import persistencia.SocioData;
         }
  
         if (editando) {
-            // 3a) MODIFICAR: fechas, costo, estado y cantidad de entradas
+            //  MODIFICAR: fechas, costo, estado y cantidad de entradas
             Pases p = paseData.buscarPasePorId(idPaseActual);
             if (p == null) {
                 JOptionPane.showMessageDialog(this, "El pase ya no existe.");
@@ -764,7 +798,10 @@ import persistencia.SocioData;
                 return;
             }
             
-            p.setCantidadPases(Integer.parseInt(seleccion.toString()));
+           int entradasActuales = p.getCantidadPases();
+        int entradasAAgregar = Integer.parseInt(seleccion.toString());
+
+         p.setCantidadPases(entradasActuales + entradasAAgregar);
             p.setFechaInicio(inicio);
             p.setFechaFin(inicio.plusDays(Pases.DIAS_VALIDEZ));
             p.setCosto(costo);
@@ -772,7 +809,7 @@ import persistencia.SocioData;
             paseData.modificarPase(p);
             JOptionPane.showMessageDialog(this, "Pase modificado correctamente.");
         } else {
-            // 3b) ALTA: hace falta un socio cargado desde la búsqueda
+            //  ALTA: hace falta un socio cargado desde la búsqueda
             String idTexto = txtSocio.getText().trim();
             if (idTexto.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
@@ -820,11 +857,11 @@ import persistencia.SocioData;
         cargarPases();
         limpiarFormulario();
     }
-       // Llena la tabla según el DNI de la última búsqueda y los radios Activos / Inactivos
+       // Llena la tabla segun el DNI de la ultima busqueda y los radios Activos / Inactivos
     private void cargarPases() {
-    modeloTabla.setRowCount(0);
+    modeloTabla.setRowCount(0); //limpia filas
 
-    // CASO 1: Si selecciona "Sin Asignar"
+    // Radio button SIN ASIGNAR 
     if (jRBSinAsignar.isSelected()) {
         List<Socio> sociosSinPase = paseData.listarSociosSinPase();
         for (Socio s : sociosSinPase) {
@@ -845,7 +882,7 @@ import persistencia.SocioData;
         return;
     }
 
-    // CASO 2: Si selecciona "Activos", "Inactivos" o ninguno por defecto
+    // Si se selecciona "Activos", "Inactivos" o ninguno por defecto
     List<Pases> lista;
     if (jRBPasesActivos.isSelected()) {
         lista = filtroDni.isEmpty() ? paseData.listarPasesActivos() : paseData.listarPasesActivosPorDni(filtroDni);
@@ -872,7 +909,7 @@ import persistencia.SocioData;
         });
     }
 }
-    // Vuelve a leer el pase de la base para saber si el cambio de estado se hizo de verdad
+    // Vuelve a leer el pase de la base y consultar si se le quiere dar de ALTA O BAJA
     private void verificarEstado(int id, boolean estadoEsperado, String mensajeOk, String mensajeError) {
         Pases p = paseData.buscarPasePorId(id);
         cargarPases();
@@ -923,22 +960,44 @@ import persistencia.SocioData;
         }
     }
  
-    // Modificar, Baja y Alta solo se habilitan con una fila elegida
+    // va a controlar que botones estan habilitados segun que se selecciona en la tabla
     private void actualizarBotones() {
+    // Obtenemos el índice de la fila seleccionada en la tabla (-1 si no hay selección).
         int fila = tablaPases.getSelectedRow();
         boolean seleccionado = fila != -1;
- 
-        btnModificar.setEnabled(seleccionado);
+
         if (seleccionado) {
-            String estado = tablaPases.getValueAt(fila, 7).toString();
-            btnBaja.setEnabled(estado.equals("Activo"));
-            btnAlta.setEnabled(estado.equals("Inactivo"));
+            // Leemos el texto de la columna 7 ("pases"), donde se muestra el estado de la fila.
+            String estadoColumna = tablaPases.getValueAt(fila, 7).toString();
+
+            if ("Sin Asignar".equals(estadoColumna)) {
+                // Si es un socio sin pase, se habilita "Nuevo" para asignarle su pase
+                btnNuevo.setEnabled(true);
+                btnBaja.setEnabled(false);
+                btnAlta.setEnabled(false);
+                btnModificar.setEnabled(false);
+            } else if ("Activo".equals(estadoColumna)) {
+                // Si el pase está activo, se bloquea nuevo y alta , y habilitamos solo baja y modificar
+                btnNuevo.setEnabled(false);
+                btnBaja.setEnabled(true);
+                btnAlta.setEnabled(false);
+                btnModificar.setEnabled(true);
+            } else {
+                // Si el pase está inactivo, se habilita  "Alta" y "Modificar" (y dejamos Nuevo y Baja apagados).
+                btnNuevo.setEnabled(false);
+                btnBaja.setEnabled(false);
+                btnAlta.setEnabled(true);
+                btnModificar.setEnabled(true);
+            }
         } else {
+            // Si no hay ninguna fila seleccionada en la tabla, deshabilitamos todos los botones.
+            btnNuevo.setEnabled(false);
             btnBaja.setEnabled(false);
             btnAlta.setEnabled(false);
+            btnModificar.setEnabled(false);
         }
-    }
- 
+}
+  //obtiene el num de la fila seleccionada y si no hay seleccion devuelve -1
     private int idFilaSeleccionada() {
         int fila = tablaPases.getSelectedRow();
         if (fila == -1) {
@@ -947,7 +1006,7 @@ import persistencia.SocioData;
         return Integer.parseInt(tablaPases.getValueAt(fila, 0).toString());
     }
  
-    // DNI: solo números, 7 u 8 dígitos. Ajustalo si en Socios usan otro formato.
+    // DNI: solo números, 7 u 8 dígitos
     private boolean dniValido(String dni) {
         return dni.matches("\\d{7,8}");
     }

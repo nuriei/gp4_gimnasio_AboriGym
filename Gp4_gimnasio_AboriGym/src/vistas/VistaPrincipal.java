@@ -12,8 +12,9 @@ public class VistaPrincipal extends javax.swing.JFrame {
     public VistaPrincipal() {
        
         initComponents();
-        // Ícono de la ventana (asegurate de tener tu imagen en la carpeta imagenes)
+        
     try {
+        //captura el error si por casualidad no encuentra la imagen de fondo
         Image icono = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagenes/pesa_logo.png"));
         setIconImage(icono);
     } catch (Exception e) {

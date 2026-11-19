@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package persistencia;
 
 import java.sql.*;
@@ -52,34 +49,7 @@ public class AsistenciaData {
             return false;
         }
 }
-        //Recibe el ID de una clase y una fecha
-        //consulta la tabla asistencias y devuelve cuantas personas ya estan registradas en esa clase ese día
-        public int contarAsistenciasPorClaseYFecha(int idClase, LocalDate fecha) {
-
-    String sql = "SELECT COUNT(*) FROM asistencias "
-            + "WHERE id_clase = ? AND fecha_asistencia = ?";
-
-    try {
-        PreparedStatement ps = connection.prepareStatement(sql);
-
-        ps.setInt(1, idClase);
-        ps.setDate(2, java.sql.Date.valueOf(fecha));
-
-        ResultSet rs = ps.executeQuery();
-
-        if (rs.next()) {
-            return rs.getInt(1);
-        }
-
-        ps.close();
-
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(null,
-                "Error al contar las asistencias: " + ex.getMessage());
-    }
-
-    return 0;
-}
+   
         
         public List<Asistencias> listarAsistencias() {
         List<Asistencias> asistencias = new ArrayList<>();
@@ -109,7 +79,44 @@ public class AsistenciaData {
         }
         return asistencias;
     }
-        
+         //Consultamos las asitencias por fecha y las guardamos en un arreglo para desp mostrarlas
+    //Tamb usamos eeste metodo para que al registrar asistencias anteriores se pueda conabilizar el cupo 
+    public List<Asistencias> listarAsistenciasPorDia(LocalDate fecha) { 
+
+        List<Asistencias> asistencias = new ArrayList<>();
+
+        String sql = "SELECT * FROM asistencias WHERE fecha_asistencia = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setDate(1, java.sql.Date.valueOf(fecha));
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Asistencias asistencia = new Asistencias();
+
+                asistencia.setIdAsistencia(rs.getInt("id_asistencia"));
+                asistencia.setFechaAsistencia(
+                        rs.getDate("fecha_asistencia").toLocalDate());
+                asistencia.setSocio(
+                        socioData.buscarSocioPorId(rs.getInt("id_socio")));
+                asistencia.setClase(
+                        claseData.buscarClasePorId(rs.getInt("id_clase")));
+
+                asistencias.add(asistencia);
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null,
+                    "Error al listar asistencias por día: " + ex.getMessage());
+        }
+
+        return asistencias;
+    }
         public List<Asistencias> obtenerAsistenciasPorSocio(int idSocio) {
         List<Asistencias> asistencias = new ArrayList<>();
         String sql = "SELECT * FROM asistencias WHERE id_socio = ?";
