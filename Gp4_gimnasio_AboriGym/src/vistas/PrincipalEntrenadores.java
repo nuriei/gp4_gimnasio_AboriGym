@@ -1,10 +1,7 @@
 package vistas;
 
 import entidades.Entrenadores;
-
-import java.awt.Image;
 import java.util.List;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import persistencia.EntrenadorData;
@@ -660,7 +657,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
                 }
             } else {
                
-                JOptionPane.showMessageDialog(this, "No se encontró ningún entrenador con el nombre: " + nombreBuscado, "Sin resultados", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No se encontro ningun entrenador con el nombre: " + nombreBuscado, "Sin resultados", JOptionPane.INFORMATION_MESSAGE);
                 cargarEntrenadores(); // Recarga la tabla nuevamente con todos
             }
             
@@ -685,7 +682,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
                     cargarEntrenadores();
                 }
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "El ID debe ser numérico.");
+                JOptionPane.showMessageDialog(this, "El ID debe ser numerico.");
                 txtBuscarPorID.setText("");
 
             }
@@ -768,7 +765,7 @@ public class PrincipalEntrenadores extends javax.swing.JInternalFrame {
     
     // nos fijamos si estan vacios
     if (documento.isEmpty() || apellido.isEmpty() || nombre.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Completá todos los campos.");
+        JOptionPane.showMessageDialog(this, "Complete todos los campos.");
         return;
     }
 

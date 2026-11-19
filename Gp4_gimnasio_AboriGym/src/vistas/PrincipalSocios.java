@@ -16,20 +16,19 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
 
     public PrincipalSocios() {
         initComponents();
-       
-        
-
+            
        btnGuardar.setEnabled(false); // Arranca apagado
-        //como es una interfaz debo decirle con q va  funcionar
+       
+        //creo un escuchador para activar el btn guardar
         javax.swing.event.DocumentListener validadorListener = new javax.swing.event.DocumentListener() {
             @Override
-           public void insertUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+           public void insertUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }//escucha si escribe algo
             @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }//escucha si borra
             @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { verificarCamposCompletos(); }//la interfaz lo exige pero no se usa, detecta si se subraya o se pone en negrita u texto
        };
-//
+        //conecta el escuchador con cada uno de los campos q considero q sean obligatorios antes de activar el btn guardar
        txtDni.getDocument().addDocumentListener(validadorListener);
        txtApellido.getDocument().addDocumentListener(validadorListener);
        txtNombre.getDocument().addDocumentListener(validadorListener);
@@ -37,44 +36,50 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
        txtEdad.getDocument().addDocumentListener(validadorListener); 
        txtCorreo.getDocument().addDocumentListener(validadorListener);
        
-
+      
         panelFormulario.setVisible(false);
         
         modeloTabla = (DefaultTableModel) tablaSocios.getModel();
         
+        //crea una instancia de la clase conexion
+        
         MiConexion conexion = new MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym", "root", "");
         
+        //crea un objeto socio data
         socioData = new SocioData(conexion);
 
-        cargarSocios();
+        cargarSocios();// llama el metodo q carga la tabla desde la bd
         
+        //se ponen los botones inactivos todos
         jbModificar.setEnabled(false);
         jBBaja.setEnabled(false);
         jBAlta.setEnabled(false);
         jbEliminar.setEnabled(false);
-
+        
+        //se configura escuchador para botones
+        
         tablaSocios.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                int fila = tablaSocios.getSelectedRow();
-                boolean seleccionado = fila != -1;
-
+            if (!e.getValueIsAdjusting()) { //evita q se seleccione dos veces
+                int fila = tablaSocios.getSelectedRow(); //guarda el indice seleccionado
+                boolean seleccionado = fila != -1; //vale true si hay valor false si es -1
+                //segun el valor que tome seleecionado va a modificar la visibilidad de los botones
                 jbModificar.setEnabled(seleccionado);
                 jbEliminar.setEnabled(seleccionado);
 
                 // Dependiendo del estado activo o inactivo del socio se habilita el btn baja y alta
                 if (seleccionado) {
-                    String estado = tablaSocios.getValueAt(fila, 5).toString(); // Columna de Estado
-
-                    jBBaja.setEnabled(estado.equals("Activo"));
-                    jBAlta.setEnabled(estado.equals("Inactivo"));
-                } else {
+                    String estado = tablaSocios.getValueAt(fila, 5).toString(); // trae el valor de mi columna en el indice 5 y se lo asigno a la variable
+                    //de acuerdo a eso se activa o se inactivan botones
+                    jBBaja.setEnabled(estado.equals("Activo"));//si esta activo habilita el de baja
+                    jBAlta.setEnabled(estado.equals("Inactivo"));//si dice inactivo el de alta
+                } else {//cuando no hay nada seleccionado inhabilita btns
                     jBBaja.setEnabled(false);
                     jBAlta.setEnabled(false);
                 }
             }
         });
     }
-
+    //funciona con el escuchador  le pasa si hay o no cambios
     private void verificarCamposCompletos() {
         boolean dniLleno = !txtDni.getText().trim().isEmpty();
         boolean apellidoLleno = !txtApellido.getText().trim().isEmpty();
@@ -88,7 +93,8 @@ public class PrincipalSocios extends javax.swing.JInternalFrame {
         btnGuardar.setEnabled(dniLleno && apellidoLleno && nombreLleno && edadLlena && correoLleno && telLleno);
     }
 
-    private void cargarSocios() {
+    private void cargarSocios() { 
+        
         modeloTabla.setRowCount(0);
         for (Socio s : socioData.listarSocios()) {
             modeloTabla.addRow(new Object[]{
