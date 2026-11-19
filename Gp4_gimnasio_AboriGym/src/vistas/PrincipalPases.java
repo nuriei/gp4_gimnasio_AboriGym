@@ -32,7 +32,7 @@ import persistencia.SocioData;
     public PrincipalPases(MiConexion conexion) {
         initComponents();
         this.setSize(670,685);
-        btnGuardar.addActionListener(e -> btnGuardarActionPerformed(e));
+        
         btnBuscarSocio.addActionListener(e -> btnBuscarSocioActionPerformed(e)); //configura accion de btones
         jBLimpiar.addActionListener(e -> jBLimpiarActionPerformed(e));
         btnNuevo.addActionListener(e -> btnNuevoActionPerformed(e));
@@ -686,33 +686,44 @@ import persistencia.SocioData;
 
     private void btnBuscarSocioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarSocioActionPerformed
   String dni = txtDniSocio.getText().trim();
- 
+        Socio socioBuscado = null;
+
         if (dni.isEmpty()) {
             filtroDni = "";                       // sin DNI: se muestran los pases de todos
         } else {
             if (!dniValido(dni)) {
-                JOptionPane.showMessageDialog(this, "El DNI debe tener 7 u 8 números, sin puntos ni espacios."); //validacion DNI
+                JOptionPane.showMessageDialog(this, "El DNI debe tener 7 u 8 números, sin puntos ni espacios.");
                 txtDniSocio.requestFocus();
                 return;
             }
-            Socio socio = socioData.buscarSocioPorDni(dni);
-            if (socio == null) {
+            socioBuscado = socioData.buscarSocioPorDni(dni);
+            if (socioBuscado == null) {
                 JOptionPane.showMessageDialog(this, "No existe un socio con ese DNI.");
                 return;
             }
             filtroDni = dni;
             if (!editando) {
-                mostrarSocio(socio);              // deja cargado el socio en el formulario para crear un pase nuevo
+                mostrarSocio(socioBuscado);       // deja cargado el socio para crear un pase nuevo
             }
         }
- 
-        cargarPases();
-        if (modeloTabla.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this, "¡Asignele un pase!.");
-        }
-    
 
-   
+        cargarPases();
+
+        if (modeloTabla.getRowCount() == 0 && socioBuscado != null) {
+            modeloTabla.addRow(new Object[]{
+                "Sin ID",
+                socioBuscado.getDni(),
+                socioBuscado.getApellido() + ", " + socioBuscado.getNombre(),
+                "-",
+                "-",
+                "-",
+                "-",
+                "Sin Asignar"
+            });
+            tablaPases.setRowSelectionInterval(0, 0);
+            actualizarBotones();
+            JOptionPane.showMessageDialog(this, "¡Asigne un pase!");
+        }
     }//GEN-LAST:event_btnBuscarSocioActionPerformed
 
     private void jBLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBLimpiarActionPerformed
