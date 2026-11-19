@@ -81,7 +81,7 @@ public class AsistenciaData {
     }
          //Consultamos las asitencias por fecha y las guardamos en un arreglo para desp mostrarlas
     //Tamb usamos eeste metodo para que al registrar asistencias anteriores se pueda conabilizar el cupo 
-    public List<Asistencias> listarAsistenciasPorDia(LocalDate fecha) { 
+        public List<Asistencias> listarAsistenciasPorDia(LocalDate fecha) { 
 
         List<Asistencias> asistencias = new ArrayList<>();
 
@@ -147,5 +147,26 @@ public class AsistenciaData {
         return asistencias;
     }
         
+        public boolean eliminarAsistencia(int idAsistencia) {
+
+        String sql = "DELETE FROM asistencias WHERE id_asistencia = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            ps.setInt(1, idAsistencia);
+
+            int filas = ps.executeUpdate();
+            ps.close();
+
+            return filas > 0;
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null,
+                    "Error al eliminar la asistencia: " + ex.getMessage());
+            return false;
+        }
+    }
+
     
 }
