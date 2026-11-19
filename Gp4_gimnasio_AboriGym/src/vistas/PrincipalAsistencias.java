@@ -156,6 +156,51 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
 
         return null;
     }
+    private void actualizarInfoClase() {
+
+    if (cbClase.getSelectedItem() == null || dcFecha.getDate() == null) {
+        return;
+    }
+
+    String seleccion = cbClase.getSelectedItem().toString();
+
+    List<Clases> clases = claseData.listarClasesActivas();
+
+    for (Clases clase : clases) {
+
+        String profesor = clase.getEntrenador().getApellido()
+                + ", " + clase.getEntrenador().getNombre();
+
+        String opcion = clase.getNombre() + " - "
+                + profesor + " - " + clase.getHorario();
+
+        if (opcion.equals(seleccion)) {
+
+            lblClaseTitulo.setText(clase.getNombre());
+            lblHorario.setText(clase.getHorario().toString());
+
+            LocalDate fecha = dcFecha.getDate().toInstant()
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .toLocalDate();
+
+            List<Asistencias> asistenciasDelDia =
+                    asistenciaData.listarAsistenciasPorDia(fecha);
+
+            int ocupados = 0;
+
+            for (Asistencias a : asistenciasDelDia) {
+                if (a.getClase().getIdClase() == clase.getIdClase()) {
+                    ocupados++;
+                }
+            }
+
+            int disponibles = clase.getCapacidad() - ocupados;
+
+            lblCupos.setText(String.valueOf(Math.max(0, disponibles)));
+            break;
+        }
+    }
+}
    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -644,7 +689,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         }
         JOptionPane.showMessageDialog(this,
                 "Asistencia registrada correctamente.");
-
+        actualizarInfoClase();
     }//GEN-LAST:event_btnRegistrarAsistenciaActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
@@ -779,81 +824,132 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     private void cbClaseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbClaseItemStateChanged
         if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) 
         {
-            if (cbClase.getSelectedItem() == null) 
-            {
-                return;
-            }
-
-            String seleccion = cbClase.getSelectedItem().toString();
-
-            List<Clases> clases = claseData.listarClasesActivas();
-
-            for (Clases clase : clases) {
-
-                String profesor = clase.getEntrenador().getApellido()+ ", " + clase.getEntrenador().getNombre();
-
-                String opcion = clase.getNombre() + " - "+ profesor + " - " + clase.getHorario();
-
-                if (opcion.equals(seleccion)) 
-                {
-                    lblClaseTitulo.setText(clase.getNombre());
-                    lblHorario.setText(clase.getHorario().toString());
-
-                    if (dcFecha.getDate() == null) 
-                    {
-                        return;
-                    }
-                    //LocalDate, obtiene solamente la fecha q esta en el jcalendar
-                    LocalDate fecha = dcFecha.getDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
-
-                    List<Asistencias> asistenciasDelDia =asistenciaData.listarAsistenciasPorDia(fecha);
-
-                    int ocupados = 0;
-
-                    for (Asistencias a : asistenciasDelDia)
-                    {
-                        if (a.getClase().getIdClase() == clase.getIdClase()) 
-                        {
-                            ocupados++;
-                        }
-                    }
-                    int disponibles = clase.getCapacidad() -ocupados;
-                    lblCupos.setText(String.valueOf(Math.max(0, disponibles)));
-                    break;
-                }
-            }
+            actualizarInfoClase();
         }
-
     }//GEN-LAST:event_cbClaseItemStateChanged
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-   
-        // Verifica que se haya seleccionado una fila
-        int fila = tablaAsistencias.getSelectedRow();
 
-        if (fila == -1) //si no, arroja error
-        {
-            JOptionPane.showMessageDialog(this,"Seleccione una asistencia para eliminar.");
-            return;
-        }
-        // Elegimos el ID de la primer fila
-        int idAsistencia = Integer.parseInt(tablaAsistencias.getValueAt(fila, 0).toString());
-        
-        int respuesta = JOptionPane.showConfirmDialog(this,"¿Está seguro de que desea eliminar esta asistencia?",
-                "Confirmar eliminación",JOptionPane.YES_NO_OPTION);
 
-        if (respuesta != JOptionPane.YES_OPTION) 
-        {
-            return;
-        }
-        // Eliminamos de la bd
-        boolean eliminado = asistenciaData.eliminarAsistencia(idAsistencia);
 
-        if (eliminado) 
-        {
-            JOptionPane.showMessageDialog(this,"Asistencia eliminada correctamente.");
+    // Verificamos que se haya seleccionado una fila
+    int fila = tablaAsistencias.getSelectedRow();
+
+    if (fila == -1) {
+        JOptionPane.showMessageDialog(this,
+                "Seleccione una asistencia para eliminar.");
+        return;
+    }
+
+    // Buscamos el socio seleccionado
+    Socio socio = buscarSocioSeleccionado();
+
+    if (socio == null) {
+        JOptionPane.showMessageDialog(this, "Seleccione un socio.");
+        return;
+    }
+
+    // Obtenemos el ID de la asistencia seleccionada
+    int idAsistencia = Integer.parseInt(
+            tablaAsistencias.getValueAt(fila, 0).toString());
+
+    // Buscamos la asistencia para obtener su clase y fecha
+    List<Asistencias> asistencias =
+            asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
+
+    Asistencias asistenciaSeleccionada = null;
+
+    for (Asistencias a : asistencias) {
+        if (a.getIdAsistencia() == idAsistencia) {
+            asistenciaSeleccionada = a;
+            break;
         }
-        
+    }
+
+    if (asistenciaSeleccionada == null) {
+        JOptionPane.showMessageDialog(this,
+                "No se encontró la asistencia seleccionada.");
+        return;
+    }
+
+    // Buscamos el pase vigente del socio
+    Pases pase = buscarPaseActivo(socio);
+
+    if (pase == null) {
+        JOptionPane.showMessageDialog(this,
+                "El socio no tiene un pase vigente. Primero debe registrar un pase nuevo.");
+        return;
+    }
+
+    // Confirmamos la eliminación
+    int respuesta = JOptionPane.showConfirmDialog(this,
+            "¿Está seguro de que desea eliminar esta asistencia?",
+            "Confirmar eliminación",
+            JOptionPane.YES_NO_OPTION);
+
+    if (respuesta != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    // Guardamos los datos de la clase y fecha antes de eliminar
+    Clases claseEliminada = asistenciaSeleccionada.getClase();
+    LocalDate fechaEliminada =
+            asistenciaSeleccionada.getFechaAsistencia();
+
+    // Eliminamos la asistencia de la base de datos
+    boolean eliminado = asistenciaData.eliminarAsistencia(idAsistencia);
+
+    if (!eliminado) {
+        JOptionPane.showMessageDialog(this,
+                "No se pudo eliminar la asistencia.");
+        return;
+    }
+
+    // Devolvemos una entrada al pase vigente
+    pase.setCantidadPases(pase.getCantidadPases() + 1);
+    paseData.modificarPase(pase);
+
+    // Actualizamos la cantidad de entradas disponibles
+    lblCantidadClases.setText(
+            String.valueOf(pase.getCantidadPases()));
+
+    // Seleccionamos la clase que acabamos de modificar
+    String profesor = claseEliminada.getEntrenador().getApellido()
+            + ", " + claseEliminada.getEntrenador().getNombre();
+
+    String opcion = claseEliminada.getNombre() + " - "
+            + profesor + " - " + claseEliminada.getHorario();
+
+    cbClase.setSelectedItem(opcion);
+
+    // Asignamos al calendario la fecha de la asistencia eliminada
+    dcFecha.setDate(java.sql.Date.valueOf(fechaEliminada));
+
+    // Actualizamos el panel de información y los cupos disponibles
+    actualizarInfoClase();
+
+    // Actualizamos el historial de asistencias
+    List<Asistencias> historial =
+            asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
+
+    DefaultTableModel modelo =
+            (DefaultTableModel) tablaAsistencias.getModel();
+
+    modelo.setRowCount(0);
+
+    for (Asistencias a : historial) {
+        modelo.addRow(new Object[]{
+            a.getIdAsistencia(),
+            a.getSocio().getApellido() + ", " + a.getSocio().getNombre(),
+            a.getClase().getNombre(),
+            a.getFechaAsistencia(),
+            a.getClase().getHorario()
+        });
+    }
+
+    JOptionPane.showMessageDialog(this,
+            "Asistencia eliminada correctamente.");
+
 
     }//GEN-LAST:event_btnEliminarActionPerformed
 

@@ -624,7 +624,7 @@ public class PrincipalClases extends javax.swing.JInternalFrame {
             String especialidadProf = entrenadorSeleccionado.getEspecialidad().toString().trim().toLowerCase();
             String nombreClaseMin = nombre.toLowerCase();
 
-            if (!nombreClaseMin.contains(especialidadProf) && !especialidadProf.contains(nombreClaseMin)) {
+            if (!nombreClaseMin.equalsIgnoreCase(especialidadProf) && !especialidadProf.equalsIgnoreCase(nombreClaseMin)) {
                 javax.swing.JOptionPane.showMessageDialog(this, "La especialidad del entrenador (" + entrenadorSeleccionado.getEspecialidad().toString() + ") no coincide con la clase ' " + nombre + " '.", "Especialidad incompatible", JOptionPane.WARNING_MESSAGE);
                 return;
             }
