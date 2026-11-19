@@ -47,7 +47,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
       
         this.setSize(800, 900);
         
-        // Compartimos una única conexión para ahorrar recursos 
+        // Compartimos una unica conexion para ahorrar recursos 
         //y evitar abrir varias conexiones independientes a la base de datos.        
         MiConexion conexion = new MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym","root","");
     
@@ -191,8 +191,7 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
             }
 
             @Override
-            public void insertString(FilterBypass fb, int offset,
-                    String texto, AttributeSet attrs)
+            public void insertString(FilterBypass fb, int offset, String texto, AttributeSet attrs)
                     throws BadLocationException {
 
                 replace(fb, offset, 0, texto, attrs);
@@ -223,10 +222,11 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
         return null;
     }
     
-    // Verifica si el socio tenía un pase vigente en la fecha indicada
+    // Verifica si el socio tenia un pase vigente en la fecha indicada
 private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
 
-    if (socio == null || fecha == null) {
+    if (socio == null || fecha == null) 
+    {
         return false;
     }
 
@@ -235,10 +235,8 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
 
     for (Pases pase : pases) {
 
-        // Comprobamos si la fecha estaba dentro del período de vigencia
-        if (pase.isEstado()
-                && !fecha.isBefore(pase.getFechaInicio())
-                && !fecha.isAfter(pase.getFechaFin())) {
+        // vems si la fecha estaba dentro del periodo de vigencia
+        if (pase.isEstado()&& !fecha.isBefore(pase.getFechaInicio())&& !fecha.isAfter(pase.getFechaFin())) {
 
             return true;
         }
@@ -248,7 +246,8 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
 }
     private void actualizarInfoClase() {
 
-    if (cbClase.getSelectedItem() == null || dcFecha.getDate() == null) {
+    if (cbClase.getSelectedItem() == null || dcFecha.getDate() == null)
+    {
         return;
     }
 
@@ -258,34 +257,28 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
 
     for (Clases clase : clases) {
 
-        String profesor = clase.getEntrenador().getApellido()
-                + ", " + clase.getEntrenador().getNombre();
+        String profesor = clase.getEntrenador().getApellido()+ ", " + clase.getEntrenador().getNombre();
 
-        String opcion = clase.getNombre() + " - "
-                + profesor + " - " + clase.getHorario();
+        String opcion = clase.getNombre() + " - " + profesor + " - " + clase.getHorario();
 
-        if (opcion.equals(seleccion)) {
-
+        if (opcion.equals(seleccion)) 
+        {
             lblClaseTitulo.setText(clase.getNombre());
             lblHorario.setText(clase.getHorario().toString());
 
-            LocalDate fecha = dcFecha.getDate().toInstant()
-                    .atZone(java.time.ZoneId.systemDefault())
-                    .toLocalDate();
+            LocalDate fecha = dcFecha.getDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
 
-            List<Asistencias> asistenciasDelDia =
-                    asistenciaData.listarAsistenciasPorDia(fecha);
+            List<Asistencias> asistenciasDelDia =asistenciaData.listarAsistenciasPorDia(fecha);
 
             int ocupados = 0;
 
-            for (Asistencias a : asistenciasDelDia) {
+            for (Asistencias a : asistenciasDelDia) 
+            {
                 if (a.getClase().getIdClase() == clase.getIdClase()) {
                     ocupados++;
                 }
             }
-
             int disponibles = clase.getCapacidad() - ocupados;
-
             lblCupos.setText(String.valueOf(Math.max(0, disponibles)));
             break;
         }
@@ -424,7 +417,7 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
         btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel1.setText("Filtro de busqeda");
+        jLabel1.setText("Filtro de busqueda");
 
         btnBuscarSocio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/listar_usuario.png"))); // NOI18N
         btnBuscarSocio.addActionListener(this::btnBuscarSocioActionPerformed);
@@ -700,18 +693,18 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
 
     private void btnRegistrarAsistenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarAsistenciaActionPerformed
     
-
-
     // Asignamos a una variable el socio seleccionado en el cbSocio
     Socio socio = buscarSocioSeleccionado();
 
-    if (socio == null) {
+    if (socio == null) 
+    {
         JOptionPane.showMessageDialog(this, "Seleccione un socio.");
         return;
     }
 
     // Verificamos que haya una fecha seleccionada
-    if (dcFecha.getDate() == null) {
+    if (dcFecha.getDate() == null) 
+    {
         JOptionPane.showMessageDialog(this, "Seleccione una fecha.");
         return;
     }
@@ -722,8 +715,7 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
 
     // Verificamos que el socio haya tenido un pase vigente en esa fecha
     if (!teniaPaseVigente(socio, fechaSeleccionada)) {
-        JOptionPane.showMessageDialog(this,
-                "El socio no tenía un pase vigente en la fecha seleccionada.");
+        JOptionPane.showMessageDialog(this,"El socio no tenia un pase vigente en la fecha seleccionada.");
         return;
     }
 
@@ -731,8 +723,7 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
     Pases pase = buscarPaseActivo(socio);
 
     if (pase == null || pase.getCantidadPases() <= 0) {
-        JOptionPane.showMessageDialog(this,
-                "El socio no tiene clases disponibles.");
+        JOptionPane.showMessageDialog(this,"El socio no tiene clases disponibles.");
         return;
     }
 
@@ -798,8 +789,7 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
 
     // Verificamos la capacidad de la clase
     if (asistenciasRegistradas >= claseSeleccionada.getCapacidad()) {
-        JOptionPane.showMessageDialog(this,
-                "La clase no tiene cupos disponibles para esta fecha.");
+        JOptionPane.showMessageDialog(this,"La clase no tiene cupos disponibles para esta fecha.");
         return;
     }
 
@@ -809,12 +799,11 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
     asistencia.setClase(claseSeleccionada);
     asistencia.setFechaAsistencia(fechaSeleccionada);
 
-    // Verificamos que se haya registrado correctamente
+    // se verifica fecha registrada
     boolean registrado = asistenciaData.registrarAsistencia(asistencia);
 
     if (!registrado) {
-        JOptionPane.showMessageDialog(this,
-                "No se pudo registrar la asistencia.");
+        JOptionPane.showMessageDialog(this,"No se pudo registrar la asistencia.");
         return;
     }
 
@@ -825,12 +814,10 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
     // Actualizamos la cantidad de clases disponibles
     lblCantidadClases.setText(String.valueOf(pase.getCantidadPases()));
 
-    // Actualizamos el historial de asistencias
-    List<Asistencias> asistencias =
-            asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
+    // Actualizamos el historial de asistencias ymostramos en la tabla
+    List<Asistencias> asistencias = asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
 
-    DefaultTableModel modelo =
-            (DefaultTableModel) tablaAsistencias.getModel();
+    DefaultTableModel modelo =(DefaultTableModel) tablaAsistencias.getModel();
 
     modelo.setRowCount(0);
 
@@ -847,8 +834,7 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
     // Actualizamos los cupos disponibles
     actualizarInfoClase();
 
-    JOptionPane.showMessageDialog(this,
-            "Asistencia registrada correctamente.");
+    JOptionPane.showMessageDialog(this,"Asistencia registrada correctamente.");
 
     }//GEN-LAST:event_btnRegistrarAsistenciaActionPerformed
 
@@ -922,17 +908,17 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
       
     private void btnBuscarSocioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarSocioActionPerformed
 
-        // Verificamos que se haya seleccionado un tipo de búsqueda
+        // tiene q haber un radiobutton seleccionado si o si 
         if (!rbNombre.isSelected() && !rbDni.isSelected() && !rbID.isSelected()) 
         {
-            JOptionPane.showMessageDialog(this, "Seleccione tipo de búsqueda.");
+            JOptionPane.showMessageDialog(this, "Seleccione tipo de busqueda.");
             return;
         }
 
         String texto = txtBuscarSocio.getText().trim().toLowerCase();
 
-        // Verificamos que se haya ingresado un dato
-        if (texto.isEmpty()) 
+        // Se registro un dato?
+        if (texto.isEmpty()) //No
         {
             JOptionPane.showMessageDialog(this, "Ingrese un dato para buscar.");
             return;
@@ -941,20 +927,18 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
         // Validamos la longitud del DNI
         if (rbDni.isSelected() && !texto.matches("[0-9]{7,8}")) 
         {
-            JOptionPane.showMessageDialog(this,
-                    "El DNI debe tener entre 7 y 8 números.");
+            JOptionPane.showMessageDialog(this, "El DNI debe tener entre 7 y 8 numeros.");
             return;
         }
 
         // Validamos la longitud del ID
         if (rbID.isSelected() && !texto.matches("[0-9]{1,4}")) 
         {
-            JOptionPane.showMessageDialog(this,
-                    "El ID debe tener entre 1 y 4 números.");
+            JOptionPane.showMessageDialog(this,"El ID debe tener entre 1 y 4 numeros.");
             return;
         }
 
-        // Limpiamos el combo antes de realizar una nueva búsqueda
+        // Limpiamos el combo antes de volver a buscar
         cbSocio.removeAllItems();
 
         List<Socio> socios = socioData.listarSocios();
@@ -983,8 +967,7 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
                 if (socio.isEstado() && buscarPaseActivo(socio) != null) {
 
                     if (socio.getDni().contains(texto)) {
-                        cbSocio.addItem(socio.getApellido() + ", "
-                                + socio.getNombre() + " - ID: " + socio.getIdSocio());
+                        cbSocio.addItem(socio.getApellido() + ", "+ socio.getNombre() + " - ID: " + socio.getIdSocio());
                     }
                 }
             }
@@ -998,8 +981,7 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
                 if (socio.isEstado() && buscarPaseActivo(socio) != null) {
 
                     if (String.valueOf(socio.getIdSocio()).contains(texto)) {
-                        cbSocio.addItem(socio.getApellido() + ", "
-                                + socio.getNombre() + " - ID: " + socio.getIdSocio());
+                        cbSocio.addItem(socio.getApellido() + ", "+ socio.getNombre() + " - ID: " + socio.getIdSocio());
                     }
                 }
             }
@@ -1013,6 +995,7 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
 
     }//GEN-LAST:event_btnBuscarSocioActionPerformed
 
+    //Esto solo actualiza la informacion q se muestra en el panel informativo
     private void cbClaseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbClaseItemStateChanged
         if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) 
         {
@@ -1021,33 +1004,28 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
     }//GEN-LAST:event_cbClaseItemStateChanged
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-
-
-
     // Verificamos que se haya seleccionado una fila
     int fila = tablaAsistencias.getSelectedRow();
 
     if (fila == -1) {
-        JOptionPane.showMessageDialog(this,
-                "Seleccione una asistencia para eliminar.");
+        JOptionPane.showMessageDialog(this,"Seleccione una asistencia para eliminar.");
         return;
     }
 
-    // Buscamos el socio seleccionado
+    // Buscamos socio seleccionado
     Socio socio = buscarSocioSeleccionado();
 
-    if (socio == null) {
+    if (socio == null) 
+    {
         JOptionPane.showMessageDialog(this, "Seleccione un socio.");
         return;
     }
 
     // Obtenemos el ID de la asistencia seleccionada
-    int idAsistencia = Integer.parseInt(
-            tablaAsistencias.getValueAt(fila, 0).toString());
+    int idAsistencia = Integer.parseInt(tablaAsistencias.getValueAt(fila, 0).toString());
 
     // Buscamos la asistencia para obtener su clase y fecha
-    List<Asistencias> asistencias =
-            asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
+    List<Asistencias> asistencias = asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
 
     Asistencias asistenciaSeleccionada = null;
 
@@ -1059,8 +1037,7 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
     }
 
     if (asistenciaSeleccionada == null) {
-        JOptionPane.showMessageDialog(this,
-                "No se encontró la asistencia seleccionada.");
+        JOptionPane.showMessageDialog(this, "No se encontro la asistencia seleccionada.");
         return;
     }
 
@@ -1068,32 +1045,28 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
     Pases pase = buscarPaseActivo(socio);
 
     if (pase == null) {
-        JOptionPane.showMessageDialog(this,
-                "El socio no tiene un pase vigente. Primero debe registrar un pase nuevo.");
+        JOptionPane.showMessageDialog(this,"El socio no tiene un pase vigente. Primero debe registrar un pase nuevo.");
         return;
     }
 
-    // Confirmamos la eliminación
-    int respuesta = JOptionPane.showConfirmDialog(this,
-            "¿Está seguro de que desea eliminar esta asistencia?",
-            "Confirmar eliminación",
-            JOptionPane.YES_NO_OPTION);
+    int respuesta = JOptionPane.showConfirmDialog(this,"¿Seguro de que desea eliminar esta asistencia?",
+            "Confirmar eliminacion",JOptionPane.YES_NO_OPTION);
 
-    if (respuesta != JOptionPane.YES_OPTION) {
+    if (respuesta != JOptionPane.YES_OPTION)
+    {
         return;
     }
 
     // Guardamos los datos de la clase y fecha antes de eliminar
     Clases claseEliminada = asistenciaSeleccionada.getClase();
-    LocalDate fechaEliminada =
-            asistenciaSeleccionada.getFechaAsistencia();
+    LocalDate fechaEliminada = asistenciaSeleccionada.getFechaAsistencia();
 
     // Eliminamos la asistencia de la base de datos
     boolean eliminado = asistenciaData.eliminarAsistencia(idAsistencia);
 
-    if (!eliminado) {
-        JOptionPane.showMessageDialog(this,
-                "No se pudo eliminar la asistencia.");
+    if (!eliminado) 
+    {
+        JOptionPane.showMessageDialog(this,"No se pudo eliminar la asistencia.");
         return;
     }
 
@@ -1106,11 +1079,9 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
             String.valueOf(pase.getCantidadPases()));
 
     // Seleccionamos la clase que acabamos de modificar
-    String profesor = claseEliminada.getEntrenador().getApellido()
-            + ", " + claseEliminada.getEntrenador().getNombre();
+    String profesor = claseEliminada.getEntrenador().getApellido()+ ", " + claseEliminada.getEntrenador().getNombre();
 
-    String opcion = claseEliminada.getNombre() + " - "
-            + profesor + " - " + claseEliminada.getHorario();
+    String opcion = claseEliminada.getNombre() + " - "+ profesor + " - " + claseEliminada.getHorario();
 
     cbClase.setSelectedItem(opcion);
 
@@ -1121,11 +1092,9 @@ private boolean teniaPaseVigente(Socio socio, LocalDate fecha) {
     actualizarInfoClase();
 
     // Actualizamos el historial de asistencias
-    List<Asistencias> historial =
-            asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
+    List<Asistencias> historial =asistenciaData.obtenerAsistenciasPorSocio(socio.getIdSocio());
 
-    DefaultTableModel modelo =
-            (DefaultTableModel) tablaAsistencias.getModel();
+    DefaultTableModel modelo =(DefaultTableModel) tablaAsistencias.getModel();
 
     modelo.setRowCount(0);
 
