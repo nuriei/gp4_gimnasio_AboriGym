@@ -33,11 +33,17 @@ public class PrincipalAsistencias extends javax.swing.JInternalFrame {
     public PrincipalAsistencias()
     {
         initComponents();
+        
+        dcFecha.getDateEditor().addPropertyChangeListener
+        ("date", evt ->
+        {cbClaseItemStateChanged(new java.awt.event.ItemEvent(cbClase,
+         java.awt.event.ItemEvent.ITEM_STATE_CHANGED,cbClase.getSelectedItem(),java.awt.event.ItemEvent.SELECTED));}
+        );
       
         this.setSize(800, 900);
         
-// Compartimos una única conexión para ahorrar recursos 
-//y evitar abrir varias conexiones independientes a la base de datos.        
+        // Compartimos una única conexión para ahorrar recursos 
+        //y evitar abrir varias conexiones independientes a la base de datos.        
         MiConexion conexion = new MiConexion("jdbc:mysql://localhost:3306/gp4_gimnasio_aborigym","root","");
     
     
