@@ -1,5 +1,6 @@
 package pruebasMain;
 
+import entidades.Asistencias;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -14,6 +15,8 @@ import persistencia.PaseData;
 import persistencia.ClaseData;
 import entidades.Clases;
 import java.time.LocalTime;
+import persistencia.AsistenciaData;
+import java.util.List;
 
 public class PruebaConexion {
 
@@ -155,6 +158,46 @@ public class PruebaConexion {
                 if (claseBuscada != null) {
                     System.out.println("Clase encontrada: " + claseBuscada.getNombre());
                     System.out.println("ID de la clase: " + claseBuscada.getIdClase());
+                    
+                    System.out.println("\n--- INICIANDO PRUEBAS DE ASISTENCIAS ---");
+        
+        //Creamos una AsistenciaData
+        
+        AsistenciaData asistenciaData = new AsistenciaData(con);
+        
+        //Creamos una Asistencia
+        Asistencias asis = new Asistencias(socioParaPase, claseBuscada, LocalDate.now());
+        
+        //Registramos la Asistencia.
+        boolean registrada = asistenciaData.registrarAsistencia(asis);
+        
+        // Comprobamos si se registro o no la Asistencia.
+        if(registrada){
+            System.out.println("Se registro la asistencia correctamente.");
+            
+        } else {
+            System.out.println("Ocurrió un error al registrar la asistencia.");
+        }
+        
+        //Consultamos todas las asistencias
+        List<Asistencias> listaAsistencias = asistenciaData.listarAsistencias();
+        
+        
+        System.out.println("\n--- LISTADO DE ASISTENCIAS ---");
+        
+        if(!listaAsistencias.isEmpty()){
+            
+            for(Asistencias asistencia : listaAsistencias){
+                
+                System.out.println("ID: " + asistencia.getIdAsistencia());
+                System.out.println("Socio: " + asistencia.getSocio());
+                System.out.println("Clase: " + asistencia.getClase());
+                System.out.println("Fecha: " + asistencia.getFechaAsistencia());
+            }
+            
+        } else {
+            System.out.println("No hay asistencias registradas.");
+        }
                 } else {
                     System.out.println("No se pudo recuperar la clase. ");
                 }
@@ -166,6 +209,8 @@ public class PruebaConexion {
             System.out.println("\n--- FIN DE LAS PRUEBAS ---");
         }
         
+        
+            
         
 
     }
